@@ -14,9 +14,14 @@ export function isExternal(path) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function validUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+export function validUsername(userName) {
+  const reg = /^[a-zA-Z0-9_-]{4,16}$/
+  return reg.test(userName)
+}
+
+export function validPassword(pwd) {
+  const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
+  return reg.test(pwd)
 }
 
 /**
