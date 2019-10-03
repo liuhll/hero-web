@@ -57,6 +57,18 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
+      if (errorInfo.code == 401) {
+        // to re-login
+        MessageBox.confirm('您已经登出系统,是否重新登录系统?', 'Confirm logout', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('account/resetToken').then(() => {
+            location.reload()
+          })
+        })
+      }
       return Promise.reject(errorInfo)
     }
 

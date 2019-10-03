@@ -1,24 +1,10 @@
 import request from '@/utils/request'
+import setting from '@/settings'
 
-export function login(data) {
+export function queryUser(query) {
   return request({
-    url: '/user/login',
+    url: `${setting.apiPrefix}/user/query`,
     method: 'post',
-    data
-  })
-}
-
-export function getInfo(token) {
-  return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
+    data: { query: query }
   })
 }
