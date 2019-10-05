@@ -7,3 +7,17 @@ export const getOrgTree = () => {
         method: 'get'
     })
 }
+
+export const getDeptPosition = (deptId) => {    
+    return request({
+        url: `${setting.apiPrefix}/position/getdeptposition/${deptId}`,
+        method: 'get'
+    })
+}
+
+export const getDeptPositionByOrgId = (orgId) => {    
+    return request({
+        url: `${setting.apiPrefix}/position/getdeptpositionbyorgid/${orgId}`,
+        method: 'get'
+    })
+}

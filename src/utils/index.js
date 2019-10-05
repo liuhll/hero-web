@@ -348,3 +348,11 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export const isEmpty = (obj) => {
+  if (typeof obj == "undefined" || obj == null || obj == "") {
+    return true;
+  } else {
+    return false;
+  }
+}

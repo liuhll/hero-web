@@ -1,16 +1,17 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10">
-      <el-col :span="6">
+      <el-col :span="4">
         <el-tree
           :data="orgData"
           default-expand-all
           :render-content="renderContent"
           :expand-on-click-node="false"
           @node-click="handleOrgNodeClick"
+          ref="orgTree"
         ></el-tree>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="20">
         <div class="filter-container">
           <el-input
             v-model="query.searchKey"
@@ -19,6 +20,15 @@
             class="filter-item"
             @keyup.enter.native="handleUserFilter"
           />
+          <el-select
+            placeholder="请选择用户状态"
+            v-model="query.status"
+            class="filter-item"
+            @change="handleChangeQueryUserStatus"
+          >
+            <el-option key="1" label="有效" value="1"></el-option>
+            <el-option key="0" label="冻结" value="0"></el-option>
+          </el-select>
           <el-button
             v-waves
             class="filter-item"
@@ -35,7 +45,13 @@
           >清除</el-button>
         </div>
         <div class="filter-container">
-          <el-button v-waves class="filter-item" type="primary" icon="el-icon-plus">新增</el-button>
+          <el-button
+            v-waves
+            @click="handleCreate"
+            class="filter-item"
+            type="primary"
+            icon="el-icon-plus"
+          >新增</el-button>
         </div>
         <div class="filter-container">
           <el-table
@@ -58,7 +74,31 @@
                 <el-tag :type="row.status | statusTagFilter">{{ row.status | statusFilter }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作"></el-table-column>
+            <el-table-column
+              label="操作"
+              align="center"
+              width="380"
+              class-name="small-padding fixed-width"
+            >
+              <template slot-scope="{row}">
+                <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+                <el-button type="default" size="mini" @click="handleResetPwd(row)">密码</el-button>
+                <el-button
+                  v-if="row.status==1"
+                  size="mini"
+                  type="warning"
+                  @click="handleModifyStatus(row,'freeze')"
+                >冻结</el-button>
+                <el-button
+                  v-if="row.status==0"
+                  size="mini"
+                  type="success"
+                  @click="handleModifyStatus(row,'activate')"
+                >激活</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
+                <el-button size="mini" type="info" @click="handleLook(row)">查看</el-button>
+              </template>
+            </el-table-column>
           </el-table>
           <pagination
             v-show="userDataTotal>0"
@@ -70,6 +110,22 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+      @close="handleDialogClose"
+    >
+      <create-or-update
+        ref="userInfo"
+        :userInfo="userInfo"
+        :orgData="orgData"
+        :dialogStatus="dialogStatus"
+      ></create-or-update>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,10 +133,14 @@
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import OrgNode from "@/views/organization/components/org-node.vue";
+import CreateOrUpdate from "./components/create-or-update.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+import { compileFunction } from "vm";
+import { userInfo } from "os";
 export default {
   components: {
     OrgNode,
+    CreateOrUpdate,
     Pagination
   },
   directives: { waves },
@@ -100,6 +160,17 @@ export default {
       userData: [],
       listLoading: true,
       userDataTotal: 0,
+      dialogStatus: "",
+      dialogFormVisible: false,
+      userInfo: {
+        orgId: undefined,
+        positionId: undefined,
+        roleIds: []
+      },
+      textMap: {
+        update: "编辑用户",
+        create: "新增用户"
+      },
       query: {
         searchKey: "",
         orgId: 0,
@@ -113,8 +184,15 @@ export default {
     this.loadUserData();
   },
   methods: {
-    ...mapActions("organization", ["getOrgTree"]),
-    ...mapActions("user", ["queryUser"]),
+    ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
+    ...mapActions("user", [
+      "queryUser",
+      "create",
+      "update",
+      "updateStatus",
+      "deleteUser",
+      "resetPassword"
+    ]),
     loadOrgData() {
       this.getOrgTree().then(data => {
         this.orgData = data;
@@ -128,12 +206,89 @@ export default {
       this.query.pageIndex = 1;
       this.query.searchKey = "";
       this.query.orgId = 0;
+      delete this.query.status;
       this.loadUserData();
+      this.resetUserInfo();
     },
     handleOrgNodeClick(data, node) {
       this.query.pageIndex = 1;
       this.query.orgId = data.id;
       this.loadUserData();
+    },
+    handleChangeQueryUserStatus(value) {
+      this.query.pageIndex = 1;
+      this.query.status = value;
+      this.loadUserData();
+    },
+    handleUpdate(row) {
+      this.resetUserInfo();
+      this.userInfo = Object.assign({}, row); // copy obj
+      this.userInfo.positionId = row.positionId;
+      this.dialogStatus = "update";
+      this.dialogFormVisible = true;
+
+      this.$nextTick(() => {
+        this.$refs["userInfo"].isResetPosition = false;
+        this.$refs["userInfo"].loadDeptPosition(this.userInfo.orgId);
+        this.$refs["userInfo"].loadRoleData();
+        this.$refs["userInfo"].$refs["userInfoForm"].clearValidate();
+      });
+    },
+    handleResetPwd(row) {
+      this.$prompt(`重置该账号密码`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+        inputErrorMessage: "密码格式不正确(保护数字和字符,不低于6位)"
+      })
+        .then(({value}) => {
+          this.resetPassword({
+            id: row.id,
+            newPassword: value
+          }).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000
+            });
+            this.loadUserData();
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            title: "提示",
+            message: "取消密码重置",
+            type: "info",
+            duration: 2000
+          });
+        });
+    },
+    handleDelete(row) {
+      this.$confirm(`您是否确认删除该账户?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.deleteUser(row.id).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000
+            });
+            this.loadUserData();
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            title: "提示",
+            message: "取消删除操作",
+            type: "info",
+            duration: 2000
+          });
+        });
     },
     loadUserData() {
       this.listLoading = true;
@@ -145,6 +300,105 @@ export default {
           this.listLoading = false;
         }, 1.5 * 200);
       });
+    },
+    resetUserInfo() {
+      this.userInfo = {
+        orgId: undefined,
+        positionId: undefined,
+        roleIds: []
+      };
+      const selectOrgNode = this.$refs["orgTree"].getCurrentNode();
+      if (selectOrgNode && selectOrgNode.orgType == 1) {
+        this.userInfo.orgId = selectOrgNode.id;
+      } else {
+        this.userInfo.orgId = undefined;
+      }
+    },
+    createData() {
+      this.$refs["userInfo"].$refs["userInfoForm"].validate(valid => {
+        if (valid) {
+          this.userInfo.status = 1;
+          this.create(this.userInfo).then(data => {
+            this.dialogFormVisible = false;
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000
+            });
+            this.resetUserInfo();
+            this.loadUserData();
+          });
+        }
+      });
+    },
+    updateData() {
+      this.$refs["userInfo"].$refs["userInfoForm"].validate(valid => {
+        if (valid) {
+          this.update(this.userInfo).then(data => {
+            this.dialogFormVisible = false;
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000
+            });
+            this.resetUserInfo();
+            this.loadUserData();
+          });
+        }
+      });
+    },
+    handleModifyStatus(row, operate) {
+      let operateDesc;
+      let userStatus = 0;
+      if (operate == "freeze") {
+        operateDesc = "冻结";
+        userStatus = 0;
+      }
+      if (operate == "activate") {
+        operateDesc = "激活";
+        userStatus = 1;
+      }
+      this.$confirm(`您是否确认${operateDesc}该账户?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.updateStatus({
+            id: row.id,
+            status: userStatus
+          }).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000
+            });
+            this.loadUserData();
+          });
+        })
+        .catch(err => {
+          this.$notify({
+            title: "提示",
+            message: `取消${operateDesc}操作`,
+            type: "info",
+            duration: 2000
+          });
+        });
+    },
+    handleCreate() {
+      this.resetUserInfo();
+      this.dialogStatus = "create";
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["userInfo"].loadRoleData();
+        this.$refs["userInfo"].$refs["userInfoForm"].clearValidate();
+      });
+    },
+    handleDialogClose() {
+      this.$refs["userInfo"].isResetPosition = false;
     },
     renderContent(h, { node, data, store }) {
       return h(OrgNode, {
