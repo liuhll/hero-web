@@ -44,6 +44,16 @@ const actions = {
       })
     })
   },
+  logout({ commit }, state) {
+    return new Promise((resolve, reject) => {
+      commit('SET_ROLES', [])
+      commit('SET_NAME', '')
+      commit('SET_CHINESE_NAME', '')
+      removeToken()
+      resetRouter()
+      resolve()
+    })
+  },
   getLoginUser({ commit, state }) {
     return new Promise((resolve, reject) => {
       getLoginUser().then(response => {
