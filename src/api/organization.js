@@ -21,3 +21,17 @@ export const getDeptPositionByOrgId = (orgId) => {
         method: 'get'
     })
 }
+
+export const getCorporationByOrgId = (orgId) => {
+    return request({
+        url: `${setting.apiPrefix}/corporation/getbyorgid/${orgId}`,
+        method: 'get'
+    })
+}
+
+export const getDepartmentByOrgId = (orgId) => {
+    return request({
+        url: `${setting.apiPrefix}/department/getbyorgid/${orgId}`,
+        method: 'get'
+    })
+}

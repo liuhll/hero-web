@@ -2,12 +2,14 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="4">
+        <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
         <el-tree
           :data="orgData"
           default-expand-all
           :render-content="renderContent"
           :expand-on-click-node="false"
           @node-click="handleOrgNodeClick"
+          :filter-node-method="filterOrgNode"
           ref="orgTree"
         ></el-tree>
       </el-col>
@@ -135,8 +137,6 @@ import waves from "@/directive/waves"; // waves directive
 import OrgNode from "@/views/organization/components/org-node.vue";
 import CreateOrUpdate from "./components/create-or-update.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
-import { compileFunction } from "vm";
-import { userInfo } from "os";
 export default {
   components: {
     OrgNode,
@@ -161,6 +161,7 @@ export default {
       listLoading: true,
       userDataTotal: 0,
       dialogStatus: "",
+      filterOrgName: "",
       dialogFormVisible: false,
       userInfo: {
         orgId: undefined,
@@ -182,6 +183,11 @@ export default {
   mounted() {
     this.loadOrgData();
     this.loadUserData();
+  },
+  watch: {
+    filterOrgName(val) {
+      this.$refs.orgTree.filter(val);
+    }
   },
   methods: {
     ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
@@ -241,7 +247,7 @@ export default {
         inputPattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
         inputErrorMessage: "密码格式不正确(保护数字和字符,不低于6位)"
       })
-        .then(({value}) => {
+        .then(({ value }) => {
           this.resetPassword({
             id: row.id,
             newPassword: value
@@ -399,6 +405,10 @@ export default {
     },
     handleDialogClose() {
       this.$refs["userInfo"].isResetPosition = false;
+    },
+    filterOrgNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
     },
     renderContent(h, { node, data, store }) {
       return h(OrgNode, {
