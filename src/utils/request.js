@@ -10,7 +10,7 @@ const service = axios.create({
   headers: {
     'Content-Type': 'application/json'
   },
-  timeout: 5000 // request timeout
+  timeout: 10000 // request timeout
 })
 
 // request interceptor
