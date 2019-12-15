@@ -24,14 +24,14 @@ export const getDeptPositionByOrgId = (orgId) => {
 
 export const getCorporationByOrgId = (orgId) => {
     return request({
-        url: `${setting.apiPrefix}/corporation/getbyorgid/${orgId}`,
+        url: `${setting.apiPrefix}/corporation/get/org/${orgId}`,
         method: 'get'
     })
 }
 
 export const getDepartmentByOrgId = (orgId) => {
     return request({
-        url: `${setting.apiPrefix}/department/getbyorgid/${orgId}`,
+        url: `${setting.apiPrefix}/department/get/byorg/${orgId}`,
         method: 'get'
     })
 }
