@@ -51,7 +51,7 @@
             v-waves
             @click="handleCreate"
             class="filter-item"
-            type="primary"
+            type="success"
             icon="el-icon-plus"
           >新增</el-button>
         </div>
