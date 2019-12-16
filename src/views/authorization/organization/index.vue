@@ -82,65 +82,71 @@
               <el-input type="textarea" v-model="department.memo" />
             </el-form-item>
             <el-form-item label="职位信息" prop="positions">
-              <el-table
-                :data="department.positions"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-              >
-                <el-table-column prop="name" label="职位名称" min-width="80"></el-table-column>
-                <el-table-column prop="postResponsibility" label="岗位职责" min-width="80"></el-table-column>
-                <el-table-column label="职位级别" min-width="80">
-                  <template slot-scope="{row}">
-                    <el-select v-model="row.positionLevelId">
-                      <el-option
-                        v-for="item in positionLevels"
-                        :key="item.id"
-                        :label="item.value"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </template>
-                </el-table-column>
-                <el-table-column label="职能" min-width="80">
-                  <template slot-scope="{row}">
-                    <el-select v-model="row.functionId">
-                      <el-option
-                        v-for="item in positionFunctions"
-                        :key="item.id"
-                        :label="item.value"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </template>
-                </el-table-column>
-                <el-table-column label="是否部门负责人">
-                  <template slot-scope="{row}">
-                    <el-tag
-                      :type="row.isLeadershipPost | statusTagFilter"
-                    >{{ row.isLeadershipPost | statusFilter }}</el-tag>
-                  </template>
-                </el-table-column>
-                <el-table-column label="是否领导人岗位">
-                  <template slot-scope="{row}">
-                    <el-tag
-                      :type="row.isLeadingOfficial | statusTagFilter"
-                    >{{ row.isLeadingOfficial | statusFilter }}</el-tag>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="briefIntro" label="简介" min-width="80"></el-table-column>
-                <el-table-column prop="memo" label="备注" min-width="80"></el-table-column>
-                <el-table-column label="操作" min-width="120">
-                  <template slot="header" slot-scope="scope">
-                     <el-button type="default" size="mini">新增</el-button>
-                  </template>
-                  <template slot-scope="{row}">
-                    <el-button type="primary" size="mini">编辑</el-button>
-                    <el-button type="danger" size="mini">移除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
+              <el-row>
+                <el-col :span="24">
+                  <el-button type="success" icon="el-icon-plus">新增</el-button>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <el-table
+                    :data="department.positions"
+                    border
+                    fit
+                    highlight-current-row
+                    style="width: 100%"
+                  >
+                    <el-table-column prop="name" label="职位名称" min-width="80"></el-table-column>
+                    <el-table-column prop="postResponsibility" label="岗位职责" min-width="80"></el-table-column>
+                    <el-table-column label="职位级别" min-width="80">
+                      <template slot-scope="{row}">
+                        <el-select v-model="row.positionLevelId">
+                          <el-option
+                            v-for="item in positionLevels"
+                            :key="item.id"
+                            :label="item.value"
+                            :value="item.id"
+                          ></el-option>
+                        </el-select>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="职能" min-width="80">
+                      <template slot-scope="{row}">
+                        <el-select v-model="row.functionId">
+                          <el-option
+                            v-for="item in positionFunctions"
+                            :key="item.id"
+                            :label="item.value"
+                            :value="item.id"
+                          ></el-option>
+                        </el-select>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="是否部门负责人">
+                      <template slot-scope="{row}">
+                        <el-tag
+                          :type="row.isLeadershipPost | statusTagFilter"
+                        >{{ row.isLeadershipPost | statusFilter }}</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="是否领导人岗位">
+                      <template slot-scope="{row}">
+                        <el-tag
+                          :type="row.isLeadingOfficial | statusTagFilter"
+                        >{{ row.isLeadingOfficial | statusFilter }}</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="briefIntro" label="简介" min-width="80"></el-table-column>
+                    <el-table-column prop="memo" label="备注" min-width="80"></el-table-column>
+                    <el-table-column label="操作" min-width="120">
+                      <template slot-scope="{row}">
+                        <el-button type="primary" size="mini">编辑</el-button>
+                        <el-button type="danger" size="mini">移除</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
         </div>
@@ -336,3 +342,15 @@ export default {
   }
 };
 </script>
+
+<style>
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+</style>

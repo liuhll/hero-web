@@ -6,8 +6,9 @@
       {{data.name}}
     </span>
     <span>
-      <el-button size="mini" type="text" icon="el-icon-circle-plus" circle @click="appendNode"></el-button>
-      <el-button size="mini" type="text" icon="el-icon-delete" circle @click="deleteNode"></el-button>
+      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode"></el-button>
+      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-edit" circle @click="editNode"></el-button>
+      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-delete" circle @click="deleteNode"></el-button>
     </span>
   </span>
 </template>
@@ -33,6 +34,9 @@ export default {
     },
     deleteNode() {
       this.$emit("on-delete-org", this.node, this.data);
+    },
+    editNode() {
+      this.$emit("on-edit-org", this.node, this.data);
     }
   }
 };
@@ -47,4 +51,5 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
+
 </style>
