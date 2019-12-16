@@ -28,7 +28,7 @@ export function update(userInfo) {
 
 export function updateStatus(userStatus) {
   return request({
-    url: `${setting.apiPrefix}/user/updatestatus`,
+    url: `${setting.apiPrefix}/user/update/status`,
     method: 'put',
     data: { input: userStatus }
   })
