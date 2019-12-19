@@ -6,8 +6,8 @@
       {{data.name}}
     </span>
     <span>
-      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode"></el-button>
-      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-edit" circle @click="editNode"></el-button>
+      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
+      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-edit" circle @click="editNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
       <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-delete" circle @click="deleteNode"></el-button>
     </span>
   </span>

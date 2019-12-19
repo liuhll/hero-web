@@ -9,6 +9,7 @@
           :render-content="renderContent"
           :expand-on-click-node="false"
           :filter-node-method="filterOrgNode"
+          node-key="code"
           @node-click="handleOrgSelected"
           ref="orgTree"
         ></el-tree>
@@ -28,6 +29,13 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog title="请选择组织类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
+      <check-org-type ref="newOrgNode" :newOrgNodeData="newOrgNodeData"></check-org-type>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="success" size="mini" @click="handleAppendOrgConfirm">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -57,15 +65,16 @@ export default {
       corporation: {},
       department: {},
       orgData: [],
-     
+      dialogFormVisible: false,
+      haveUnSaveOrgData: false,
+      newOrgNodeData: {},
       positionLevels: [],
       positionFunctions: []
     };
   },
   watch: {
     selectedOrg(val) {
-      console.log(val);
-      if (!isEmpty(val)) {
+      if (!isEmpty(val) && val.id) {
         if (val.orgType == 0) {
           this.loadCorporation(val.id);
         } else if (val.orgType == 1) {
@@ -90,69 +99,64 @@ export default {
         this.orgData = data;
         const firstNode = data[0];
         if (firstNode) {
-          this.selectedOrg = {
-            id: firstNode.id,
-            orgType: firstNode.orgType,
-            name: firstNode.name,
-            operate: 0
-          };
+          firstNode.operate = 0;
+          this.selectedOrg = firstNode;
         }
       });
     },
-
-    handleAppendOrg(node, data) {
-      const h = this.$createElement;
-      if (data.orgType == 0) {
-        this.$msgbox({
-          title: "请选择组织类型",
-          message: h(CheckOrgType, {
-            on: {
-              "on-checked-orgtype": selectedOrg => {
-                console.log(selectedOrg);
-                this.selectedOrg = selectedOrg;
-              }
-            }
-          }),
-          showCancelButton: true,
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          beforeClose: (action, instance, done) => {
-            if (action == "confirm") {
-              if (this.selectedOrg.orgType == -1) {
-                this.$message.error("请选择您要新增的组织类型");
-              } else {
-                done();
-              }
-            } else {
-              done();
-            }
-          }
-        }).then(action => {
-          if (action == "confirm") {
-            let newOrgData = {
-              name: this.selectedOrg.name,
-              title: this.selectedOrg.name,
-              orgType: this.selectedOrg.orgType,
-              children: []
-            };
-            if (!data.children) {
-              this.$set(data, "children", []);
-            }
-            data.children.push(newOrgData);
-          }
-        });
+    handleDialogClose() {
+      this.dialogFormVisible = false;
+    },
+    handleAppendOrgCreate(node, data) {
+      if (!this.haveUnSaveOrgData) {
+        this.newOrgNodeData = {};
+        this.newOrgNodeData.parentOrgType = data.orgType;
+        if (data.orgType === 1) {
+          this.newOrgNodeData.orgType = data.orgType;
+        }
+        this.dialogFormVisible = true;
+      } else {
+        this.$message.error("存在未保存的组织机构");
       }
     },
+    handleAppendOrgConfirm() {
+      this.$refs["newOrgNode"].$refs["newOrgNodeForm"].validate(valid => {
+        if (valid) {
+          this.dialogFormVisible = false;
+
+          const newOrgData = {
+            name: this.newOrgNodeData.name,
+            title: this.newOrgNodeData.name,
+            orgType: this.newOrgNodeData.orgType,
+            operate: 1,
+            children: []
+          };
+          if (!this.selectedOrg.children) {
+            this.$set(this.selectedOrg, "children", []);
+          }
+          this.selectedOrg.children.push(newOrgData);
+          this.haveUnSaveOrgData = true;
+        }
+      });
+    },
     handleOrgSelected(node, data) {
-      this.selectedOrg = {
-        id: node.id,
-        orgType: node.orgType,
-        name: node.name,
-        operate: 0
-      };
+      debugger;
+      node.operate = 0;
+      this.selectedOrg = node;
     },
     handleDeleteOrg(node, data) {
-      console.log(node);
+      const parent = node.parent;
+      const children = parent.data.children || parent.data;
+      const index = children.findIndex(d => d.id === data.id);
+      children.splice(index, 1);
+      // debugger;
+      // this.selectedOrg = parent.data;
+      // this.selectedOrg.operate = 2;
+      parent.checked = true;
+      this.$refs["orgTree"].setCurrentNode(parent);
+      if (!data.id) {
+        this.haveUnSaveOrgData = false;
+      }
     },
     filterOrgNode(value, data) {
       if (!value) return true;
@@ -176,7 +180,7 @@ export default {
         },
         on: {
           "on-append-org": node => {
-            this.handleAppendOrg(node, data);
+            this.handleAppendOrgCreate(node, data);
           },
           "on-delete-org": node => {
             this.handleDeleteOrg(node, data);

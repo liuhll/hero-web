@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
-    <el-form :model="checkOrgType" label-position="left" label-width="90px">
-      <el-form-item label="组织类型">
-        <el-radio-group v-model="checkOrgType.orgType">
+    <el-form ref="newOrgNodeForm" :model="newOrgNodeData" label-position="left" label-width="90px">
+      <el-form-item label="组织类型" v-if="newOrgNodeData.parentOrgType === 0" prop="orgType" required>
+        <el-radio-group v-model="newOrgNodeData.orgType">
           <el-radio :label="0">公司</el-radio>
           <el-radio :label="1">部门</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="组织名称">
-        <el-input v-model="checkOrgType.name" placeholder="请输入组织名称" />
+      <el-form-item label="组织名称" prop="name" required>
+        <el-input v-model="newOrgNodeData.name" placeholder="请输入组织名称" />
       </el-form-item>
     </el-form>
   </div>
@@ -19,21 +19,23 @@ import Emitter from "@/mixins/emitter.js";
 export default {
   name: "CheckOrgType",
   mixins: [Emitter],
+  props: {
+    newOrgNodeData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      checkOrgType: {
-        orgType: -1,
-        name: ""
+      rules: {
+        orgType: [
+          { required: true, message: "请选择组织类型", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "请输入组织名称", trigger: "blur" }
+        ]
       }
     };
-  },
-  methods: {
-    handleCheckOrgType() {
-      this.$emit("on-checked-orgtype", this.checkOrgType);
-    },
-    reSetOrgType() {
-      this.orgType = -1;
-    }
   }
 };
 </script>
