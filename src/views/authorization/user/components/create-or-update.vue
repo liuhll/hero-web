@@ -94,7 +94,7 @@ export default {
       default: () => []
     },
     dialogStatus: {
-      type: string,
+      type: String,
       default: ""
     }
   },

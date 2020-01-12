@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: "PositionForm",
   props: {
     position: {
       type: Object,
@@ -21,10 +22,6 @@ export default {
     }
   },
   data() {
-    return {};
   }
 };
 </script>
-
-<style>
-</style>

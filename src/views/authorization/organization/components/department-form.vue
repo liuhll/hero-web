@@ -117,7 +117,6 @@ export default {
       }
     }
   },
-  components: {},
   mounted() {
     this.loadDepartmentType();
     // this.loadPositionLevels();
@@ -134,7 +133,7 @@ export default {
         create: "新增岗位"
       },
       editPosition: {
-        name: ""
+        
       }
     };
   },
