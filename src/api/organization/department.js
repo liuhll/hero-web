@@ -1,13 +1,6 @@
 import request from '@/utils/request'
 import setting from '@/settings'
 
-export const getOrgTree = () => {
-    return request({
-        url: `${setting.apiPrefix}/organization/get/tree`,
-        method: 'get'
-    })
-}
-
 export const getDeptPosition = (deptId) => {    
     return request({
         url: `${setting.apiPrefix}/position/get/dept/${deptId}`,
@@ -22,16 +15,20 @@ export const getDeptPositionByOrgId = (orgId) => {
     })
 }
 
-export const getCorporationByOrgId = (orgId) => {
-    return request({
-        url: `${setting.apiPrefix}/corporation/get/org/${orgId}`,
-        method: 'get'
-    })
-}
-
 export const getDepartmentByOrgId = (orgId) => {
     return request({
         url: `${setting.apiPrefix}/department/get/orgid/${orgId}`,
         method: 'get'
+    })
+}
+
+
+export const createDepartment = (input) => {
+    return request({
+        url: `${setting.apiPrefix}/department/create`,
+        method: 'post',
+        data: {
+            input: input
+        }
     })
 }

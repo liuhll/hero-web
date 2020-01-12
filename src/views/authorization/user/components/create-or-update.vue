@@ -83,7 +83,6 @@ import OrgNode from "@/views/organization/components/org-node.vue";
 import Tinymce from "@/components/Tinymce";
 import { isEmpty } from "@/utils";
 import { mapActions } from "vuex";
-import { string } from "jszip/lib/support";
 export default {
   props: {
     userInfo: {

@@ -1,9 +1,11 @@
-import { getOrgTree, getDeptPosition, getDeptPositionByOrgId, getCorporationByOrgId, getDepartmentByOrgId } from '@/api/organization'
+import * as Organization from '@/api/organization/index'
+import * as Corporation from '@/api/organization/corporation'
+import * as Department from '@/api/organization/department'
 
 const actions = {
     getOrgTree({ commit }) {
         return new Promise((resolve, reject) => {
-            getOrgTree().then(response => {
+            Organization.getOrgTree().then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
@@ -13,7 +15,7 @@ const actions = {
     },
     getDeptPosition({ commit }, deptId) {
         return new Promise((resolve, reject) => {
-            getDeptPosition(deptId).then(response => {
+            Department.getDeptPosition(deptId).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
@@ -23,7 +25,7 @@ const actions = {
     },
     getDeptPositionByOrgId({ commit }, orgId) {
         return new Promise((resolve, reject) => {
-            getDeptPositionByOrgId(orgId).then(response => {
+            Department.getDeptPositionByOrgId(orgId).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
@@ -32,9 +34,9 @@ const actions = {
         })
     },
 
-    getCorporationByOrgId({ commit }, orgId) {   
+    getCorporationByOrgId({ commit }, orgId) {
         return new Promise((resolve, reject) => {
-            getCorporationByOrgId(orgId).then(response => {
+            Corporation.getCorporationByOrgId(orgId).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
@@ -45,7 +47,7 @@ const actions = {
 
     getDepartmentByOrgId({ commit }, orgId) {
         return new Promise((resolve, reject) => {
-            getDepartmentByOrgId(orgId).then(response => {
+            Department.getDepartmentByOrgId(orgId).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
@@ -53,6 +55,28 @@ const actions = {
             })
         })
     },
+
+    createDepartment({ commit }, input) {
+        return new Promise((resolve, reject) => {
+            Department.createDepartment(input).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    },
+
+    createCorporation({ commit }, input) {
+        return new Promise((resolve, reject) => {
+            Corporation.createCorporation(input).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    }    
 }
 
 export default {
