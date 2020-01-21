@@ -26,9 +26,6 @@
       <el-form-item label="部门简介" prop="briefIntro">
         <el-input type="textarea" v-model="department.briefIntro" />
       </el-form-item>
-      <el-form-item label="备注" prop="memo">
-        <el-input type="textarea" v-model="department.memo" />
-      </el-form-item>
       <el-form-item label="职位信息" prop="positions">
         <el-button type="success" icon="el-icon-plus" v-if="operate!== 0" @click="createPosition">新增</el-button>
         <div class="department-container">
@@ -57,8 +54,7 @@
                 >{{ row.isLeadingOfficial | statusFilter }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="briefIntro" label="简介"></el-table-column>
-            <el-table-column prop="memo" label="备注"></el-table-column>
+            <el-table-column prop="postResponsibility" label="岗位职责"></el-table-column>
             <el-table-column label="操作" min-width="100" v-if="operate !== 0">
               <template slot-scope="{row}">
                 <el-button type="primary" size="mini">编辑</el-button>
@@ -69,12 +65,12 @@
         </div>
       </el-form-item>
     </el-form>
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-     
-    >
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <position-form :position="editPosition"></position-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="success" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -132,9 +128,7 @@ export default {
         update: "编辑岗位",
         create: "新增岗位"
       },
-      editPosition: {
-        
-      }
+      editPosition: {}
     };
   },
   methods: {
