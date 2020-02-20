@@ -2,7 +2,10 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="6" class="block">
-        <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
+        <el-input
+          placeholder="请输入组织结构名称进行过滤"
+          v-model="filterOrgName"
+        ></el-input>
         <el-tree
           :data="orgData"
           default-expand-all
@@ -28,23 +31,42 @@
             v-if="selectedOrg.orgType === 1"
             ref="department"
           ></department-form>
-          <div class="operate-container" v-if="operate!== 0">
+          <div class="operate-container" v-if="operate !== 0">
             <el-button
               v-loading="loading"
               style="margin-left: 10px;"
               type="success"
-              @click="handleCreateOrg"
-            >保存</el-button>
-            <el-button v-loading="loading" type="warning">取消</el-button>
+              @click="
+                operate === 1 ? handleCreateOrgData() : handleEditOrgData()
+              "
+              >保存</el-button
+            >
+            <el-button
+              v-loading="loading"
+              type="warning"
+              @click="handleCancleOrgData()"
+              >取消</el-button
+            >
           </div>
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="请选择组织类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
-      <check-org-type ref="newOrgNode" :newOrgNodeData="newOrgNodeData"></check-org-type>
+    <el-dialog
+      title="请选择组织类型"
+      :visible.sync="dialogFormVisible"
+      @close="handleDialogClose"
+    >
+      <check-org-type
+        ref="newOrgNode"
+        :newOrgNodeData="newOrgNodeData"
+      ></check-org-type>
       <div slot="footer" class="dialog-footer">
-        <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="success" size="mini" @click="handleAppendOrgConfirm">确认</el-button>
+        <el-button type="default" size="mini" @click="dialogFormVisible = false"
+          >取消</el-button
+        >
+        <el-button type="success" size="mini" @click="handleAppendOrgConfirm"
+          >确认</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -58,7 +80,7 @@ import CorporationForm from "./components/corporation-form.vue";
 
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty } from "@/utils";
+import { isEmpty, findTreeItem } from "@/utils";
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",
   positionFunctionCode = "PositionFunction";
@@ -108,16 +130,26 @@ export default {
       "getCorporationByOrgId",
       "getDepartmentByOrgId",
       "createDepartment",
-      "createCorporation"
+      "createCorporation",
+      "updateDepartment",
+      "updateCorporation",
+      "deleteDepartment",
+      "deleteCorporation"
     ]),
     ...mapActions("wordbook", ["getWordbookitemByCode"]),
-    loadOrgData() {
+    loadOrgData(orgId) {
       this.getOrgTree().then(data => {
         this.orgData = data;
-        const firstNode = data[0];
-        if (firstNode) {
+        let selectedNodeData = data[0];
+        if (orgId) {
+          selectedNodeData = findTreeItem(
+            this.orgData,
+            item => item.id == orgId
+          );
+        }
+        if (selectedNodeData) {
           this.operate = 0;
-          this.selectedOrg = firstNode;
+          this.selectedOrg = selectedNodeData;
         }
       });
     },
@@ -176,9 +208,22 @@ export default {
           break;
         // add
         case 1:
+          if (node.id) {
+            this.$message({
+              message: "请先保存数据或取消操作",
+              type: "warning"
+            });
+          }
         // edit
         case 3:
-          if (node.id) {
+          if (
+            node.id &&
+            node.id != this.selectedOrg.id &&
+            !this.haveUnSaveOrgData
+          ) {
+            this.selectedOrg = node;
+            this.haveUnSaveOrgData = true;
+          } else {
             this.$message({
               message: "请先保存数据或取消操作",
               type: "warning"
@@ -192,39 +237,142 @@ export default {
           break;
       }
     },
-    handleCreateOrg() {
+    handleCreateOrgData() {
       if (this.newOrgNodeData.orgType === 0) {
         this.$refs["corporation"].$refs["corporationForm"].validate(valid => {
           if (valid) {
             this.createCorporation(this.corporation).then(data => {
               this.$notify({
                 title: "成功",
-                message: data,
+                message: data.tips,
                 type: "success",
                 duration: 2000
               });
-              this.loadOrgData();
+              this.loadOrgData(data.orgId);
+              this.haveUnSaveOrgData = false;
             });
           }
         });
       } else {
-        console.log(this.department);
+        this.$refs["department"].$refs["departmentForm"].validate(valid => {
+          if (valid) {
+            this.createDepartment(this.department).then(data => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000
+              });
+              this.loadOrgData(data.orgId);
+              this.haveUnSaveOrgData = false;
+            });
+          }
+        });
+      }
+    },
+    handleCancleOrgData() {
+      if (this.operate === 1) {
+        if (this.selectedOrg.orgType === 0) {
+          this.loadOrgData(this.corporation.parentId);
+        } else {
+          this.loadOrgData(this.department.parentId);
+        }
+      }else {
+        this.loadOrgData(this.selectedOrg.id);
+      }
+      this.operate = 0;
+      this.haveUnSaveOrgData = false;
+    },
+    handleEditOrgData() {
+      if (this.selectedOrg.orgType === 0) {
+        this.$refs["corporation"].$refs["corporationForm"].validate(valid => {
+          if (valid) {
+            this.updateCorporation(this.corporation).then(data => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000
+              });
+              this.loadOrgData(data.orgId);
+              this.haveUnSaveOrgData = false;
+            });
+          }
+        });
+      } else {
+        this.$refs["department"].$refs["departmentForm"].validate(valid => {
+          if (valid) {
+            this.updateDepartment(this.department).then(data => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000
+              });
+              this.loadOrgData(data.orgId);
+              this.haveUnSaveOrgData = false;
+            });
+          }
+        });
       }
     },
     handleDeleteOrg(node, data) {
-      this.operate = 2;
-      const parent = node.parent;
-      const children = parent.data.children || parent.data;
-      const index = children.findIndex(d => d.id === data.id);
-      children.splice(index, 1);
-      debugger;
-      this.selectedOrg = parent.data;
+      this.$confirm(
+        `是否删除该${data.orgType === 0 ? "公司" : "部门"}?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.operate = 2;
+          const parent = node.parent;
+          // const children = parent.data.children || parent.data;
+          // const index = children.findIndex(d => d.id === data.id);
+          //children.splice(index, 1);
+          //this.selectedOrg = parent.data;
 
-      parent.checked = true;
-      this.$refs["orgTree"].setCurrentNode(parent);
-      if (!data.id) {
-        this.haveUnSaveOrgData = false;
-      }
+          // parent.checked = true;
+          // this.$refs["orgTree"].setCurrentNode(parent);
+          // if (!data.id) {
+          //   this.haveUnSaveOrgData = false;
+          // }
+          //debugger;
+          if (data.orgType === 0) {
+            this.deleteCorporation(data.id).then(reps => {
+              this.$notify({
+                title: "成功",
+                message: "删除公司信息成功",
+                type: "success",
+                duration: 2000
+              });
+              this.loadOrgData(parent.data.id);
+              this.operate = 0;
+            });
+          } else {
+            this.deleteDepartment(data.id).then(reps => {
+              this.$notify({
+                title: "成功",
+                message: "删除部门信息成功",
+                type: "success",
+                duration: 2000
+              });
+              this.loadOrgData(parent.data.id);
+              this.operate = 0;
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleEditOrg(node, data) {
+      this.operate = 3;
     },
     filterOrgNode(value, data) {
       if (!value) return true;
@@ -238,6 +386,13 @@ export default {
     loadDepartment(id) {
       this.getDepartmentByOrgId(id).then(data => {
         this.department = data;
+        let index = 1;
+        if (data.positions) {
+          data.positions.forEach(item => {
+            item.index = index;
+            index++;
+          });
+        }
       });
     },
     renderContent(h, { node, data, store }) {
@@ -252,6 +407,9 @@ export default {
           },
           "on-delete-org": node => {
             this.handleDeleteOrg(node, data);
+          },
+          "on-edit-org": node => {
+            this.handleEditOrg(node, data);
           }
         }
       });

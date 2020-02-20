@@ -32,3 +32,20 @@ export const createDepartment = (input) => {
         }
     })
 }
+
+export const updateDepartment = input => {
+    return request({
+        url: `${setting.apiPrefix}/department/update`,
+        method: 'put',
+        data: {
+            input: input
+        }
+    })
+}
+
+export const deleteDepartment = orgId => {
+    return request({
+        url: `${setting.apiPrefix}/department/delete/${orgId}`,
+        method: 'delete'
+    })
+}

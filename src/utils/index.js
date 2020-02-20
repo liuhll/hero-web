@@ -370,3 +370,23 @@ export const objEqual = (obj1, obj2) => {
   /* eslint-disable-next-line */
   else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
+
+export const findTreeItem = (treeArr,findFunc) => {
+  if (!treeArr instanceof Array) {
+    throw new Error("第一次参数必须是树形结构的数组")
+  }
+  let findResult = treeArr.find(findFunc)
+  if (!findResult) {
+    for(let item of treeArr) {
+      if (!item.children) {
+        throw new Error("treeArr不是树形结构,不存在children")
+      }
+      findResult = findTreeItem(item.children,findFunc);
+      if (findResult) {
+        break;
+      }
+    }
+  }
+  return findResult;
+ 
+};

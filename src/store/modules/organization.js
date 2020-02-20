@@ -76,7 +76,50 @@ const actions = {
                 reject(err)
             })
         })       
-    }    
+    },
+
+    updateDepartment({ commit }, input) {
+        return new Promise((resolve, reject) => {
+            Department.updateDepartment(input).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    },
+
+    updateCorporation({ commit }, input) {
+        return new Promise((resolve, reject) => {
+            Corporation.updateCorporation(input).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    },
+    
+    deleteDepartment({ commit }, orgId) {
+        return new Promise((resolve, reject) => {
+            Department.deleteDepartment(orgId).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    },    
+    deleteCorporation({ commit }, orgId) {
+        return new Promise((resolve, reject) => {
+            Corporation.deleteCorporation(orgId).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })       
+    },      
 }
 
 export default {

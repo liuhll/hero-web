@@ -18,3 +18,20 @@ export const createCorporation = (input) => {
         }
     })
 }
+
+export const updateCorporation = (input) => {
+    return request({
+        url: `${setting.apiPrefix}/corporation/update`,
+        method: 'put',
+        data: {
+            input: input
+        }
+    })
+}
+
+export const deleteCorporation = orgId => {
+    return request({
+        url: `${setting.apiPrefix}/corporation/delete/${orgId}`,
+        method: 'delete'
+    })
+}
