@@ -2,7 +2,10 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="4">
-        <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
+        <el-input
+          placeholder="请输入组织结构名称进行过滤"
+          v-model="filterOrgName"
+        ></el-input>
         <el-tree
           :data="orgData"
           default-expand-all
@@ -37,14 +40,16 @@
             type="primary"
             icon="el-icon-search"
             @click="handleUserFilter"
-          >搜索</el-button>
+            >搜索</el-button
+          >
           <el-button
             v-waves
             class="filter-item"
             type="default"
             icon="el-icon-clear"
             @click="handleClear"
-          >清除</el-button>
+            >清除</el-button
+          >
         </div>
         <div class="filter-container">
           <el-button
@@ -53,63 +58,106 @@
             class="filter-item"
             type="success"
             icon="el-icon-plus"
-          >新增</el-button>
-        </div>
-        <div class="filter-container">
-          <el-table
-            :data="userData"
-            border
-            fit
-            highlight-current-row
-            v-loading="listLoading"
-            style="width: 100%"
+            >新增</el-button
           >
-            <el-table-column prop="userName" label="用户名" min-width="80"></el-table-column>
-            <el-table-column prop="chineseName" label="中文名" min-width="80"></el-table-column>
-            <el-table-column prop="email" label="电子邮件" min-width="110"></el-table-column>
-            <el-table-column prop="phone" label="手机"></el-table-column>
-            <el-table-column prop="deptName" label="部门"></el-table-column>
-            <el-table-column prop="positionName" label="职位"></el-table-column>
-            <el-table-column prop="displayRoles" label="角色" min-width="140"></el-table-column>
-            <el-table-column label="状态" class-name="status-col">
-              <template slot-scope="{row}">
-                <el-tag :type="row.status | statusTagFilter">{{ row.status | statusFilter }}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="操作"
-              align="center"
-              width="380"
-              class-name="small-padding fixed-width"
-            >
-              <template slot-scope="{row}">
-                <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-                <el-button type="default" size="mini" @click="handleResetPwd(row)">密码</el-button>
-                <el-button
-                  v-if="row.status==1"
-                  size="mini"
-                  type="warning"
-                  @click="handleModifyStatus(row,'freeze')"
-                >冻结</el-button>
-                <el-button
-                  v-if="row.status==0"
-                  size="mini"
-                  type="success"
-                  @click="handleModifyStatus(row,'activate')"
-                >激活</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(row)">删除</el-button>
-                <el-button size="mini" type="info" @click="handleLook(row)">查看</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination
-            v-show="userDataTotal>0"
-            :total="userDataTotal"
-            :page.sync="query.pageIndex"
-            :limit.sync="query.pageCount"
-            @pagination="loadUserData"
-          />
         </div>
+        <el-row>
+          <el-col>
+            <el-table
+              :data="userData"
+              border
+              fit
+              highlight-current-row
+              v-loading="listLoading"
+              style="width: 100%"
+            >
+              <el-table-column
+                prop="userName"
+                label="用户名"
+                min-width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="chineseName"
+                label="中文名"
+                min-width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="email"
+                label="电子邮件"
+                min-width="110"
+              ></el-table-column>
+              <el-table-column prop="phone" label="手机"></el-table-column>
+              <el-table-column prop="deptName" label="部门"></el-table-column>
+              <el-table-column
+                prop="positionName"
+                label="职位"
+              ></el-table-column>
+              <el-table-column
+                prop="displayRoles"
+                label="角色"
+                min-width="140"
+              ></el-table-column>
+              <el-table-column label="状态" class-name="status-col">
+                <template slot-scope="{ row }">
+                  <el-tag :type="row.status | statusTagFilter">{{
+                    row.status | statusFilter
+                  }}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                align="center"
+                width="380"
+                class-name="small-padding fixed-width"
+              >
+                <template slot-scope="{ row }">
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    @click="handleUpdate(row)"
+                    >编辑</el-button
+                  >
+                  <el-button
+                    type="default"
+                    size="mini"
+                    @click="handleResetPwd(row)"
+                    >密码</el-button
+                  >
+                  <el-button
+                    v-if="row.status == 1"
+                    size="mini"
+                    type="warning"
+                    @click="handleModifyStatus(row, 'freeze')"
+                    >冻结</el-button
+                  >
+                  <el-button
+                    v-if="row.status == 0"
+                    size="mini"
+                    type="success"
+                    @click="handleModifyStatus(row, 'activate')"
+                    >激活</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(row)"
+                    >删除</el-button
+                  >
+                  <el-button size="mini" type="info" @click="handleLook(row)"
+                    >查看</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+            <pagination
+              v-show="userDataTotal > 0"
+              :total="userDataTotal"
+              :page.sync="query.pageIndex"
+              :limit.sync="query.pageCount"
+              @pagination="loadUserData"
+            />
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-dialog
@@ -125,7 +173,11 @@
       ></create-or-update>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+        <el-button
+          type="primary"
+          @click="dialogStatus === 'create' ? createData() : updateData()"
+          >确认</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -135,7 +187,7 @@
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import OrgNode from "@/views/organization/components/org-node.vue";
-import CreateOrUpdate from "./components/create-or-update.vue";
+import CreateOrUpdate from "./components/userinfo-form.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 export default {
   components: {

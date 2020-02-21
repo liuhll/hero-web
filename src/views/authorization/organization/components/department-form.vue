@@ -273,20 +273,20 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
-.app-container {
-  position: relative;
-  .app-main-container {
-    padding: 40px 45px 20px 50px;
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
-      .postInfo-container-item {
-        float: left;
-      }
-    }
-  }
-}
+// .app-container {
+//   position: relative;
+//   .app-main-container {
+//     padding: 40px 45px 20px 50px;
+//     .postInfo-container {
+//       position: relative;
+//       @include clearfix;
+//       margin-bottom: 10px;
+//       .postInfo-container-item {
+//         float: left;
+//       }
+//     }
+//   }
+// }
 .department-container {
   padding: 20px 0;
 }
