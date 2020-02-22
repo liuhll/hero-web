@@ -80,7 +80,8 @@ import CorporationForm from "./components/corporation-form.vue";
 
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty, findTreeItem } from "@/utils";
+import { isEmpty, findTreeItem, operateType, orgType } from "@/utils";
+
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",
   positionFunctionCode = "PositionFunction";
@@ -104,7 +105,7 @@ export default {
       newOrgNodeData: {},
       positionLevels: [],
       positionFunctions: [],
-      operate: 0, // 0. 查看 1. 新增 2. 删除 3.编辑
+      operate: operateType.Look, // 0. 查看 1. 新增 2. 删除 3.编辑
       hisOperate: undefined,
       loading: false
     };
@@ -112,9 +113,9 @@ export default {
   watch: {
     selectedOrg(val) {
       if (!isEmpty(val) && val.id) {
-        if (val.orgType == 0) {
+        if (val.orgType == orgType.Corporation) {
           this.loadCorporation(val.id);
-        } else if (val.orgType == 1) {
+        } else if (val.orgType == orgType.Department) {
           this.loadDepartment(val.id);
         }
       }
@@ -148,7 +149,7 @@ export default {
           );
         }
         if (selectedNodeData) {
-          this.operate = 0;
+          this.operate = operateType.Look;
           this.selectedOrg = selectedNodeData;
         }
       });
@@ -161,7 +162,7 @@ export default {
         this.newOrgNodeData = {};
         this.newOrgNodeData.parentId = data.id;
         this.newOrgNodeData.parentOrgType = data.orgType;
-        if (data.orgType === 1) {
+        if (data.orgType === orgType.Department) {
           this.newOrgNodeData.orgType = data.orgType;
         }
         this.dialogFormVisible = true;
@@ -172,7 +173,7 @@ export default {
     handleAppendOrgConfirm() {
       this.$refs["newOrgNode"].$refs["newOrgNodeForm"].validate(valid => {
         if (valid) {
-          this.operate = 1;
+          this.operate = operateType.Add;
           this.dialogFormVisible = false;
           const newOrgData = {
             name: this.newOrgNodeData.name,
@@ -186,7 +187,7 @@ export default {
           this.selectedOrg.children.push(newOrgData);
           this.selectedOrg = newOrgData;
           this.haveUnSaveOrgData = true;
-          if (this.newOrgNodeData.orgType === 0) {
+          if (this.newOrgNodeData.orgType === orgType.Corporation) {
             this.corporation = {
               parentId: this.newOrgNodeData.parentId,
               name: this.newOrgNodeData.name
@@ -203,11 +204,11 @@ export default {
     handleOrgSelected(node, data) {
       switch (this.operate) {
         // look
-        case 0:
+        case operateType.Look:
           this.selectedOrg = node;
           break;
         // add
-        case 1:
+         case operateType.Add:
           if (node.id) {
             this.$message({
               message: "请先保存数据或取消操作",
@@ -215,7 +216,7 @@ export default {
             });
           }
         // edit
-        case 3:
+        case operateType.Edit:
           if (
             node.id &&
             node.id != this.selectedOrg.id &&
@@ -232,13 +233,13 @@ export default {
 
           break;
         // delete
-        case 2:
-          this.operate = 0;
+        case operateType.Delete:
+          this.operate = operateType.Look;
           break;
       }
     },
     handleCreateOrgData() {
-      if (this.newOrgNodeData.orgType === 0) {
+      if (this.newOrgNodeData.orgType === orgType.Corporation) {
         this.$refs["corporation"].$refs["corporationForm"].validate(valid => {
           if (valid) {
             this.createCorporation(this.corporation).then(data => {
@@ -271,20 +272,20 @@ export default {
       }
     },
     handleCancleOrgData() {
-      if (this.operate === 1) {
-        if (this.selectedOrg.orgType === 0) {
+      if (this.operate === operateType.Add) {
+        if (this.selectedOrg.orgType === orgType.Corporation) {
           this.loadOrgData(this.corporation.parentId);
         } else {
           this.loadOrgData(this.department.parentId);
         }
-      }else {
+      } else {
         this.loadOrgData(this.selectedOrg.id);
       }
-      this.operate = 0;
+      this.operate = operateType.Add;
       this.haveUnSaveOrgData = false;
     },
     handleEditOrgData() {
-      if (this.selectedOrg.orgType === 0) {
+      if (this.selectedOrg.orgType === orgType.Corporation) {
         this.$refs["corporation"].$refs["corporationForm"].validate(valid => {
           if (valid) {
             this.updateCorporation(this.corporation).then(data => {
@@ -318,7 +319,7 @@ export default {
     },
     handleDeleteOrg(node, data) {
       this.$confirm(
-        `是否删除该${data.orgType === 0 ? "公司" : "部门"}?`,
+        `是否删除该${data.orgType === orgType.Corporation ? "公司" : "部门"}?`,
         "提示",
         {
           confirmButtonText: "确定",
@@ -327,7 +328,7 @@ export default {
         }
       )
         .then(() => {
-          this.operate = 2;
+          this.operate = operateType.Delete;
           const parent = node.parent;
           // const children = parent.data.children || parent.data;
           // const index = children.findIndex(d => d.id === data.id);
@@ -340,7 +341,7 @@ export default {
           //   this.haveUnSaveOrgData = false;
           // }
           //debugger;
-          if (data.orgType === 0) {
+          if (data.orgType === orgType.Corporation) {
             this.deleteCorporation(data.id).then(reps => {
               this.$notify({
                 title: "成功",
@@ -349,7 +350,7 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = 0;
+              this.operate = operateType.Add;
             });
           } else {
             this.deleteDepartment(data.id).then(reps => {
@@ -360,7 +361,7 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = 0;
+              this.operate = operateType.Add;
             });
           }
         })
@@ -372,7 +373,7 @@ export default {
         });
     },
     handleEditOrg(node, data) {
-      this.operate = 3;
+      this.operate = operateType.Edit;
     },
     filterOrgNode(value, data) {
       if (!value) return true;

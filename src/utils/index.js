@@ -390,3 +390,15 @@ export const findTreeItem = (treeArr,findFunc) => {
   return findResult;
  
 };
+
+export const operateType = {
+  Look: 0,
+  Add: 1,
+  Delete: 2,
+  Edit: 3
+};
+
+export const orgType = {
+  Corporation: 0,
+  Department: 1
+}
