@@ -401,4 +401,9 @@ export const operateType = {
 export const orgType = {
   Corporation: 0,
   Department: 1
-}
+};
+
+export const permissionType = {
+  Menu: 0,
+  Operation: 1
+};

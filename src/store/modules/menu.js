@@ -18,6 +18,26 @@ const actions = {
             })
         })
     },
+    getMenu({ commit },id) {
+        return new Promise((resolve, reject) => {
+            Menu.getMenu(id).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },  
+    getOperation({ commit },id) {
+        return new Promise((resolve, reject) => {
+            Menu.getOperation(id).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },       
 }
 
 export default {
