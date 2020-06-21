@@ -7,6 +7,7 @@
           placeholder="请输入菜单或是操作"
         ></el-input>
         <el-tree
+          ref="menuTree"
           :data="menuData"
           default-expand-all
           :expand-on-click-node="false"
@@ -14,7 +15,6 @@
           :render-content="renderContent"
           node-key="code"
           @node-click="handleMenuSelected"
-          ref="menuTree"
         ></el-tree>
       </el-col>
       <el-col :span="18">
@@ -26,20 +26,38 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog
+      title="请选择权限类型"
+      :visible.sync="dialogFormVisible"
+      @close="handleDialogClose"
+    >
+      <check-permission-type :newPermissionData="newPermissionData"></check-permission-type>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="default" size="mini" @click="dialogFormVisible = false"
+          >取消</el-button
+        >
+        <el-button type="success" size="mini" @click="handleAppendOrgConfirm"
+          >确认</el-button
+        >
+      </div>
+    </el-dialog>    
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty, findTreeItem, permissionType } from "@/utils";
+import { isEmpty, findTreeItem, permissionType,  operateType } from "@/utils";
 import MenuNodeEdit from "./components/menu-node-edit.vue";
 import MenuForm from "./components/menu-form.vue";
+import CheckPermissionType from "./components/check-permission-type.vue";
 
 export default {
   components: {
     MenuNodeEdit,
-    MenuForm
+    MenuForm,
+    CheckPermissionType
   },
   data() {
     return {
@@ -47,7 +65,10 @@ export default {
       menuData: [],
       selectedPermission: {},
       menu: {},
-      operation: {}
+      operation: {},
+      haveUnSavePermissionData: false,
+      newPermissionData: {},
+      dialogFormVisible: false,
     };
   },
   mounted() {
@@ -58,7 +79,6 @@ export default {
       this.$refs.menuTree.filter(val);
     },
     selectedPermission(val) {
-      debugger
       if (!isEmpty(val) && val.id) {
         if (val.mold == permissionType.Menu) {
           this.loadMenuData(val.id);
@@ -73,7 +93,6 @@ export default {
     loadMenuTreeData(permissionId) {
       this.getTree().then(data => {
         this.menuData = data;
-        debugger
         let selectedNodeData = data[0];
         if (permissionId) {
           selectedNodeData = findTreeItem(
@@ -82,12 +101,26 @@ export default {
           );
         }
         if (selectedNodeData) {
-          //this.operate = 0;
           this.selectedPermission = selectedNodeData;
         }
       });
     },
-    handleMenuSelected() {},
+    handleMenuSelected(node, data) {     
+      this.selectedPermission = node;
+    },
+    handleAppendMenu(node, data) {
+      if (!this.haveUnSavePermissionData) {
+        this.newPermissionData = {}
+
+        this.dialogFormVisible = true
+      }else {
+        this.$message.error("存在未保存的数据");
+      } 
+    },
+    handleDialogClose() {
+      this.newPermissionData = {}
+      this.dialogFormVisible = false
+    },
     filterMenuNode(value, data) {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
