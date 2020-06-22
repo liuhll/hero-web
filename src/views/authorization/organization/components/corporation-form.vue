@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+   <div class="form-container">
     <el-form ref="corporationForm"  label-position="left" label-width="90px" :model="corporation" :disabled="operate == 0">
       <el-form-item label="公司名称" prop="name" required>
         <el-input v-model="corporation.name" placeholder="请输入公司名称" />

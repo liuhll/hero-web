@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="form-container">
     <el-form
       ref="departmentForm"
       label-position="left"

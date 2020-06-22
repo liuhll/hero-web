@@ -1,11 +1,8 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row :gutter="10">
       <el-col :span="6">
-        <el-input
-          v-model="filterMenuName"
-          placeholder="请输入菜单或是操作"
-        ></el-input>
+        <el-input v-model="filterMenuName" placeholder="请输入菜单或是操作"></el-input>
         <el-tree
           ref="menuTree"
           :data="menuData"
@@ -19,44 +16,36 @@
       </el-col>
       <el-col :span="18">
         <div class="filter-container">
-          <menu-form
-            v-if="selectedPermission.mold === 0"
-            :menu="menu"
-          ></menu-form>
+          <menu-form v-if="selectedPermission.mold === 0" :menu="menu"></menu-form>
+          <operation-from v-else :operation="operation"></operation-from>
         </div>
       </el-col>
     </el-row>
-    <el-dialog
-      title="请选择权限类型"
-      :visible.sync="dialogFormVisible"
-      @close="handleDialogClose"
-    >
-      <check-permission-type :newPermissionData="newPermissionData"></check-permission-type>
+    <el-dialog title="请选择权限类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
+      <check-permission-type ref="newPermission" :newPermissionData="newPermissionData"></check-permission-type>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="default" size="mini" @click="dialogFormVisible = false"
-          >取消</el-button
-        >
-        <el-button type="success" size="mini" @click="handleAppendOrgConfirm"
-          >确认</el-button
-        >
+        <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="success" size="mini" @click="handleAppendOrgConfirm">确认</el-button>
       </div>
-    </el-dialog>    
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty, findTreeItem, permissionType,  operateType } from "@/utils";
+import { isEmpty, findTreeItem, permissionType, operateType } from "@/utils";
 import MenuNodeEdit from "./components/menu-node-edit.vue";
 import MenuForm from "./components/menu-form.vue";
+import OperationFrom from "./components/operation-form.vue";
 import CheckPermissionType from "./components/check-permission-type.vue";
 
 export default {
   components: {
     MenuNodeEdit,
     MenuForm,
+    OperationFrom,
     CheckPermissionType
   },
   data() {
@@ -69,6 +58,7 @@ export default {
       haveUnSavePermissionData: false,
       newPermissionData: {},
       dialogFormVisible: false,
+      operate: operateType.Look // 0. 查看 1. 新增 2. 删除 3.编辑
     };
   },
   mounted() {
@@ -105,21 +95,53 @@ export default {
         }
       });
     },
-    handleMenuSelected(node, data) {     
+    handleMenuSelected(node, data) {
       this.selectedPermission = node;
     },
     handleAppendMenu(node, data) {
       if (!this.haveUnSavePermissionData) {
-        this.newPermissionData = {}
-
-        this.dialogFormVisible = true
-      }else {
+        this.newPermissionData = {};
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs["newPermission"].$refs[
+            "newPermissionNodeForm"
+          ].clearValidate();
+        });
+      } else {
         this.$message.error("存在未保存的数据");
-      } 
+      }
+    },
+    handleAppendOrgConfirm() {
+      this.$refs["newPermission"].$refs["newPermissionNodeForm"].validate(
+        valid => {
+          if (valid) {
+            this.operate = operateType.Add;
+            this.dialogFormVisible = false;
+            const newPermissionData = {
+              parentId: this.selectedPermission.id,
+              title: this.newPermissionData.name,
+              mold: this.newPermissionData.mold,
+              children: []
+            };
+            if (!this.selectedPermission.children) {
+              this.$set(this.selectedPermission, "children", []);
+            }
+            this.selectedPermission.children.push(newPermissionData);
+            this.selectedPermission = newPermissionData;
+            if (this.selectedPermission.mold == permissionType.Menu) {
+              this.menu.parentId = newPermissionData.parentId;
+              this.menu.title = newPermissionData.title;
+            } else {
+              this.operation.parentId = newPermissionData.parentId;
+              this.operation.title = newPermissionData.title;
+            }
+          }
+        }
+      );
     },
     handleDialogClose() {
-      this.newPermissionData = {}
-      this.dialogFormVisible = false
+      this.newPermissionData = {};
+      this.dialogFormVisible = false;
     },
     filterMenuNode(value, data) {
       if (!value) return true;

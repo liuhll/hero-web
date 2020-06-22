@@ -7,10 +7,10 @@
           <el-radio :label="1">操作</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="newPermissionData.mold==0" label="菜单名称" prop="menuName">
+      <el-form-item v-if="newPermissionData.mold==0" label="菜单名称" prop="name">
         <el-input v-model="newPermissionData.name" placeholder="请输入菜单名称" />
       </el-form-item>
-       <el-form-item v-else label="操作名称" prop="operationName">
+       <el-form-item v-else label="操作名称" prop="name">
         <el-input v-model="newPermissionData.name" placeholder="请输入操作名称" />
       </el-form-item>
     </el-form>
@@ -32,13 +32,11 @@ export default {
                 mold: [
                     { required: true, message: "请选择权限类型", trigger: "change" }
                 ],
-                menuName: [
-                    { required: true, message: "请输入菜单名称", trigger: "blur" }
-                ],
-                operationName: [
-                    { required: true, message: "请输入操作名称", trigger: "blur" }
+                name: [
+                    { required: true, message: "请输入权限名称", trigger: "blur" }
                 ]
             }
+                
         }
     }
    

@@ -166,6 +166,10 @@ export default {
           this.newOrgNodeData.orgType = data.orgType;
         }
         this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs["newOrgNode"].$refs["newOrgNodeForm"].clearValidate()
+        })
+        
       } else {
         this.$message.error("存在未保存的组织机构");
       }
