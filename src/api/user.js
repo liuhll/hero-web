@@ -43,7 +43,7 @@ export function deleteUser (userId) {
 
 export function resetPassword (input) {
   return request({
-    url: `${setting.apiPrefix}/user/resetpassword`,
+    url: `${setting.apiPrefix}/user/reset/password`,
     method: 'put',
     data: { input: input }
   })

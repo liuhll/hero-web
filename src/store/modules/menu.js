@@ -37,7 +37,47 @@ const actions = {
                 reject(err)
             })
         })
-    },       
+    },
+    createMenu({ commit },data) {
+        return new Promise((resolve, reject) => {
+            Menu.createMenu(data).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    updateMenu({ commit },data) {
+        return new Promise((resolve, reject) => {
+            Menu.updateMenu(data).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },                    
+    createOperation({ commit },data) {
+        return new Promise((resolve, reject) => {
+            Menu.createOperation(data).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    updateOperation({ commit },data) {
+        return new Promise((resolve, reject) => {
+            Menu.updateOperation(data).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }, 
 }
 
 export default {

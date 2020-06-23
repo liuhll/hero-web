@@ -6,7 +6,7 @@
       {{data.title}}
     </span>
     <span>
-      <el-button size="mini" type="text" class="menu-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
+      <el-button size="mini" type="text" class="menu-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode" v-if="(data.operate==0 || data.operate==undefined) && data.mold==0"></el-button>
       <el-button size="mini" type="text" class="menu-node-buttion" icon="el-icon-edit" circle @click="editNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
       <el-button size="mini" type="text" class="menu-node-buttion" icon="el-icon-delete" circle @click="deleteNode"></el-button>
     </span>

@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <el-form :model="operation" label-position="left" label-width="120px" :rules="rules">
+    <el-form :model="operation" label-position="left" label-width="120px"  :disabled="operate == 0" :rules="rules">
       <el-form-item label="名称" prop="title">
         <el-input v-model="operation.title" />
       </el-form-item>
@@ -56,6 +56,10 @@ export default {
     operation: {
       type: Object,
       default: () => {}
+    },
+    operate: {
+      type: Number,
+      default: 0
     }
   },
   data() {

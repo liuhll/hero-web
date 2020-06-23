@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="6">
-        <el-input v-model="filterMenuName" placeholder="请输入菜单或是操作"></el-input>
+        <el-input class="left-item" v-model="filterMenuName" placeholder="请输入菜单或是操作"></el-input>
         <el-tree
           ref="menuTree"
           :data="menuData"
@@ -16,17 +16,36 @@
       </el-col>
       <el-col :span="18">
         <div class="filter-container">
-          <menu-form v-if="selectedPermission.mold === 0" :menu="menu"></menu-form>
-          <operation-from v-else :operation="operation"></operation-from>
+          <menu-form
+            ref="menu"
+            v-if="selectedPermission.mold === 0"
+            :menu="menu"
+            :operate="operate"
+          ></menu-form>
+          <operation-from ref="operation" v-else :operation="operation" :operate="operate"></operation-from>
+        </div>
+        <div class="operate-container" v-if="operate !== 0">
+          <el-button
+            v-loading="loading"
+            style="margin-left: 10px;"
+            type="success"
+            @click="
+                operate === 1 ? handleCreate() : handleUpdate()
+              "
+          >保存</el-button>
+          <el-button v-loading="loading" type="warning" @click="handleCancle()">取消</el-button>
         </div>
       </el-col>
     </el-row>
     <el-dialog title="请选择权限类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
-      <check-permission-type ref="newPermission" :newPermissionData="newPermissionData"></check-permission-type>
-
+      <check-permission-type
+        ref="newPermission"
+        :selectedPermission="selectedPermission"
+        :newPermissionData="newPermissionData"
+      ></check-permission-type>
       <div slot="footer" class="dialog-footer">
         <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="success" size="mini" @click="handleAppendOrgConfirm">确认</el-button>
+        <el-button type="success" size="mini" @click="handleAppendPermissionConfirm">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -36,6 +55,8 @@
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import { isEmpty, findTreeItem, permissionType, operateType } from "@/utils";
+import { Loading } from "element-ui";
+
 import MenuNodeEdit from "./components/menu-node-edit.vue";
 import MenuForm from "./components/menu-form.vue";
 import OperationFrom from "./components/operation-form.vue";
@@ -58,7 +79,8 @@ export default {
       haveUnSavePermissionData: false,
       newPermissionData: {},
       dialogFormVisible: false,
-      operate: operateType.Look // 0. 查看 1. 新增 2. 删除 3.编辑
+      operate: operateType.Look, // 0. 查看 1. 新增 2. 删除 3.编辑
+      loading: false
     };
   },
   mounted() {
@@ -79,7 +101,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("menu", ["getTree", "getMenu", "getOperation"]),
+    ...mapActions("menu", ["getTree", "getMenu", "getOperation", "createMenu"]),
     loadMenuTreeData(permissionId) {
       this.getTree().then(data => {
         this.menuData = data;
@@ -91,12 +113,47 @@ export default {
           );
         }
         if (selectedNodeData) {
+          this.operate = operateType.Look;
           this.selectedPermission = selectedNodeData;
         }
       });
     },
     handleMenuSelected(node, data) {
-      this.selectedPermission = node;
+      switch (this.operate) {
+        // look
+        case operateType.Look:
+          this.selectedPermission = node;
+          break;
+        // add
+        case operateType.Add:
+          if (node.id) {
+            this.$message({
+              message: "请先保存数据或取消操作",
+              type: "warning"
+            });
+          }
+          break;
+        // edit
+        case operateType.Edit:
+          if (
+            node.id &&
+            node.id != this.selectedPermission.id &&
+            !this.haveUnSavePermissionData
+          ) {
+            this.selectedPermission = node;
+            this.haveUnSavePermissionData = true;
+          } else {
+            this.$message({
+              message: "请先保存数据或取消操作",
+              type: "warning"
+            });
+          }
+          break;
+        // delete
+        case operateType.Delete:
+          this.operate = operateType.Look;
+          break;
+      }
     },
     handleAppendMenu(node, data) {
       if (!this.haveUnSavePermissionData) {
@@ -111,14 +168,13 @@ export default {
         this.$message.error("存在未保存的数据");
       }
     },
-    handleAppendOrgConfirm() {
+    handleAppendPermissionConfirm() {
       this.$refs["newPermission"].$refs["newPermissionNodeForm"].validate(
         valid => {
           if (valid) {
             this.operate = operateType.Add;
             this.dialogFormVisible = false;
-            const newPermissionData = {
-              parentId: this.selectedPermission.id,
+            let newPermissionData = {
               title: this.newPermissionData.name,
               mold: this.newPermissionData.mold,
               children: []
@@ -126,12 +182,20 @@ export default {
             if (!this.selectedPermission.children) {
               this.$set(this.selectedPermission, "children", []);
             }
-            this.selectedPermission.children.push(newPermissionData);
+            if (this.newPermissionData.permissionLevel === 0) {
+              newPermissionData.parentId = 0;
+              this.menuData.push(newPermissionData);
+            } else {
+              newPermissionData.parentId = this.selectedPermission.id;
+              this.selectedPermission.children.push(newPermissionData);
+            }
             this.selectedPermission = newPermissionData;
             if (this.selectedPermission.mold == permissionType.Menu) {
+              this.menu = {};
               this.menu.parentId = newPermissionData.parentId;
               this.menu.title = newPermissionData.title;
             } else {
+              this.operation = {};
               this.operation.parentId = newPermissionData.parentId;
               this.operation.title = newPermissionData.title;
             }
@@ -148,8 +212,15 @@ export default {
       return data.name.indexOf(value) !== -1;
     },
     loadMenuData(id) {
+      let loading = Loading.service({
+        target: ".filter-container",
+        fullscreen: false
+      });
       this.getMenu(id).then(data => {
         this.menu = data;
+        setTimeout(() => {
+          loading.close();
+        }, 200);
       });
     },
     loadOperationData(id) {
@@ -157,6 +228,30 @@ export default {
         this.operation = data;
       });
     },
+    handleCreate() {
+      if (this.selectedPermission.mold == permissionType.Menu) {
+        this.handleCreateMenu();
+      } else {
+        this.handleCreateOperation();
+      }
+    },
+    handleCreateMenu() {
+      this.$refs["menu"].$refs["menuForm"].validate(valid => {
+        if (valid) {
+          this.createMenu(this.menu).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data.tips,
+              type: "success",
+              duration: 2000
+            });
+            this.loadMenuTreeData(data.permissionId);
+            this.haveUnSavePermissionData = false;
+          });
+        }
+      });
+    },
+    handleCreateOperation() {},
     renderContent(h, { node, data, store }) {
       return h(MenuNodeEdit, {
         props: {
