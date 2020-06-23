@@ -91,6 +91,7 @@ export default {
       this.$refs.menuTree.filter(val);
     },
     selectedPermission(val) {
+      debugger
       if (!isEmpty(val) && val.id) {
         if (val.mold == permissionType.Menu) {
           this.loadMenuData(val.id);
@@ -101,7 +102,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions("menu", ["getTree", "getMenu", "getOperation", "createMenu"]),
+    ...mapActions("menu", [
+      "getTree",
+      "getMenu",
+      "getOperation",
+      "createMenu",
+      "updateMenu"
+    ]),
     loadMenuTreeData(permissionId) {
       this.getTree().then(data => {
         this.menuData = data;
@@ -203,6 +210,9 @@ export default {
         }
       );
     },
+    handleEditMenu(node, data) {
+      this.operate = operateType.Edit;
+    },
     handleDialogClose() {
       this.newPermissionData = {};
       this.dialogFormVisible = false;
@@ -251,7 +261,33 @@ export default {
         }
       });
     },
-    handleCreateOperation() {},
+    handleCreateOperation() {
+
+    },
+    handleUpdate() {
+      if (this.selectedPermission.mold == permissionType.Menu) {
+        this.handleUpdateMenu();
+      } else {
+        this.handleUpdateOperation();
+      }
+    },
+    handleUpdateMenu() {
+      this.$refs["menu"].$refs["menuForm"].validate(valid => {
+        if (valid) {
+          this.updateMenu(this.menu).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data.tips,
+              type: "success",
+              duration: 2000
+            });
+            this.loadMenuTreeData(data.permissionId);
+            this.haveUnSavePermissionData = false;
+          });
+        }
+      });      
+    },
+    handleUpdateOperation() {},
     renderContent(h, { node, data, store }) {
       return h(MenuNodeEdit, {
         props: {
