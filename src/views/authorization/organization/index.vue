@@ -2,10 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="6" class="block">
-        <el-input
-          placeholder="请输入组织结构名称进行过滤"
-          v-model="filterOrgName"
-        ></el-input>
+        <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
         <el-tree
           :data="orgData"
           default-expand-all
@@ -39,34 +36,17 @@
               @click="
                 operate === 1 ? handleCreateOrgData() : handleEditOrgData()
               "
-              >保存</el-button
-            >
-            <el-button
-              v-loading="loading"
-              type="warning"
-              @click="handleCancleOrgData()"
-              >取消</el-button
-            >
+            >保存</el-button>
+            <el-button v-loading="loading" type="warning" @click="handleCancleOrgData()">取消</el-button>
           </div>
         </div>
       </el-col>
     </el-row>
-    <el-dialog
-      title="请选择组织类型"
-      :visible.sync="dialogFormVisible"
-      @close="handleDialogClose"
-    >
-      <check-org-type
-        ref="newOrgNode"
-        :newOrgNodeData="newOrgNodeData"
-      ></check-org-type>
+    <el-dialog title="请选择组织类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
+      <check-org-type ref="newOrgNode" :newOrgNodeData="newOrgNodeData"></check-org-type>
       <div slot="footer" class="dialog-footer">
-        <el-button type="default" size="mini" @click="dialogFormVisible = false"
-          >取消</el-button
-        >
-        <el-button type="success" size="mini" @click="handleAppendOrgConfirm"
-          >确认</el-button
-        >
+        <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="success" size="mini" @click="handleAppendOrgConfirm">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -77,6 +57,7 @@ import OrgNodeEdit from "@/views/organization/components/org-node-edit.vue";
 import CheckOrgType from "./components/check-org-type.vue";
 import DepartmentForm from "./components/department-form.vue";
 import CorporationForm from "./components/corporation-form.vue";
+import { Loading } from "element-ui";
 
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
@@ -167,9 +148,8 @@ export default {
         }
         this.dialogFormVisible = true;
         this.$nextTick(() => {
-          this.$refs["newOrgNode"].$refs["newOrgNodeForm"].clearValidate()
-        })
-        
+          this.$refs["newOrgNode"].$refs["newOrgNodeForm"].clearValidate();
+        });
       } else {
         this.$message.error("存在未保存的组织机构");
       }
@@ -212,13 +192,14 @@ export default {
           this.selectedOrg = node;
           break;
         // add
-         case operateType.Add:
+        case operateType.Add:
           if (node.id) {
             this.$message({
               message: "请先保存数据或取消操作",
               type: "warning"
             });
           }
+          break;
         // edit
         case operateType.Edit:
           if (
@@ -384,11 +365,22 @@ export default {
       return data.name.indexOf(value) !== -1;
     },
     loadCorporation(id) {
+      let loading = Loading.service({
+        target: ".filter-container",
+        fullscreen: false
+      });
       this.getCorporationByOrgId(id).then(data => {
         this.corporation = data;
+        setTimeout(() => {
+          loading.close();
+        }, 200);
       });
     },
     loadDepartment(id) {
+      let loading = Loading.service({
+        target: ".filter-container",
+        fullscreen: false
+      });
       this.getDepartmentByOrgId(id).then(data => {
         this.department = data;
         let index = 1;
@@ -398,6 +390,9 @@ export default {
             index++;
           });
         }
+        setTimeout(() => {
+          loading.close();
+        }, 200);
       });
     },
     renderContent(h, { node, data, store }) {
