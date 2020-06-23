@@ -54,3 +54,11 @@ export const updateOperation = data => {
         method: 'put'
     })
 }
+
+export const deletePermission = data => {
+    return request({
+        url: `${setting.apiPrefix}/permission/delete`,
+        data: { 'input': data },
+        method: 'delete'
+    })    
+}

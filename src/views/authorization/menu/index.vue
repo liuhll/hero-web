@@ -91,11 +91,11 @@ export default {
       this.$refs.menuTree.filter(val);
     },
     selectedPermission(val) {
-      debugger
+      ;
       if (!isEmpty(val) && val.id) {
         if (val.mold == permissionType.Menu) {
           this.loadMenuData(val.id);
-        } else if (val.orgType == permissionType.Operation) {
+        } else if (val.mold == permissionType.Operation) {
           this.loadOperationData(val.id);
         }
       }
@@ -107,7 +107,8 @@ export default {
       "getMenu",
       "getOperation",
       "createMenu",
-      "updateMenu"
+      "updateMenu",
+      "deletePermission"
     ]),
     loadMenuTreeData(permissionId) {
       this.getTree().then(data => {
@@ -261,9 +262,7 @@ export default {
         }
       });
     },
-    handleCreateOperation() {
-
-    },
+    handleCreateOperation() {},
     handleUpdate() {
       if (this.selectedPermission.mold == permissionType.Menu) {
         this.handleUpdateMenu();
@@ -285,9 +284,48 @@ export default {
             this.haveUnSavePermissionData = false;
           });
         }
-      });      
+      });
     },
     handleUpdateOperation() {},
+    handleDeleteMenu(node, data) {
+      this.$confirm(
+        `是否删除该${data.mold === permissionType.Menu ? "菜单" : "操作"}?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.operate = operateType.Delete;
+          const parent = node.parent;
+
+          if (data.mold === permissionType.Menu) {
+            this.deletePermission({
+              id: data.id,
+              mold: permissionType.Menu
+            }).then(reps => {
+              this.$notify({
+                title: "成功",
+                message: "删除菜单信息成功",
+                type: "success",
+                duration: 2000
+              });
+              this.loadMenuTreeData(parent.data.id);
+              this.operate = operateType.Look;
+            });
+          } else {
+            
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
     renderContent(h, { node, data, store }) {
       return h(MenuNodeEdit, {
         props: {

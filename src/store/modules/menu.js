@@ -78,6 +78,16 @@ const actions = {
             })
         })
     }, 
+    deletePermission({ commit },data) {
+        return new Promise((resolve, reject) => {
+            Menu.deletePermission(data).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },     
 }
 
 export default {

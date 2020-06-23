@@ -335,7 +335,7 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = operateType.Add;
+              this.operate = operateType.Look;
             });
           } else {
             this.deleteDepartment(data.id).then(reps => {
@@ -346,7 +346,7 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = operateType.Add;
+              this.operate = operateType.Look;
             });
           }
         })
