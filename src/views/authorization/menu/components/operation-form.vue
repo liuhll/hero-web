@@ -30,12 +30,7 @@
         <el-input type="textarea" v-model="operation.memo" />
       </el-form-item>
       <el-form-item label="服务API" prop="actions">
-        <el-button
-          type="success"
-          icon="el-icon-plus"
-          v-if="operate !== operateType.Query"
-          @click="createPosition"
-        >新增</el-button>
+        <el-cascader collapse-tags clearable></el-cascader>
         <div class="operation-container">
           <el-table
             :data="operation.actions"
@@ -115,3 +110,8 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.operation-container {
+  padding: 20px 0;
+}
+</style>
