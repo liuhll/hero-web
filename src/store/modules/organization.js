@@ -1,6 +1,7 @@
 import * as Organization from '@/api/organization/index'
 import * as Corporation from '@/api/organization/corporation'
 import * as Department from '@/api/organization/department'
+import * as Position from '@/api/organization/position'
 
 const actions = {
     getOrgTree({ commit }) {
@@ -64,7 +65,7 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
+        })
     },
 
     createCorporation({ commit }, input) {
@@ -75,7 +76,7 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
+        })
     },
 
     updateDepartment({ commit }, input) {
@@ -86,7 +87,7 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
+        })
     },
 
     updateCorporation({ commit }, input) {
@@ -97,9 +98,9 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
+        })
     },
-    
+
     deleteDepartment({ commit }, orgId) {
         return new Promise((resolve, reject) => {
             Department.deleteDepartment(orgId).then(response => {
@@ -108,8 +109,8 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
-    },    
+        })
+    },
     deleteCorporation({ commit }, orgId) {
         return new Promise((resolve, reject) => {
             Corporation.deleteCorporation(orgId).then(response => {
@@ -118,8 +119,18 @@ const actions = {
             }).catch(err => {
                 reject(err)
             })
-        })       
-    },      
+        })
+    },
+    checkCanDeletePosition({ commit }, input) {
+        return new Promise((resolve, reject) => {
+            Position.checkCanDeletePosition(input).then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
 }
 
 export default {

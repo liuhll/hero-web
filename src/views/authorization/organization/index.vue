@@ -335,8 +335,8 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = operateType.Look;
             });
+            this.operate = operateType.Look;
           } else {
             this.deleteDepartment(data.id).then(reps => {
               this.$notify({
@@ -346,8 +346,8 @@ export default {
                 duration: 2000
               });
               this.loadOrgData(parent.data.id);
-              this.operate = operateType.Look;
             });
+            this.operate = operateType.Look;
           }
         })
         .catch(() => {
