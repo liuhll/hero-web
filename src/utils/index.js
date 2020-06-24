@@ -373,7 +373,7 @@ export const objEqual = (obj1, obj2) => {
 
 export const findTreeItem = (treeArr, findFunc) => {
   if (!treeArr instanceof Array) {
-    throw new Error("第一次参数必须是树形结构的数组")
+    throw new Error("第一个参数必须是树形结构的数组")
   }
   let findResult = treeArr.find(findFunc)
   if (!findResult) {
