@@ -5,7 +5,7 @@
       label-position="left"
       label-width="90px"
       :model="department"
-      :disabled="operate === 0"
+      :disabled="operate === operateType.Query"
     >
       <el-form-item label="部门名称" prop="name" required>
         <el-input v-model="department.name" placeholder="请输入部门名称" />
@@ -30,7 +30,7 @@
         <el-button
           type="success"
           icon="el-icon-plus"
-          v-if="operate !== 0"
+          v-if="operate !== operateType.Query"
           @click="createPosition"
         >新增</el-button>
         <div class="department-container">
@@ -63,7 +63,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="postResponsibility" label="岗位职责"></el-table-column>
-            <el-table-column label="操作" min-width="100" v-if="operate !== 0">
+            <el-table-column label="操作" min-width="100" v-if="operate !== operateType.Query">
               <template slot-scope="{ row }">
                 <el-button type="primary" size="mini" @click="updatePosition(row)">编辑</el-button>
                 <el-button type="danger" size="mini" @click="deletePosition(row)">移除</el-button>
@@ -93,6 +93,7 @@
 <script>
 import { mapActions } from "vuex";
 import PositionForm from "./position-form.vue";
+import { operateType } from "@/utils";
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",
   positionFunctionCode = "PositionFunction";
@@ -149,7 +150,8 @@ export default {
         update: "编辑岗位",
         create: "新增岗位"
       },
-      editPosition: {}
+      editPosition: {},
+      operateType: operateType
     };
   },
   methods: {

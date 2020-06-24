@@ -1,20 +1,44 @@
 <template>
   <span style="width: '100%'" class="org-tree-node">
     <span>
-      <svg-icon v-if="data.orgType==0" icon-class="corporation" />
-      <svg-icon v-if="data.orgType==1" icon-class="department" />
+      <svg-icon v-if="data.orgType==orgType.Corporation" icon-class="corporation" />
+      <svg-icon v-if="data.orgType==orgType.Department" icon-class="department" />
       {{data.name}}
     </span>
     <span>
-      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-circle-plus" circle @click="appendNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
-      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-edit" circle @click="editNode" v-if="data.operate==0 || data.operate==undefined"></el-button>
-      <el-button size="mini" type="text" class="org-node-buttion" icon="el-icon-delete" circle @click="deleteNode"></el-button>
+      <el-button
+        size="mini"
+        type="text"
+        class="org-node-buttion"
+        icon="el-icon-circle-plus"
+        circle
+        @click="appendNode"
+        v-if="data.operate==operateType.Query || data.operate==undefined"
+      ></el-button>
+      <el-button
+        size="mini"
+        type="text"
+        class="org-node-buttion"
+        icon="el-icon-edit"
+        circle
+        @click="editNode"
+        v-if="data.operate==operateType.Query || data.operate==undefined"
+      ></el-button>
+      <el-button
+        size="mini"
+        type="text"
+        class="org-node-buttion"
+        icon="el-icon-delete"
+        circle
+        @click="deleteNode"
+      ></el-button>
     </span>
   </span>
 </template>
 
 <script>
 import Emitter from "@/mixins/emitter.js";
+import { operateType, orgType } from "@/utils";
 export default {
   name: "OrgNodeEdit",
   mixins: [Emitter],
@@ -27,6 +51,12 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  data() {
+    return {
+      operateType: operateType,
+      orgType: orgType
+    };
   },
   methods: {
     appendNode() {
@@ -51,5 +81,4 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
-
 </style>

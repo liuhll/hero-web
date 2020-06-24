@@ -24,13 +24,13 @@
           ></menu-form>
           <operation-from ref="operation" v-else :operation="operation" :operate="operate"></operation-from>
         </div>
-        <div class="operate-container" v-if="operate !== 0">
+        <div class="operate-container" v-if="operate !== operateType.Query">
           <el-button
             v-loading="loading"
             style="margin-left: 10px;"
             type="success"
             @click="
-                operate === 1 ? handleCreate() : handleUpdate()
+                operate === operateType.Create ? handleCreate() : handleUpdate()
               "
           >保存</el-button>
           <el-button v-loading="loading" type="warning" @click="handleCancle()">取消</el-button>
@@ -54,7 +54,13 @@
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty, findTreeItem, permissionType, operateType } from "@/utils";
+import {
+  isEmpty,
+  findTreeItem,
+  permissionType,
+  operateType,
+  permissionLevel
+} from "@/utils";
 import { Loading } from "element-ui";
 
 import MenuNodeEdit from "./components/menu-node-edit.vue";
@@ -79,8 +85,10 @@ export default {
       haveUnSavePermissionData: false,
       newPermissionData: {},
       dialogFormVisible: false,
-      operate: operateType.Look, // 0. 查看 1. 新增 2. 删除 3.编辑
-      loading: false
+      operate: operateType.Query,
+      loading: false,
+      operateType: operateType,
+      permissionLevel: permissionLevel
     };
   },
   mounted() {
@@ -91,7 +99,6 @@ export default {
       this.$refs.menuTree.filter(val);
     },
     selectedPermission(val) {
-      ;
       if (!isEmpty(val) && val.id) {
         if (val.mold == permissionType.Menu) {
           this.loadMenuData(val.id);
@@ -121,7 +128,7 @@ export default {
           );
         }
         if (selectedNodeData) {
-          this.operate = operateType.Look;
+          this.operate = operateType.Query;
           this.selectedPermission = selectedNodeData;
         }
       });
@@ -129,11 +136,11 @@ export default {
     handleMenuSelected(node, data) {
       switch (this.operate) {
         // look
-        case operateType.Look:
+        case operateType.Query:
           this.selectedPermission = node;
           break;
         // add
-        case operateType.Add:
+        case operateType.Create:
           if (node.id) {
             this.$message({
               message: "请先保存数据或取消操作",
@@ -142,7 +149,7 @@ export default {
           }
           break;
         // edit
-        case operateType.Edit:
+        case operateType.Update:
           if (
             node.id &&
             node.id != this.selectedPermission.id &&
@@ -159,7 +166,7 @@ export default {
           break;
         // delete
         case operateType.Delete:
-          this.operate = operateType.Look;
+          this.operate = operateType.Query;
           break;
       }
     },
@@ -180,7 +187,7 @@ export default {
       this.$refs["newPermission"].$refs["newPermissionNodeForm"].validate(
         valid => {
           if (valid) {
-            this.operate = operateType.Add;
+            this.operate = operateType.Create;
             this.dialogFormVisible = false;
             let newPermissionData = {
               title: this.newPermissionData.name,
@@ -190,7 +197,9 @@ export default {
             if (!this.selectedPermission.children) {
               this.$set(this.selectedPermission, "children", []);
             }
-            if (this.newPermissionData.permissionLevel === 0) {
+            if (
+              this.newPermissionData.permissionLevel === permissionLevel.TopMenu
+            ) {
               newPermissionData.parentId = 0;
               this.menuData.push(newPermissionData);
             } else {
@@ -212,7 +221,7 @@ export default {
       );
     },
     handleEditMenu(node, data) {
-      this.operate = operateType.Edit;
+      this.operate = operateType.Update;
     },
     handleDialogClose() {
       this.newPermissionData = {};
@@ -313,10 +322,9 @@ export default {
                 duration: 2000
               });
               this.loadMenuTreeData(parent.data.id);
-              this.operate = operateType.Look;
+              this.operate = operateType.Query;
             });
           } else {
-            
           }
         })
         .catch(() => {

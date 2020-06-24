@@ -19,22 +19,22 @@
           <corporation-form
             :corporation="corporation"
             :operate="operate"
-            v-if="selectedOrg.orgType === 0"
+            v-if="selectedOrg.orgType === orgType.Corporation"
             ref="corporation"
           ></corporation-form>
           <department-form
             :department="department"
             :operate="operate"
-            v-if="selectedOrg.orgType === 1"
+            v-if="selectedOrg.orgType === orgType.Department"
             ref="department"
           ></department-form>
-          <div class="operate-container" v-if="operate !== 0">
+          <div class="operate-container" v-if="operate !== operateType.Query">
             <el-button
               v-loading="loading"
               style="margin-left: 10px;"
               type="success"
               @click="
-                operate === 1 ? handleCreateOrgData() : handleEditOrgData()
+                operate === operateType.Create ? handleCreateOrgData() : handleEditOrgData()
               "
             >保存</el-button>
             <el-button v-loading="loading" type="warning" @click="handleCancleOrgData()">取消</el-button>
@@ -86,9 +86,11 @@ export default {
       newOrgNodeData: {},
       positionLevels: [],
       positionFunctions: [],
-      operate: operateType.Look, // 0. 查看 1. 新增 2. 删除 3.编辑
+      operate: operateType.Query,
       hisOperate: undefined,
-      loading: false
+      loading: false,
+      operateType: operateType,
+      orgType: orgType
     };
   },
   watch: {
@@ -130,7 +132,7 @@ export default {
           );
         }
         if (selectedNodeData) {
-          this.operate = operateType.Look;
+          this.operate = operateType.Query;
           this.selectedOrg = selectedNodeData;
         }
       });
@@ -157,7 +159,7 @@ export default {
     handleAppendOrgConfirm() {
       this.$refs["newOrgNode"].$refs["newOrgNodeForm"].validate(valid => {
         if (valid) {
-          this.operate = operateType.Add;
+          this.operate = operateType.Create;
           this.dialogFormVisible = false;
           const newOrgData = {
             name: this.newOrgNodeData.name,
@@ -188,11 +190,11 @@ export default {
     handleOrgSelected(node, data) {
       switch (this.operate) {
         // look
-        case operateType.Look:
+        case operateType.Query:
           this.selectedOrg = node;
           break;
         // add
-        case operateType.Add:
+        case operateType.Create:
           if (node.id) {
             this.$message({
               message: "请先保存数据或取消操作",
@@ -201,7 +203,7 @@ export default {
           }
           break;
         // edit
-        case operateType.Edit:
+        case operateType.Update:
           if (
             node.id &&
             node.id != this.selectedOrg.id &&
@@ -219,7 +221,7 @@ export default {
           break;
         // delete
         case operateType.Delete:
-          this.operate = operateType.Look;
+          this.operate = operateType.Query;
           break;
       }
     },
@@ -257,7 +259,7 @@ export default {
       }
     },
     handleCancleOrgData() {
-      if (this.operate === operateType.Add) {
+      if (this.operate === operateType.Create) {
         if (this.selectedOrg.orgType === orgType.Corporation) {
           this.loadOrgData(this.corporation.parentId);
         } else {
@@ -266,7 +268,7 @@ export default {
       } else {
         this.loadOrgData(this.selectedOrg.id);
       }
-      this.operate = operateType.Add;
+      this.operate = operateType.Query;
       this.haveUnSaveOrgData = false;
     },
     handleEditOrgData() {
@@ -336,7 +338,7 @@ export default {
               });
               this.loadOrgData(parent.data.id);
             });
-            this.operate = operateType.Look;
+            this.operate = operateType.Query;
           } else {
             this.deleteDepartment(data.id).then(reps => {
               this.$notify({
@@ -347,7 +349,7 @@ export default {
               });
               this.loadOrgData(parent.data.id);
             });
-            this.operate = operateType.Look;
+            this.operate = operateType.Query;
           }
         })
         .catch(() => {
@@ -358,7 +360,7 @@ export default {
         });
     },
     handleEditOrg(node, data) {
-      this.operate = operateType.Edit;
+      this.operate = operateType.Update;
     },
     filterOrgNode(value, data) {
       if (!value) return true;

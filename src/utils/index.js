@@ -37,7 +37,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -163,12 +163,12 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
 
@@ -247,7 +247,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -264,7 +264,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -371,37 +371,43 @@ export const objEqual = (obj1, obj2) => {
   else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
 
-export const findTreeItem = (treeArr,findFunc) => {
+export const findTreeItem = (treeArr, findFunc) => {
   if (!treeArr instanceof Array) {
     throw new Error("第一次参数必须是树形结构的数组")
   }
   let findResult = treeArr.find(findFunc)
   if (!findResult) {
-    for(let item of treeArr) {
+    for (let item of treeArr) {
       if (!item.children) {
         throw new Error("treeArr不是树形结构,不存在children")
       }
-      findResult = findTreeItem(item.children,findFunc);
+      findResult = findTreeItem(item.children, findFunc);
       if (findResult) {
         break;
       }
     }
   }
   return findResult;
- 
+
 };
 
 export const operateType = {
-  Look: 0,
-  Add: 1,
-  Delete: 2,
-  Edit: 3
+  Create: 0,
+  Update: 1,
+  Query: 2,
+  Delete: 3,
+  Other: 4
 };
 
 export const orgType = {
   Corporation: 0,
   Department: 1
 };
+
+export const permissionLevel = {
+  TopMenu: 0,
+  SubMenu: 1
+}
 
 export const permissionType = {
   Menu: 0,

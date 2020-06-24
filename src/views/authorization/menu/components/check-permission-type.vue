@@ -9,21 +9,21 @@
     >
       <el-form-item label="权限类型" prop="mold">
         <el-radio-group v-model="newPermissionData.mold">
-          <el-radio :label="0">菜单</el-radio>
-          <el-radio :label="1">操作</el-radio>
+          <el-radio :label="permissionType.Menu">菜单</el-radio>
+          <el-radio :label="permissionType.Operation">操作</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item
-        v-if="newPermissionData.mold==0 && selectedPermission.parentId===0"
+        v-if="newPermissionData.mold==permissionType.Menu && selectedPermission.parentId===0"
         label="菜单层级"
         prop="permissionLevel"
       >
         <el-radio-group v-model="newPermissionData.permissionLevel">
-          <el-radio :label="0">顶层菜单</el-radio>
-          <el-radio :label="1">子菜单</el-radio>
+          <el-radio :label="permissionLevel.TopMenu">顶层菜单</el-radio>
+          <el-radio :label="permissionLevel.SubMenu">子菜单</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="newPermissionData.mold==0" label="菜单名称" prop="name">
+      <el-form-item v-if="newPermissionData.mold==permissionType.Menu" label="菜单名称" prop="name">
         <el-input v-model="newPermissionData.name" placeholder="请输入菜单名称" />
       </el-form-item>
       <el-form-item v-else label="操作名称" prop="name">
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { permissionType, permissionLevel } from "@/utils";
 export default {
   name: "CheckPermissionType",
   props: {
@@ -56,7 +57,9 @@ export default {
         permissionLevel: [
           { required: true, message: "请选择菜单层级", trigger: "change" }
         ]
-      }
+      },
+      permissionType: permissionType,
+      permissionLevel: permissionLevel
     };
   }
 };

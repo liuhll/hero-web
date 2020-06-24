@@ -1,11 +1,27 @@
 <template>
   <div class="form-container">
-    <el-form :model="operation" label-position="left" label-width="120px"  :disabled="operate == 0" :rules="rules">
+    <el-form
+      :model="operation"
+      label-position="left"
+      label-width="120px"
+      :disabled="operate == operateType.Query"
+      :rules="rules"
+    >
       <el-form-item label="名称" prop="title">
         <el-input v-model="operation.title" />
       </el-form-item>
       <el-form-item label="标识" prop="name">
         <el-input v-model="operation.name" />
+      </el-form-item>
+      <el-form-item label="操作类型" prop="mold">
+        <el-select v-model="operation.mold" placeholder="请选择操作类型">
+          <el-option
+            v-for="item in operationOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <el-input v-model="operation.icon" />
@@ -17,7 +33,7 @@
         <el-button
           type="success"
           icon="el-icon-plus"
-          v-if="operate !== 0"
+          v-if="operate !== operateType.Query"
           @click="createPosition"
         >新增</el-button>
         <div class="operation-container">
@@ -37,7 +53,7 @@
             <el-table-column prop="allowPermission" label="是否需要授权"></el-table-column>
             <el-table-column prop="developer" label="开发者"></el-table-column>
             <el-table-column prop="date" label="维护日期"></el-table-column>
-            <el-table-column label="操作" min-width="100" v-if="operate !== 0">
+            <el-table-column label="操作" min-width="100" v-if="operate !== operateType.Query">
               <template slot-scope="{ row }">
                 <el-button type="primary" size="mini" @click="updatePosition(row)">编辑</el-button>
                 <el-button type="danger" size="mini" @click="deletePosition(row)">移除</el-button>
@@ -51,6 +67,29 @@
 </template>
 
 <script>
+import { operateType } from "@/utils";
+const operationOptions = [
+  {
+    value: operateType.Query,
+    label: "查看"
+  },
+  {
+    value: operateType.Create,
+    label: "新增"
+  },
+  {
+    value: operateType.Update,
+    label: "修改"
+  },
+  {
+    value: operateType.Delete,
+    label: "删除"
+  },
+  {
+    value: operateType.Other,
+    label: "其他"
+  }
+];
 export default {
   props: {
     operation: {
@@ -66,8 +105,11 @@ export default {
     return {
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        name: [{ required: true, message: "请输入标识", trigger: "blur" }]
-      }
+        name: [{ required: true, message: "请输入标识", trigger: "blur" }],
+        mold: [{ required: true, message: "请选择操作类型", trigger: "change" }]
+      },
+      operateType: operateType,
+      operationOptions: operationOptions
     };
   }
 };

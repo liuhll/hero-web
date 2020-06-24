@@ -1,6 +1,12 @@
 <template>
-   <div class="form-container">
-    <el-form ref="corporationForm"  label-position="left" label-width="90px" :model="corporation" :disabled="operate == 0">
+  <div class="form-container">
+    <el-form
+      ref="corporationForm"
+      label-position="left"
+      label-width="90px"
+      :model="corporation"
+      :disabled="operate == operateType.Query"
+    >
       <el-form-item label="公司名称" prop="name" required>
         <el-input v-model="corporation.name" placeholder="请输入公司名称" />
       </el-form-item>
@@ -35,6 +41,7 @@
 </template>
 
 <script>
+import { operateType } from "@/utils";
 export default {
   props: {
     corporation: {
@@ -45,6 +52,11 @@ export default {
       type: Number,
       default: () => 0
     }
+  },
+  data() {
+    return {
+      operateType: operateType
+    };
   }
 };
 </script>
@@ -64,5 +76,4 @@ export default {
 //     }
 //   }
 // }
-
 </style>

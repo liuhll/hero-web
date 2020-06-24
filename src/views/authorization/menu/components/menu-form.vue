@@ -5,7 +5,7 @@
       label-position="left"
       label-width="90px"
       :model="menu"
-      :disabled="operate == 0"
+      :disabled="operate == operateType.Query"
       :rules="rules"
     >
       <el-form-item label="名称" prop="title">
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { operateType } from "@/utils";
 export default {
   props: {
     menu: {
@@ -48,7 +49,8 @@ export default {
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
         name: [{ required: true, message: "请输入标识", trigger: "blur" }]
-      }
+      },
+      operateType: operateType
     };
   }
 };
