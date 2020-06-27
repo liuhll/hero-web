@@ -395,8 +395,9 @@ export const operateType = {
   Create: 0,
   Update: 1,
   Query: 2,
-  Delete: 3,
-  Other: 4
+  Look: 3,
+  Delete: 4,
+  Other: 5,
 };
 
 export const orgType = {

@@ -9,7 +9,7 @@
           :render-content="renderContent"
           :expand-on-click-node="false"
           :filter-node-method="filterOrgNode"
-          node-key="code"
+          node-key="id"
           @node-click="handleOrgSelected"
           ref="orgTree"
         ></el-tree>
@@ -28,7 +28,7 @@
             v-if="selectedOrg.orgType === orgType.Department"
             ref="department"
           ></department-form>
-          <div class="operate-container" v-if="operate !== operateType.Query">
+          <div class="operate-container" v-if="operate == operateType.Create || operate == operateType.Update">
             <el-button
               v-loading="loading"
               style="margin-left: 10px;"

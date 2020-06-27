@@ -10,7 +10,7 @@
           :expand-on-click-node="false"
           :filter-node-method="filterMenuNode"
           :render-content="renderContent"
-          node-key="code"
+          node-key="permissionId"
           @node-click="handleMenuSelected"
         ></el-tree>
       </el-col>
@@ -18,13 +18,16 @@
         <div class="filter-container">
           <menu-form
             ref="menu"
-            v-if="selectedPermission.mold === 0"
+            v-if="selectedPermission.mold === permissionType.Menu"
             :menu="menu"
             :operate="operate"
           ></menu-form>
           <operation-from ref="operation" v-else :operation="operation" :operate="operate"></operation-from>
         </div>
-        <div class="operate-container" v-if="operate !== operateType.Query">
+        <div
+          class="operate-container"
+          v-if="operate == operateType.Create || operate == operateType.Update"
+        >
           <el-button
             v-loading="loading"
             style="margin-left: 10px;"
@@ -81,13 +84,16 @@ export default {
       menuData: [],
       selectedPermission: {},
       menu: {},
-      operation: {},
+      operation: {
+        actionIds: []
+      },
       haveUnSavePermissionData: false,
       newPermissionData: {},
       dialogFormVisible: false,
       operate: operateType.Query,
       loading: false,
       operateType: operateType,
+      permissionType: permissionType,
       permissionLevel: permissionLevel
     };
   },
@@ -99,11 +105,11 @@ export default {
       this.$refs.menuTree.filter(val);
     },
     selectedPermission(val) {
-      if (!isEmpty(val) && val.id) {
+      if (!isEmpty(val) && val.permissionId) {
         if (val.mold == permissionType.Menu) {
-          this.loadMenuData(val.id);
+          this.loadMenuData(val.permissionId);
         } else if (val.mold == permissionType.Operation) {
-          this.loadOperationData(val.id);
+          this.loadOperationData(val.permissionId);
         }
       }
     }
@@ -115,7 +121,9 @@ export default {
       "getOperation",
       "createMenu",
       "updateMenu",
-      "deletePermission"
+      "deletePermission",
+      "createOperation",
+      "updateOperation"
     ]),
     loadMenuTreeData(permissionId) {
       this.getTree().then(data => {
@@ -124,7 +132,7 @@ export default {
         if (permissionId) {
           selectedNodeData = findTreeItem(
             this.menuData,
-            item => item.id == permissionId
+            item => item.permissionId == permissionId
           );
         }
         if (selectedNodeData) {
@@ -141,7 +149,7 @@ export default {
           break;
         // add
         case operateType.Create:
-          if (node.id) {
+          if (node.permissionId) {
             this.$message({
               message: "请先保存数据或取消操作",
               type: "warning"
@@ -151,8 +159,8 @@ export default {
         // edit
         case operateType.Update:
           if (
-            node.id &&
-            node.id != this.selectedPermission.id &&
+            node.permissionId &&
+            node.permissionId != this.selectedPermission.permissionId &&
             !this.haveUnSavePermissionData
           ) {
             this.selectedPermission = node;
@@ -203,17 +211,17 @@ export default {
               newPermissionData.parentId = 0;
               this.menuData.push(newPermissionData);
             } else {
-              newPermissionData.parentId = this.selectedPermission.id;
+              newPermissionData.parentId = this.selectedPermission.permissionId;
               this.selectedPermission.children.push(newPermissionData);
             }
             this.selectedPermission = newPermissionData;
             if (this.selectedPermission.mold == permissionType.Menu) {
               this.menu = {};
-              this.menu.parentId = newPermissionData.parentId;
+              this.menu.parentPermissionId = newPermissionData.parentId;             
               this.menu.title = newPermissionData.title;
             } else {
               this.operation = {};
-              this.operation.parentId = newPermissionData.parentId;
+              this.operation.permissionId = newPermissionData.parentId;
               this.operation.title = newPermissionData.title;
             }
           }
@@ -231,21 +239,22 @@ export default {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
     },
-    loadMenuData(id) {
+    loadMenuData(permissionId) {
       let loading = Loading.service({
         target: ".filter-container",
         fullscreen: false
       });
-      this.getMenu(id).then(data => {
+      this.getMenu(permissionId).then(data => {
         this.menu = data;
         setTimeout(() => {
           loading.close();
         }, 200);
       });
     },
-    loadOperationData(id) {
-      this.getOperation(id).then(data => {
+    loadOperationData(permissionId) {
+      this.getOperation(permissionId).then(data => {
         this.operation = data;
+        this.$refs["operation"].loadServiceActionTableData(data.actionIds);
       });
     },
     handleCreate() {
@@ -271,7 +280,22 @@ export default {
         }
       });
     },
-    handleCreateOperation() {},
+    handleCreateOperation() {
+      this.$refs["operation"].$refs["operationForm"].validate(valid => {
+        if (valid) {
+          this.createOperation(this.operation).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data.tips,
+              type: "success",
+              duration: 2000
+            });
+            this.loadMenuTreeData(data.permissionId);
+            this.haveUnSavePermissionData = false;
+          });
+        }
+      });
+    },
     handleUpdate() {
       if (this.selectedPermission.mold == permissionType.Menu) {
         this.handleUpdateMenu();
@@ -295,7 +319,22 @@ export default {
         }
       });
     },
-    handleUpdateOperation() {},
+    handleUpdateOperation() {
+      this.$refs["operation"].$refs["operationForm"].validate(valid => {
+        if (valid) {
+          this.updateOperation(this.operation).then(data => {
+            this.$notify({
+              title: "成功",
+              message: data.tips,
+              type: "success",
+              duration: 2000
+            });
+            this.loadMenuTreeData(data.permissionId);
+            this.haveUnSavePermissionData = false;
+          });
+        }
+      });
+    },
     handleDeleteMenu(node, data) {
       this.$confirm(
         `是否删除该${data.mold === permissionType.Menu ? "菜单" : "操作"}?`,
@@ -309,23 +348,19 @@ export default {
         .then(() => {
           this.operate = operateType.Delete;
           const parent = node.parent;
-
-          if (data.mold === permissionType.Menu) {
-            this.deletePermission({
-              id: data.id,
-              mold: permissionType.Menu
-            }).then(reps => {
-              this.$notify({
-                title: "成功",
-                message: "删除菜单信息成功",
-                type: "success",
-                duration: 2000
-              });
-              this.loadMenuTreeData(parent.data.id);
-              this.operate = operateType.Query;
+          this.deletePermission({
+            permissionId: data.permissionId,
+            mold: data.mold
+          }).then(reps => {
+            this.$notify({
+              title: "成功",
+              message: `删除${data.mold === permissionType.Menu ? "菜单" : "操作"}信息成功`,
+              type: "success",
+              duration: 2000
             });
-          } else {
-          }
+            this.loadMenuTreeData(parent.data.permissionId);
+            this.operate = operateType.Query;
+          });
         })
         .catch(() => {
           this.$message({

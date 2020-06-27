@@ -5,7 +5,7 @@
       label-position="left"
       label-width="90px"
       :model="corporation"
-      :disabled="operate == operateType.Query"
+      :disabled="operate !== operateType.Create && operate !== operateType.Update"
     >
       <el-form-item label="公司名称" prop="name" required>
         <el-input v-model="corporation.name" placeholder="请输入公司名称" />

@@ -5,7 +5,7 @@
       label-position="left"
       label-width="90px"
       :model="department"
-      :disabled="operate === operateType.Query"
+      :disabled="operate !== operateType.Create && operate !== operateType.Update"
     >
       <el-form-item label="部门名称" prop="name" required>
         <el-input v-model="department.name" placeholder="请输入部门名称" />

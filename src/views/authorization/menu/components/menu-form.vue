@@ -5,7 +5,7 @@
       label-position="left"
       label-width="90px"
       :model="menu"
-      :disabled="operate == operateType.Query"
+      :disabled="operate !== operateType.Create && operate !== operateType.Update"
       :rules="rules"
     >
       <el-form-item label="名称" prop="title">
