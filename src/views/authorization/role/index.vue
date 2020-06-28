@@ -16,8 +16,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleRoleFilter"
-            >搜索</el-button
-          >
+          >搜索</el-button>
 
           <el-button
             v-waves
@@ -25,8 +24,7 @@
             type="default"
             icon="el-icon-clear"
             @click="handleClear"
-            >清除</el-button
-          >
+          >清除</el-button>
           <div class="filter-container">
             <el-button
               v-waves
@@ -34,8 +32,7 @@
               class="filter-item"
               type="success"
               icon="el-icon-plus"
-              >新增</el-button
-            >
+            >新增</el-button>
           </div>
         </div>
       </el-col>
@@ -50,34 +47,20 @@
           v-loading="listLoading"
           style="width: 100%"
         >
-          <el-table-column type="index" width="50"> </el-table-column>
-          <el-table-column
-            prop="name"
-            label="角色名"
-            min-width="100"
-          ></el-table-column>
-          <el-table-column
-            prop="memo"
-            label="备注"
-            min-width="150"
-          ></el-table-column>
+          <el-table-column type="index" width="50"></el-table-column>
+          <el-table-column prop="name" label="角色名" min-width="100"></el-table-column>
+          <el-table-column prop="memo" label="备注" min-width="150"></el-table-column>
           <el-table-column label="状态" class-name="status-col">
             <template slot-scope="{ row }">
-              <el-tag :type="row.status | statusTagFilter">{{
+              <el-tag :type="row.status | statusTagFilter">
+                {{
                 row.status | statusFilter
-              }}</el-tag>
+                }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="lastModificationUserName"
-            label="更新人"
-            min-width="100"
-          ></el-table-column>
-          <el-table-column
-            prop=""
-            label="更新时间"
-            min-width="lastModificationTime"
-          ></el-table-column>
+          <el-table-column prop="lastModificationUserName" label="更新人" min-width="100"></el-table-column>
+          <el-table-column prop="lastModificationTime" label="更新时间" min-width="100"></el-table-column>
           <el-table-column
             label="操作"
             align="center"
@@ -85,12 +68,26 @@
             class-name="small-padding fixed-width"
           >
             <template slot-scope="{ row }">
-              <el-button type="primary" size="mini" @click="handleUpdate(row)"
-                >编辑</el-button
-              >
-              <el-button size="mini" type="danger" @click="handleDelete(row)"
-                >删除</el-button
-              >
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                @click="handleUpdate(row)"
+              >编辑</el-button>
+
+              <el-button
+                type="danger"
+                size="mini"
+                icon="el-icon-delete"
+                @click="handleDelete(row)"
+              >删除</el-button>
+
+              <el-button
+                type="success"
+                size="mini"
+                icon="el-icon-setting"
+                @click="handleSetPermission(row)"
+              >权限</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -103,23 +100,14 @@
         />
       </el-col>
     </el-row>
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-      width="30%"
-    >
-      <role-form
-        ref="role"
-        :role="role"
-        :dialogStatus="dialogStatus"
-      ></role-form>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%">
+      <role-form ref="role" :role="role" :dialogStatus="dialogStatus"></role-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
-          >确认</el-button
-        >
+        >确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -278,7 +266,8 @@ export default {
           });
         }
       });
-    }
+    },
+    handleSetPermission() {}
   }
 };
 </script>
