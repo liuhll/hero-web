@@ -39,7 +39,7 @@
                 operate === operateType.Create ? handleCreate() : handleUpdate()
               "
           >保存</el-button>
-          <el-button v-loading="loading" type="warning" @click="handleCancle()">取消</el-button>
+          <el-button v-loading="loading" type="warning" @click="handleCancleSaveData()">取消</el-button>
         </div>
       </el-col>
     </el-row>
@@ -253,6 +253,15 @@ export default {
           loading.close();
         }, 200);
       });
+    },
+    handleCancleSaveData() {
+      if (this.operate === operateType.Create) {
+        this.loadMenuTreeData(this.selectedPermission.parentId);
+      } else {
+        this.loadMenuTreeData(this.selectedPermission.permissionId);
+      }
+      this.operate = operateType.Query;
+      this.haveUnSavePermissionData = false;
     },
     loadOperationData(permissionId) {
       this.getOperation(permissionId).then(data => {
