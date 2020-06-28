@@ -3,15 +3,17 @@
     <el-row :gutter="10">
       <el-col :span="4">
         <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
-        <el-tree
-          :data="orgData"
-          default-expand-all
-          :render-content="renderContent"
-          :expand-on-click-node="false"
-          @node-click="handleOrgNodeClick"
-          :filter-node-method="filterOrgNode"
-          ref="orgTree"
-        ></el-tree>
+        <el-scrollbar style="height: 600px;width:100%">
+          <el-tree
+            :data="orgData"
+            default-expand-all
+            :render-content="renderContent"
+            :expand-on-click-node="false"
+            @node-click="handleOrgNodeClick"
+            :filter-node-method="filterOrgNode"
+            ref="orgTree"
+          ></el-tree>
+        </el-scrollbar>
       </el-col>
       <el-col :span="20">
         <div class="filter-container">
@@ -431,3 +433,15 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.el-tree {
+  min-width: 100%;
+  display: inline-block !important;
+}
+.el-scrollbar {
+  height: 100%;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+</style>

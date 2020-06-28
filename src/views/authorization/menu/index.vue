@@ -3,16 +3,19 @@
     <el-row :gutter="10">
       <el-col :span="6">
         <el-input class="left-item" v-model="filterMenuName" placeholder="请输入菜单或是操作"></el-input>
-        <el-tree
-          ref="menuTree"
-          :data="menuData"
-          default-expand-all
-          :expand-on-click-node="false"
-          :filter-node-method="filterMenuNode"
-          :render-content="renderContent"
-          node-key="permissionId"
-          @node-click="handleMenuSelected"
-        ></el-tree>
+        <el-scrollbar style="height: 600px;width:100%">
+          <el-tree
+            ref="menuTree"
+            :data="menuData"
+            default-expand-all
+            :expand-on-click-node="false"
+            :filter-node-method="filterMenuNode"
+            :render-content="renderContent"
+            node-key="permissionId"
+            @node-click="handleMenuSelected"
+            class="infinite-list"
+          ></el-tree>
+        </el-scrollbar>
       </el-col>
       <el-col :span="18">
         <div class="filter-container">
@@ -217,7 +220,7 @@ export default {
             this.selectedPermission = newPermissionData;
             if (this.selectedPermission.mold == permissionType.Menu) {
               this.menu = {};
-              this.menu.parentPermissionId = newPermissionData.parentId;             
+              this.menu.parentPermissionId = newPermissionData.parentId;
               this.menu.title = newPermissionData.title;
             } else {
               this.operation = {};
@@ -354,7 +357,9 @@ export default {
           }).then(reps => {
             this.$notify({
               title: "成功",
-              message: `删除${data.mold === permissionType.Menu ? "菜单" : "操作"}信息成功`,
+              message: `删除${
+                data.mold === permissionType.Menu ? "菜单" : "操作"
+              }信息成功`,
               type: "success",
               duration: 2000
             });
@@ -391,3 +396,16 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.el-tree {
+  min-width: 100%;
+  display: inline-block !important;
+}
+.el-scrollbar {
+  height: 100%;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+</style>

@@ -3,16 +3,18 @@
     <el-row :gutter="10">
       <el-col :span="6" class="block">
         <el-input placeholder="请输入组织结构名称进行过滤" v-model="filterOrgName"></el-input>
-        <el-tree
-          :data="orgData"
-          default-expand-all
-          :render-content="renderContent"
-          :expand-on-click-node="false"
-          :filter-node-method="filterOrgNode"
-          node-key="id"
-          @node-click="handleOrgSelected"
-          ref="orgTree"
-        ></el-tree>
+        <el-scrollbar style="height: 600px;width:100%">
+          <el-tree
+            :data="orgData"
+            default-expand-all
+            :render-content="renderContent"
+            :expand-on-click-node="false"
+            :filter-node-method="filterOrgNode"
+            node-key="id"
+            @node-click="handleOrgSelected"
+            ref="orgTree"
+          ></el-tree>
+        </el-scrollbar>
       </el-col>
       <el-col :span="18">
         <div class="filter-container">
@@ -28,7 +30,10 @@
             v-if="selectedOrg.orgType === orgType.Department"
             ref="department"
           ></department-form>
-          <div class="operate-container" v-if="operate == operateType.Create || operate == operateType.Update">
+          <div
+            class="operate-container"
+            v-if="operate == operateType.Create || operate == operateType.Update"
+          >
             <el-button
               v-loading="loading"
               style="margin-left: 10px;"
@@ -420,7 +425,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .el-row {
   margin-bottom: 20px;
   &:last-child {
@@ -433,4 +438,15 @@ export default {
 .operate-container {
   margin-left: 80px;
 }
+.el-tree {
+  min-width: 100%;
+  display: inline-block !important;
+}
+.el-scrollbar {
+  height: 100%;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>
+
