@@ -211,20 +211,20 @@ export default {
             if (
               this.newPermissionData.permissionLevel === permissionLevel.TopMenu
             ) {
-              newPermissionData.parentId = 0;
+              newPermissionData.parentPermissionId = 0;
               this.menuData.push(newPermissionData);
             } else {
-              newPermissionData.parentId = this.selectedPermission.permissionId;
+              newPermissionData.parentPermissionId = this.selectedPermission.permissionId;
               this.selectedPermission.children.push(newPermissionData);
             }
             this.selectedPermission = newPermissionData;
             if (this.selectedPermission.mold == permissionType.Menu) {
               this.menu = {};
-              this.menu.parentPermissionId = newPermissionData.parentId;
+              this.menu.parentPermissionId = newPermissionData.parentPermissionId;
               this.menu.title = newPermissionData.title;
             } else {
               this.operation = {};
-              this.operation.permissionId = newPermissionData.parentId;
+              this.operation.permissionId = newPermissionData.parentPermissionId;
               this.operation.title = newPermissionData.title;
             }
           }
@@ -256,7 +256,7 @@ export default {
     },
     handleCancleSaveData() {
       if (this.operate === operateType.Create) {
-        this.loadMenuTreeData(this.selectedPermission.parentId);
+        this.loadMenuTreeData(this.selectedPermission.parentPermissionId);
       } else {
         this.loadMenuTreeData(this.selectedPermission.permissionId);
       }

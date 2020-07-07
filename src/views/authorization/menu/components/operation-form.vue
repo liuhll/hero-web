@@ -66,10 +66,10 @@
 import { operateType } from "@/utils";
 import { mapActions } from "vuex";
 const operationOptions = [
-  {
-    value: operateType.Query,
-    label: "查询"
-  },
+  // {
+  //   value: operateType.Query,
+  //   label: "查询"
+  // },
   {
     value: operateType.Look,
     label: "查看详情"

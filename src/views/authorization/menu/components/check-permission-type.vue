@@ -14,7 +14,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item
-        v-if="newPermissionData.mold==permissionType.Menu && selectedPermission.parentId===0"
+        v-if="newPermissionData.mold==permissionType.Menu && selectedPermission.parentPermissionId===0"
         label="菜单层级"
         prop="permissionLevel"
       >
