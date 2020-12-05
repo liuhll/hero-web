@@ -84,10 +84,11 @@
 
               <el-button
                 type="success"
-                size="mini"
-                icon="el-icon-setting"
-                @click="handleSetPermission(row)"
-              >权限</el-button>
+                size="mini"               
+                @click="handleLook(row)"
+              >
+              <svg-icon icon-class="look"/>
+              查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -100,9 +101,9 @@
         />
       </el-col>
     </el-row>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%" @close='handleRoleDialogClose()'> 
       <role-form ref="role" :role="role" :dialogStatus="dialogStatus"></role-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="dialogStatus !== 'look'">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
           type="primary"
@@ -118,6 +119,7 @@ import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import RoleForm from "./components/role-form.vue";
+import { Loading } from 'element-ui';
 // const defaultRole = {
 //   name: "",
 //   memo: "",
@@ -154,7 +156,8 @@ export default {
       },
       textMap: {
         update: "编辑角色",
-        create: "新增角色"
+        create: "新增角色",
+        look: "查看角色"
       }
     };
   },
@@ -230,12 +233,14 @@ export default {
     resetRoleInfo() {
       this.role = {
         name: undefined,
-        memo: undefined
+        memo: undefined,
+        permissionIds: []
       };
     },
     createData() {
       this.$refs["role"].$refs["roleForm"].validate(valid => {
         if (valid) {
+          let loadingInstance = Loading.service({ target: ".el-dialog", text: "保存中..." });
           this.create(this.role).then(data => {
             this.dialogFormVisible = false;
             this.$notify({
@@ -246,6 +251,9 @@ export default {
             });
             this.resetRoleInfo();
             this.loadRoleData();
+            this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+              loadingInstance.close();
+            });
           });
         }
       });
@@ -253,6 +261,7 @@ export default {
     updateData() {
       this.$refs["role"].$refs["roleForm"].validate(valid => {
         if (valid) {
+          let loadingInstance = Loading.service({ target: ".el-dialog", text: "保存中..." });
           this.update(this.role).then(data => {
             this.dialogFormVisible = false;
             this.$notify({
@@ -263,11 +272,27 @@ export default {
             });
             this.resetRoleInfo();
             this.loadRoleData();
+            this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+              loadingInstance.close();
+            });
           });
         }
       });
     },
-    handleSetPermission() {}
+    handleRoleDialogClose() {
+      this.$refs['role'].$refs['permissionTree'].setCheckedKeys([])
+    },
+    handleLook(row) {
+      this.resetRoleInfo();
+      this.role = Object.assign({}, row); // copy obj
+      this.dialogStatus = "look";
+      this.dialogFormVisible = true;
+
+      this.$nextTick(() => {
+        this.$refs["role"].$refs["roleForm"].clearValidate();
+      });
+    }
+
   }
 };
 </script>
