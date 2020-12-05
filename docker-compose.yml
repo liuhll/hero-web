@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  jingshonline-dashboard:
+    image: jingsh/jingshonline-dashboard:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        env: ${BUILD_ENV:-prod}
+    ports:
+      - 8080:80
