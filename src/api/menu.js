@@ -3,7 +3,7 @@ import setting from '@/settings'
 
 export const getTree = () => {
     return request({
-        url: `${setting.apiPrefix}/permission/get/tree`,
+        url: `${setting.apiPrefix}/permission/tree`,
         method: 'get'
     })
 }
@@ -11,21 +11,21 @@ export const getTree = () => {
 
 export const getMenu = id => {
     return request({
-        url: `${setting.apiPrefix}/permission/get/menu/${id}`,
+        url: `${setting.apiPrefix}/permission/menu/${id}`,
         method: 'get'
     })
 }
 
 export const getOperation = id => {
     return request({
-        url: `${setting.apiPrefix}/permission/get/operation/${id}`,
+        url: `${setting.apiPrefix}/permission/operation/${id}`,
         method: 'get'
     })
 }
 
 export const createMenu = data => {
     return request({
-        url: `${setting.apiPrefix}/permission/menu/create`,
+        url: `${setting.apiPrefix}/permission/menu`,
         data: { 'input': data },
         method: 'post'
     })
@@ -33,7 +33,7 @@ export const createMenu = data => {
 
 export const updateMenu = data => {
     return request({
-        url: `${setting.apiPrefix}/permission/menu/update`,
+        url: `${setting.apiPrefix}/permission/menu`,
         data: { 'input': data },
         method: 'put'
     })
@@ -41,7 +41,7 @@ export const updateMenu = data => {
 
 export const createOperation = data => {
     return request({
-        url: `${setting.apiPrefix}/permission/operation/create`,
+        url: `${setting.apiPrefix}/permission/operation`,
         data: { 'input': data },
         method: 'post'
     })
@@ -49,7 +49,7 @@ export const createOperation = data => {
 
 export const updateOperation = data => {
     return request({
-        url: `${setting.apiPrefix}/permission/operation/update`,
+        url: `${setting.apiPrefix}/permission/operation`,
         data: { 'input': data },
         method: 'put'
     })
@@ -57,7 +57,7 @@ export const updateOperation = data => {
 
 export const deletePermission = data => {
     return request({
-        url: `${setting.apiPrefix}/permission/delete`,
+        url: `${setting.apiPrefix}/permission`,
         data: { 'input': data },
         method: 'delete'
     })    

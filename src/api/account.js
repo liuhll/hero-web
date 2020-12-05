@@ -13,7 +13,7 @@ export const login = ({ userName, password }) => {
 
 export const getLoginUser = () => {
   return request({
-    url: `${setting.apiPrefix}/account/get/userinfo`,
+    url: `${setting.apiPrefix}/account/userinfo`,
     method: 'get'
   })
 }

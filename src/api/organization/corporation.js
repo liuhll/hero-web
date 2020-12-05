@@ -4,14 +4,14 @@ import setting from '@/settings'
 
 export const getCorporationByOrgId = (orgId) => {
     return request({
-        url: `${setting.apiPrefix}/corporation/get/org/${orgId}`,
+        url: `${setting.apiPrefix}/corporation/org/${orgId}`,
         method: 'get'
     })
 }
 
 export const createCorporation = (input) => {
     return request({
-        url: `${setting.apiPrefix}/corporation/create`,
+        url: `${setting.apiPrefix}/corporation`,
         method: 'post',
         data: {
             input: input
@@ -21,7 +21,7 @@ export const createCorporation = (input) => {
 
 export const updateCorporation = (input) => {
     return request({
-        url: `${setting.apiPrefix}/corporation/update`,
+        url: `${setting.apiPrefix}/corporation`,
         method: 'put',
         data: {
             input: input
@@ -31,7 +31,7 @@ export const updateCorporation = (input) => {
 
 export const deleteCorporation = orgId => {
     return request({
-        url: `${setting.apiPrefix}/corporation/delete/${orgId}`,
+        url: `${setting.apiPrefix}/corporation/${orgId}`,
         method: 'delete'
     })
 }

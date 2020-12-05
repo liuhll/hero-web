@@ -3,21 +3,21 @@ import setting from '@/settings'
 
 export const getDeptPosition = (deptId) => {    
     return request({
-        url: `${setting.apiPrefix}/position/get/dept/${deptId}`,
+        url: `${setting.apiPrefix}/position/dept/${deptId}`,
         method: 'get'
     })
 }
 
 export const getDeptPositionByOrgId = (orgId) => {    
     return request({
-        url: `${setting.apiPrefix}/position/get/org/${orgId}`,
+        url: `${setting.apiPrefix}/position/org/${orgId}`,
         method: 'get'
     })
 }
 
 export const getDepartmentByOrgId = (orgId) => {
     return request({
-        url: `${setting.apiPrefix}/department/get/orgid/${orgId}`,
+        url: `${setting.apiPrefix}/department/org/${orgId}`,
         method: 'get'
     })
 }
@@ -25,7 +25,7 @@ export const getDepartmentByOrgId = (orgId) => {
 
 export const createDepartment = (input) => {
     return request({
-        url: `${setting.apiPrefix}/department/create`,
+        url: `${setting.apiPrefix}/department`,
         method: 'post',
         data: {
             input: input
@@ -35,7 +35,7 @@ export const createDepartment = (input) => {
 
 export const updateDepartment = input => {
     return request({
-        url: `${setting.apiPrefix}/department/update`,
+        url: `${setting.apiPrefix}/department`,
         method: 'put',
         data: {
             input: input
@@ -45,7 +45,7 @@ export const updateDepartment = input => {
 
 export const deleteDepartment = orgId => {
     return request({
-        url: `${setting.apiPrefix}/department/delete/${orgId}`,
+        url: `${setting.apiPrefix}/department/${orgId}`,
         method: 'delete'
     })
 }

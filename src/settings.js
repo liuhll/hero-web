@@ -33,5 +33,5 @@ module.exports = {
    */
   errorLog: 'production',
 
-  apiPrefix: 'v1/api'
+  apiPrefix: 'api'
 }

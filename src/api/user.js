@@ -3,7 +3,7 @@ import setting from '@/settings'
 
 export function queryUser(query) {
   return request({
-    url: `${setting.apiPrefix}/user/query`,
+    url: `${setting.apiPrefix}/user/search`,
     method: 'post',
     data: { query: query }
   })
@@ -12,7 +12,7 @@ export function queryUser(query) {
 
 export function create(userInfo) {
   return request({
-    url: `${setting.apiPrefix}/user/create`,
+    url: `${setting.apiPrefix}/user`,
     method: 'post',
     data: { input: userInfo }
   })
@@ -20,7 +20,7 @@ export function create(userInfo) {
 
 export function update(userInfo) {
   return request({
-    url: `${setting.apiPrefix}/user/update`,
+    url: `${setting.apiPrefix}/user`,
     method: 'put',
     data: { input: userInfo }
   })
@@ -28,7 +28,7 @@ export function update(userInfo) {
 
 export function updateStatus(userStatus) {
   return request({
-    url: `${setting.apiPrefix}/user/update/status`,
+    url: `${setting.apiPrefix}/user/status`,
     method: 'put',
     data: { input: userStatus }
   })
@@ -36,14 +36,14 @@ export function updateStatus(userStatus) {
 
 export function deleteUser (userId) {
   return request({
-    url: `${setting.apiPrefix}/user/delete/${userId}`,
+    url: `${setting.apiPrefix}/user/${userId}`,
     method: 'delete'
   })
 }
 
 export function resetPassword (input) {
   return request({
-    url: `${setting.apiPrefix}/user/reset/password`,
+    url: `${setting.apiPrefix}/user/password`,
     method: 'put',
     data: { input: input }
   })
