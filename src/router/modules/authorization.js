@@ -25,7 +25,7 @@ const authorizationRouter = {
             path: 'organization',
             component: () => import('@/views/authorization/organization'),
             name: 'organization',
-            meta: { title: '组织结构', icon: 'org', noCache: true }
+            meta: { title: '组织机构', icon: 'org', noCache: true }
         },
         {
             path: 'menu',

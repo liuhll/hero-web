@@ -82,8 +82,12 @@ export const constantRoutes = [
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
-  },
+  }  
+]
+
+export const asyncRoutes = [
   authorizationRouter
+
 ]
 
 const createRouter = () => new Router({

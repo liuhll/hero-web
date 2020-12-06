@@ -17,3 +17,11 @@ export const getLoginUser = () => {
     method: 'get'
   })
 }
+
+
+export const accountMenu = () => {
+  return request({
+    url: `${setting.apiPrefix}/account/menu`,
+    method: 'get'
+  })  
+}
