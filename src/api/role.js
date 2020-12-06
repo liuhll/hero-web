@@ -12,7 +12,7 @@ export const list = (searchKey) => {
   })
 }
 
-export const query = query => {
+export const search = query => {
   return request({
     url: `${setting.apiPrefix}/role/search`,
     method: 'post',
@@ -48,7 +48,7 @@ export const updateStatus = input => {
 
 export const deleteRole = id => {
   return request({
-    url: `${setting.apiPrefix}/role/delete/${id}`,
+    url: `${setting.apiPrefix}/role/${id}`,
     method: 'delete'
   })
 }

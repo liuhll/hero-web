@@ -69,10 +69,10 @@ import {
 } from "@/utils";
 import { Loading } from "element-ui";
 
-import MenuNodeEdit from "./components/menu-node-edit.vue";
-import MenuForm from "./components/menu-form.vue";
-import OperationFrom from "./components/operation-form.vue";
-import CheckPermissionType from "./components/check-permission-type.vue";
+import MenuNodeEdit from "./components/MenuNodeEdit.vue";
+import MenuForm from "./components/MenuForm.vue";
+import OperationFrom from "./components/OperationForm.vue";
+import CheckPermissionType from "./components/CheckPermissionType.vue";
 
 export default {
   components: {

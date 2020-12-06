@@ -145,8 +145,8 @@
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import OrgNode from "@/views/organization/components/org-node.vue";
-import CreateOrUpdate from "./components/userinfo-form.vue";
+import OrgNode from "@/views/organization/components/OrgNode.vue";
+import CreateOrUpdate from "./components/UserinfoForm.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import { operateType } from "@/utils";
 export default {

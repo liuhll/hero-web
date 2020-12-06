@@ -12,7 +12,7 @@ const actions = {
     },
     queryRole({ commit }, query) {
         return new Promise((resolve, reject) => {
-            Role.query(query).then(response => {
+            Role.search(query).then(response => {
                 const { data } = response
                 resolve(data)
              }).catch(err => { 

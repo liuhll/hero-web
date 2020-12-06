@@ -69,12 +69,12 @@ export default {
     loadPermissionData() {
       this.getTree().then((data) => {
         this.permissionData = data;
-      });
+      })
     },
     handleCheckPermission(node, checked, indeterminate) {
       this.role.permissionIds = this.$refs["permissionTree"].getCheckedKeys();
-    },
-  },
+    }
+  }
 };
 </script>
 

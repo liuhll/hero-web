@@ -58,10 +58,10 @@
 </template>
 
 <script>
-import OrgNodeEdit from "@/views/organization/components/org-node-edit.vue";
-import CheckOrgType from "./components/check-org-type.vue";
-import DepartmentForm from "./components/department-form.vue";
-import CorporationForm from "./components/corporation-form.vue";
+import OrgNodeEdit from "@/views/organization/components/OrgNodeEdit.vue";
+import CheckOrgType from "./components/CheckOrgType.vue";
+import DepartmentForm from "./components/DepartmentForm.vue";
+import CorporationForm from "./components/CorporationForm.vue";
 import { Loading } from "element-ui";
 
 import { mapActions } from "vuex";

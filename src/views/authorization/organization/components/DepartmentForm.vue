@@ -92,7 +92,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import PositionForm from "./position-form.vue";
+import PositionForm from "./PositionForm.vue";
 import { operateType } from "@/utils";
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",

@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Vue Element Admin',
+  title: 'Hero权限管理系统',
 
   /**
    * @type {boolean} true | false

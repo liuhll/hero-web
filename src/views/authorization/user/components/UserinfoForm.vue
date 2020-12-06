@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import OrgNode from "@/views/organization/components/org-node.vue";
+import OrgNode from "@/views/organization/components/OrgNode.vue";
 import Tinymce from "@/components/Tinymce";
 import { isEmpty } from "@/utils";
 import { mapActions } from "vuex";
