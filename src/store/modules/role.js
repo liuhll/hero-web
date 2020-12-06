@@ -10,7 +10,7 @@ const actions = {
             })
         })
     },
-    queryRole({ commit }, query) {
+    search({ commit }, query) {
         return new Promise((resolve, reject) => {
             Role.search(query).then(response => {
                 const { data } = response

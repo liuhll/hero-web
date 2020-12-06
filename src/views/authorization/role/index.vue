@@ -110,14 +110,14 @@ export default {
         this.loadRoleData();
     },
     methods: {
-        ...mapActions("role", ["queryRole", "create", "update", "delete"]),
+        ...mapActions("role", ["search", "create", "update", "delete"]),
         handleRoleFilter() {
             this.query.pageIndex = 1;
             this.loadRoleData();
         },
         loadRoleData() {
             this.listLoading = true;
-            this.queryRole(this.query).then(data => {
+            this.search(this.query).then(data => {
                 this.totalCount = data.totalCount;
                 this.roleData = data.items;
                 // Just to simulate the time of the request
