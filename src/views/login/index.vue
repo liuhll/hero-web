@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登  录</h3>
       </div>
 
       <el-form-item prop="userName">
@@ -19,7 +19,7 @@
         <el-input
           ref="userName"
           v-model="loginForm.userName"
-          placeholder="Username"
+          placeholder="请输入用户名"
           name="userName"
           type="text"
           tabindex="1"
@@ -27,7 +27,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" content="大写字母键锁定" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -37,7 +37,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="Password"
+            placeholder="请输入密码"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -56,20 +56,20 @@
         type="primary"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
-      >Login</el-button>
+      >登录</el-button>
 
       <div style="position:relative">
         <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
+          <span>Username : liuhl</span>
+          <span>Password : 123qwe</span>
         </div>
         <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
+          <span style="margin-right:18px;">Username : dev1</span>
+          <span>Password : 1234qwer</span>
         </div>
-
-        <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">Or connect with</el-button> -->
+      
       </div>
+       <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">Or connect with</el-button> -->
     </el-form>
 
     <!-- <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -107,8 +107,8 @@ export default {
     }
     return {
       loginForm: {
-        userName: 'liuhl',
-        password: '123qwe'
+        userName: undefined,
+        password: undefined
       },
       loginRules: {
         userName: [
