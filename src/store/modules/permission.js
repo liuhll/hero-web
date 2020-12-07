@@ -12,6 +12,9 @@ function hasPermission(route, menus) {
     if (m.name == route.name) {
       hasPermission = true
     }
+    if (route.meta && route.meta.isPermission) {
+      hasPermission = true
+    }
   })
   return hasPermission
 }
