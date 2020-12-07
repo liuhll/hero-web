@@ -159,6 +159,14 @@ export default {
                             duration: 2000
                         });
                         this.loadRoleData();
+                    }).catch(err => {                        
+                        this.loadRoleData();                     
+                        this.$notify({
+                            title: "失败",
+                            message: err.message,
+                            type: "error",
+                            duration: 2000
+                        });
                     });
                 })
                 .catch(err => {
@@ -202,6 +210,17 @@ export default {
                         this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
                             loadingInstance.close();
                         });
+                    }).catch(err => {
+                        this.dialogFormVisible = false;
+                        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+                            loadingInstance.close();
+                        });                        
+                        this.$notify({
+                            title: "失败",
+                            message: err.message,
+                            type: "error",
+                            duration: 2000
+                        });
                     });
                 }
             });
@@ -223,8 +242,19 @@ export default {
                         });
                         this.resetRoleInfo();
                         this.loadRoleData();
-                        this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+                        this.$nextTick(() => { 
                             loadingInstance.close();
+                        });
+                    }).catch(err => {
+                        this.dialogFormVisible = false;
+                        this.$nextTick(() => { 
+                            loadingInstance.close();
+                        });                        
+                        this.$notify({
+                            title: "失败",
+                            message: err.message,
+                            type: "error",
+                            duration: 2000
                         });
                     });
                 }

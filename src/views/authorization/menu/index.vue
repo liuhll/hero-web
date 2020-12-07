@@ -2,8 +2,12 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :span="6">
-        <el-input class="left-item" v-model="filterMenuName" placeholder="请输入菜单或是操作"></el-input>
-        <el-scrollbar style="height: 600px;width:100%">
+        <el-input
+          class="left-item"
+          v-model="filterMenuName"
+          placeholder="请输入菜单或是操作"
+        ></el-input>
+        <el-scrollbar style="height: 600px; width: 100%">
           <el-tree
             ref="menuTree"
             :data="menuData"
@@ -25,7 +29,12 @@
             :menu="menu"
             :operate="operate"
           ></menu-form>
-          <operation-from ref="operation" v-else :operation="operation" :operate="operate"></operation-from>
+          <operation-from
+            ref="operation"
+            v-else
+            :operation="operation"
+            :operate="operate"
+          ></operation-from>
         </div>
         <div
           class="operate-container"
@@ -33,25 +42,42 @@
         >
           <el-button
             v-loading="loading"
-            style="margin-left: 10px;"
+            style="margin-left: 10px"
             type="success"
             @click="
-                operate === operateType.Create ? handleCreate() : handleUpdate()
-              "
-          >保存</el-button>
-          <el-button v-loading="loading" type="warning" @click="handleCancleSaveData()">取消</el-button>
+              operate === operateType.Create ? handleCreate() : handleUpdate()
+            "
+            >保存</el-button
+          >
+          <el-button
+            v-loading="loading"
+            type="warning"
+            @click="handleCancleSaveData()"
+            >取消</el-button
+          >
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="请选择权限类型" :visible.sync="dialogFormVisible" @close="handleDialogClose">
+    <el-dialog
+      title="请选择权限类型"
+      :visible.sync="dialogFormVisible"
+      @close="handleDialogClose"
+    >
       <check-permission-type
         ref="newPermission"
         :selectedPermission="selectedPermission"
         :newPermissionData="newPermissionData"
       ></check-permission-type>
       <div slot="footer" class="dialog-footer">
-        <el-button type="default" size="mini" @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="success" size="mini" @click="handleAppendPermissionConfirm">确认</el-button>
+        <el-button type="default" size="mini" @click="dialogFormVisible = false"
+          >取消</el-button
+        >
+        <el-button
+          type="success"
+          size="mini"
+          @click="handleAppendPermissionConfirm"
+          >确认</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -65,7 +91,7 @@ import {
   findTreeItem,
   permissionType,
   operateType,
-  permissionLevel
+  permissionLevel,
 } from "@/utils";
 import { Loading } from "element-ui";
 
@@ -79,7 +105,7 @@ export default {
     MenuNodeEdit,
     MenuForm,
     OperationFrom,
-    CheckPermissionType
+    CheckPermissionType,
   },
   data() {
     return {
@@ -88,7 +114,7 @@ export default {
       selectedPermission: {},
       menu: {},
       operation: {
-        actionIds: []
+        actionIds: [],
       },
       haveUnSavePermissionData: false,
       newPermissionData: {},
@@ -97,7 +123,7 @@ export default {
       loading: false,
       operateType: operateType,
       permissionType: permissionType,
-      permissionLevel: permissionLevel
+      permissionLevel: permissionLevel,
     };
   },
   mounted() {
@@ -115,7 +141,7 @@ export default {
           this.loadOperationData(val.permissionId);
         }
       }
-    }
+    },
   },
   methods: {
     ...mapActions("menu", [
@@ -126,16 +152,16 @@ export default {
       "updateMenu",
       "deletePermission",
       "createOperation",
-      "updateOperation"
+      "updateOperation",
     ]),
     loadMenuTreeData(permissionId) {
-      this.getTree().then(data => {
+      this.getTree().then((data) => {
         this.menuData = data;
         let selectedNodeData = data[0];
         if (permissionId) {
           selectedNodeData = findTreeItem(
             this.menuData,
-            item => item.permissionId == permissionId
+            (item) => item.permissionId == permissionId
           );
         }
         if (selectedNodeData) {
@@ -155,23 +181,19 @@ export default {
           if (node.permissionId) {
             this.$message({
               message: "请先保存数据或取消操作",
-              type: "warning"
+              type: "warning",
             });
           }
           break;
         // edit
         case operateType.Update:
-          if (
-            node.permissionId &&
-            node.permissionId != this.selectedPermission.permissionId &&
-            !this.haveUnSavePermissionData
-          ) {
+          if (!this.haveUnSavePermissionData) {
             this.selectedPermission = node;
             this.haveUnSavePermissionData = true;
           } else {
             this.$message({
               message: "请先保存数据或取消操作",
-              type: "warning"
+              type: "warning",
             });
           }
           break;
@@ -196,14 +218,14 @@ export default {
     },
     handleAppendPermissionConfirm() {
       this.$refs["newPermission"].$refs["newPermissionNodeForm"].validate(
-        valid => {
+        (valid) => {
           if (valid) {
             this.operate = operateType.Create;
             this.dialogFormVisible = false;
             let newPermissionData = {
               title: this.newPermissionData.name,
               mold: this.newPermissionData.mold,
-              children: []
+              children: [],
             };
             if (!this.selectedPermission.children) {
               this.$set(this.selectedPermission, "children", []);
@@ -220,11 +242,13 @@ export default {
             this.selectedPermission = newPermissionData;
             if (this.selectedPermission.mold == permissionType.Menu) {
               this.menu = {};
-              this.menu.parentPermissionId = newPermissionData.parentPermissionId;
+              this.menu.parentPermissionId =
+                newPermissionData.parentPermissionId;
               this.menu.title = newPermissionData.title;
             } else {
               this.operation = {};
-              this.operation.permissionId = newPermissionData.parentPermissionId;
+              this.operation.permissionId =
+                newPermissionData.parentPermissionId;
               this.operation.title = newPermissionData.title;
             }
           }
@@ -245,9 +269,9 @@ export default {
     loadMenuData(permissionId) {
       let loading = Loading.service({
         target: ".filter-container",
-        fullscreen: false
+        fullscreen: false,
       });
-      this.getMenu(permissionId).then(data => {
+      this.getMenu(permissionId).then((data) => {
         this.menu = data;
         setTimeout(() => {
           loading.close();
@@ -264,7 +288,7 @@ export default {
       this.haveUnSavePermissionData = false;
     },
     loadOperationData(permissionId) {
-      this.getOperation(permissionId).then(data => {
+      this.getOperation(permissionId).then((data) => {
         this.operation = data;
         this.$refs["operation"].loadServiceActionTableData(data.actionIds);
       });
@@ -277,34 +301,58 @@ export default {
       }
     },
     handleCreateMenu() {
-      this.$refs["menu"].$refs["menuForm"].validate(valid => {
+      this.$refs["menu"].$refs["menuForm"].validate((valid) => {
         if (valid) {
-          this.createMenu(this.menu).then(data => {
-            this.$notify({
-              title: "成功",
-              message: data.tips,
-              type: "success",
-              duration: 2000
+          this.createMenu(this.menu)
+            .then((data) => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000,
+              });
+              this.loadMenuTreeData(data.permissionId);
+              this.haveUnSavePermissionData = false;
+            })
+            .catch((err) => {
+              this.$notify({
+                title: "失败",
+                message: err.message,
+                type: "error",
+                duration: 2000,
+              });
+              this.haveUnSavePermissionData = false;
+              this.operate = operateType.Query;
+              this.handleCancleSaveData();
             });
-            this.loadMenuTreeData(data.permissionId);
-            this.haveUnSavePermissionData = false;
-          });
         }
       });
     },
     handleCreateOperation() {
-      this.$refs["operation"].$refs["operationForm"].validate(valid => {
+      this.$refs["operation"].$refs["operationForm"].validate((valid) => {
         if (valid) {
-          this.createOperation(this.operation).then(data => {
-            this.$notify({
-              title: "成功",
-              message: data.tips,
-              type: "success",
-              duration: 2000
+          this.createOperation(this.operation)
+            .then((data) => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000,
+              });
+              this.loadMenuTreeData(data.permissionId);
+              this.haveUnSavePermissionData = false;
+            })
+            .catch((err) => {
+              this.$notify({
+                title: "失败",
+                message: err.message,
+                type: "error",
+                duration: 2000,
+              });
+              this.haveUnSavePermissionData = false;
+              this.operate = operateType.Query;
+              this.handleCancleSaveData();
             });
-            this.loadMenuTreeData(data.permissionId);
-            this.haveUnSavePermissionData = false;
-          });
         }
       });
     },
@@ -316,34 +364,58 @@ export default {
       }
     },
     handleUpdateMenu() {
-      this.$refs["menu"].$refs["menuForm"].validate(valid => {
+      this.$refs["menu"].$refs["menuForm"].validate((valid) => {
         if (valid) {
-          this.updateMenu(this.menu).then(data => {
-            this.$notify({
-              title: "成功",
-              message: data.tips,
-              type: "success",
-              duration: 2000
+          this.updateMenu(this.menu)
+            .then((data) => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000,
+              });
+              this.loadMenuTreeData(data.permissionId);
+              this.haveUnSavePermissionData = false;
+            })
+            .catch((err) => {
+              this.$notify({
+                title: "失败",
+                message: err.message,
+                type: "error",
+                duration: 2000,
+              });
+              this.haveUnSavePermissionData = false;
+              this.operate = operateType.Query;
+              this.handleCancleSaveData();
             });
-            this.loadMenuTreeData(data.permissionId);
-            this.haveUnSavePermissionData = false;
-          });
         }
       });
     },
     handleUpdateOperation() {
-      this.$refs["operation"].$refs["operationForm"].validate(valid => {
+      this.$refs["operation"].$refs["operationForm"].validate((valid) => {
         if (valid) {
-          this.updateOperation(this.operation).then(data => {
-            this.$notify({
-              title: "成功",
-              message: data.tips,
-              type: "success",
-              duration: 2000
+          this.updateOperation(this.operation)
+            .then((data) => {
+              this.$notify({
+                title: "成功",
+                message: data.tips,
+                type: "success",
+                duration: 2000,
+              });
+              this.loadMenuTreeData(data.permissionId);
+              this.haveUnSavePermissionData = false;
+            })
+            .catch((err) => {
+              this.$notify({
+                title: "失败",
+                message: err.message,
+                type: "error",
+                duration: 2000,
+              });
+              this.haveUnSavePermissionData = false;
+              this.operate = operateType.Query;
+              this.handleCancleSaveData();
             });
-            this.loadMenuTreeData(data.permissionId);
-            this.haveUnSavePermissionData = false;
-          });
         }
       });
     },
@@ -354,7 +426,7 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
@@ -362,24 +434,34 @@ export default {
           const parent = node.parent;
           this.deletePermission({
             permissionId: data.permissionId,
-            mold: data.mold
-          }).then(reps => {
+            mold: data.mold,
+          }).then((reps) => {
             this.$notify({
               title: "成功",
               message: `删除${
                 data.mold === permissionType.Menu ? "菜单" : "操作"
               }信息成功`,
               type: "success",
-              duration: 2000
-            });
+              duration: 2000,
+            })
             this.loadMenuTreeData(parent.data.permissionId);
             this.operate = operateType.Query;
-          });
+          }).catch((err) => {
+              this.$notify({
+                title: "失败",
+                message: err.message,
+                type: "error",
+                duration: 2000,
+              });
+              this.haveUnSavePermissionData = false;
+              this.operate = operateType.Query;
+              this.handleCancleSaveData();
+            });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -387,22 +469,22 @@ export default {
       return h(MenuNodeEdit, {
         props: {
           node: node,
-          data: data
+          data: data,
         },
         on: {
-          "on-append-menu": node => {
+          "on-append-menu": (node) => {
             this.handleAppendMenu(node, data);
           },
-          "on-delete-menu": node => {
+          "on-delete-menu": (node) => {
             this.handleDeleteMenu(node, data);
           },
-          "on-edit-menu": node => {
+          "on-edit-menu": (node) => {
             this.handleEditMenu(node, data);
-          }
-        }
+          },
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

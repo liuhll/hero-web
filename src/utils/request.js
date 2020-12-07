@@ -52,11 +52,15 @@ service.interceptors.response.use(
       return { data: resData, status }
     } else {
       const errorInfo = { message: data.message, code: data.statusCode }
-      Message({
-        message: errorInfo.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+      if (errorInfo.code != 401 && errorInfo.code != 402) {
+        
+        Message({
+          message: errorInfo.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
+
       if (errorInfo.code == 401) {
         // to re-login
         MessageBox.confirm('您已经登出系统,是否重新登录系统?', 'Confirm logout', {
