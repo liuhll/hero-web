@@ -258,9 +258,12 @@ export default {
       this.loadUserData();
     },
     handleUpdate(row) {
-      this.dialogStatus = "update";
-      this.dialogFormVisible = true;
-
+      this.$router.push({
+        name: "user-update",
+        query: {
+          id: row.id
+        },
+      });
     },
     handleResetPwd(row) {
       this.$prompt(`重置该账号密码`, "提示", {
@@ -347,42 +350,6 @@ export default {
         }, 1.5 * 200);
       });
     },
-    updateData() {
-      this.$refs["userInfo"].$refs["userInfoForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.update(this.userInfo)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.loadUserData();
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
-            });
-        }
-      });
-    },
     handleModifyStatus(row, operate) {
       let operateDesc;
       let userStatus = 0;
@@ -433,10 +400,7 @@ export default {
     },
     handleCreate() {
       this.$router.push({
-        name: "user-create",
-        query: {
-          type: "create",
-        },
+        name: "user-create"
       });
     },
     handleDialogClose() {

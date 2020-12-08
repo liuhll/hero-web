@@ -17,8 +17,8 @@ const authorizationRouter = {
             meta: { title: '用户管理', icon: 'user1', noCache: true },
         },
         {
-            path: 'user/page',
-            component: () => import('@/views/authorization/user/components/CreateOrUpdate'),
+            path: 'user/create',
+            component: () => import('@/views/authorization/user/create'),
             name: 'user-create',
             hidden: true,
             meta: {
@@ -27,6 +27,17 @@ const authorizationRouter = {
               isPermission: true
             }                
         },
+        {
+            path: 'user/update',
+            component: () => import('@/views/authorization/user/update'),
+            name: 'user-update',
+            hidden: true,
+            meta: {
+              title: '修改用户',
+              noCache: true,
+              isPermission: true
+            }                
+        },         
         {
             path: 'role',
             component: () => import('@/views/authorization/role'),

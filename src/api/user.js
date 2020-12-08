@@ -48,3 +48,10 @@ export function resetPassword (input) {
     data: { input: input }
   })
 }
+
+export function getUser (id) {
+  return request({
+    url: `${setting.apiPrefix}/user/${id}`,
+    method: 'get'
+  })
+}

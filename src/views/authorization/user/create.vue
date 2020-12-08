@@ -31,7 +31,7 @@
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import OrgNode from "@/views/organization/components/OrgNode.vue";
-import UserinfoPageForm from "./UserinfoPageForm";
+import UserinfoPageForm from "./components/UserinfoPageForm";
 import Sticky from "@/components/Sticky"; // 粘性header组件
 import { Loading } from "element-ui";
 export default {
@@ -40,7 +40,6 @@ export default {
     Sticky,
     UserinfoPageForm,
   },
-  props: {},
   data() {
     return {
       userInfo: {
@@ -51,7 +50,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("user", ["create", "update"]),
+    ...mapActions("user", ["create"]),
     handleCreate() {
       this.$refs["userinfo-form"].$refs["userInfo"].validate((valid) => {
         if (valid) {
@@ -72,7 +71,6 @@ export default {
               this.$nextTick(() => {
                 loadingInstance.close();
               });
-
               this.$store.dispatch("tagsView/delView", this.$route);
               this.$router.push({ name: "user" });
             })
@@ -86,6 +84,8 @@ export default {
                 type: "error",
                 duration: 2000,
               });
+              //this.$store.dispatch("tagsView/delView", this.$route);
+              //this.$router.push({ name: "user" });
             });
         }
       });

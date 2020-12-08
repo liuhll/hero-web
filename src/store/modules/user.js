@@ -1,4 +1,4 @@
-import { queryUser, create, update, updateStatus, deleteUser, resetPassword } from '@/api/user'
+import { queryUser, create, update, updateStatus, deleteUser, resetPassword, getUser } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -69,7 +69,17 @@ const actions = {
         reject(err)
       })
     })
-  }
+  },
+  getUser({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      getUser(id).then(response => {
+        const { data } = response
+        resolve(data)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  }  
 }
 
 export default {

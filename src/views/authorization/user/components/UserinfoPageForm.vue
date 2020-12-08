@@ -16,6 +16,7 @@
                   <el-input
                     v-model="userInfo.userName"
                     placeholder="请输入用户名"
+                    :disabled="editType ==='update'"
                   />
                 </el-form-item>
               </el-col>
@@ -204,11 +205,17 @@ export default {
       type: Object,
       default: () => {},
     },
+    editType: {
+      type: String,
+      default: 'create'
+    }
   },
   watch: {
     "userInfo.orgId": {
       handler(newOrgId, oldOrgId) {
-        this.userInfo.positionId = null;
+        if (oldOrgId && oldOrgId !== newOrgId) {
+          this.userInfo.positionId = null;
+        }
         if (newOrgId && oldOrgId !== newOrgId) {
           this.loadDeptPosition(newOrgId);
         } else {
@@ -270,8 +277,8 @@ export default {
           { required: true, message: "角色信息不允许为空", trigger: "change" },
         ],
         gender: [
-           { required: true, message: "请选择用户性别", trigger: "change" },
-        ]
+          { required: true, message: "请选择用户性别", trigger: "change" },
+        ],
       },
     };
   },
