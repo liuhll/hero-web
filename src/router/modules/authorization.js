@@ -54,6 +54,12 @@ const authorizationRouter = {
             component: () => import('@/views/authorization/menu'),
             name: 'menu',
             meta: { title: '菜单管理', icon: 'menu-manage', noCache: true }
+        },
+        {
+            path: 'usergroup',
+            component: () => import('@/views/authorization/user-group'),
+            name: 'usergroup',
+            meta: { title: '用户组管理', icon: 'user-group', noCache: true }
         }
     ]
 }
