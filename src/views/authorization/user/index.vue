@@ -109,45 +109,77 @@
               <el-table-column
                 label="操作"
                 align="center"
-                width="380"
+                width="280"
                 class-name="small-padding fixed-width"
               >
                 <template slot-scope="{ row }">
                   <el-button
                     type="primary"
                     size="mini"
+                    icon="el-icon-edit"
                     @click="handleUpdate(row)"
                     >编辑</el-button
                   >
-                  <el-button
-                    type="default"
-                    size="mini"
-                    @click="handleResetPwd(row)"
-                    >密码</el-button
+
+                  <el-popconfirm
+                    title="您确定要删除该用户吗?"
+                    placement="top"
+                    @onConfirm="handleDelete(row)"
+                    style="margin-left: 10px"
                   >
-                  <el-button
-                    v-if="row.status == 1"
-                    size="mini"
-                    type="warning"
-                    @click="handleModifyStatus(row, 'freeze')"
-                    >冻结</el-button
-                  >
-                  <el-button
-                    v-if="row.status == 0"
-                    size="mini"
-                    type="success"
-                    @click="handleModifyStatus(row, 'activate')"
-                    >激活</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(row)"
-                    >删除</el-button
-                  >
-                  <el-button size="mini" type="info" @click="handleLook(row)"
-                    >查看</el-button
-                  >
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      icon="el-icon-delete"
+                      slot="reference"
+                    >
+                      删除</el-button
+                    >
+                  </el-popconfirm>
+
+                  <el-badge :is-dot="false" size="mini" class="item">
+                    <el-dropdown size="mini" style="margin-left: 10px">
+                      <el-button type="primary" size="mini" class="filter-item">
+                        更多
+                        <i class="el-icon-arrow-down el-icon--right" />
+                      </el-button>
+                      <el-dropdown-menu
+                        slot="dropdown"
+                        style="width: 95px; padding: 5px 0"
+                      >
+                        <el-badge :is-dot="false" size="mini" class="item">
+                          <el-dropdown-item @click.native="handleResetPwd(row)"
+                            ><svg-icon
+                              icon-class="password"
+                            />&nbsp;重置密码</el-dropdown-item
+                          >
+                        </el-badge>
+                        <el-badge :is-dot="false" size="mini" class="item">
+                          <el-dropdown-item
+                            v-if="row.status == 1"
+                            @click.native="handleModifyStatus(row, 'freeze')"
+                            ><svg-icon
+                              icon-class="freeze"
+                            />&nbsp;冻结</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            v-if="row.status == 0"
+                            @click.native="handleModifyStatus(row, 'activate')"
+                            ><svg-icon
+                              icon-class="activate"
+                            />&nbsp;激活</el-dropdown-item
+                          >
+                        </el-badge>
+                        <el-badge :is-dot="false" size="mini" class="item">
+                          <el-dropdown-item @click.native="handleLook(row)"
+                            ><svg-icon
+                              icon-class="look"
+                            />&nbsp;查看</el-dropdown-item
+                          >
+                        </el-badge>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-badge>
                 </template>
               </el-table-column>
             </el-table>
@@ -199,7 +231,6 @@ export default {
       userDataTotal: 0,
       dialogStatus: "",
       filterOrgName: "",
-      dialogFormVisible: false,
       textMap: {
         update: "编辑用户",
         create: "新增用户",
@@ -261,7 +292,7 @@ export default {
       this.$router.push({
         name: "user-update",
         query: {
-          id: row.id
+          id: row.id,
         },
       });
     },
@@ -305,36 +336,21 @@ export default {
         });
     },
     handleDelete(row) {
-      this.$confirm(`您是否确认删除该账户?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          this.deleteUser(row.id)
-            .then((data) => {
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.loadUserData();
-            })
-            .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
-            });
+      this.deleteUser(row.id)
+        .then((data) => {
+          this.$notify({
+            title: "成功",
+            message: data,
+            type: "success",
+            duration: 2000,
+          });
+          this.loadUserData();
         })
         .catch((err) => {
           this.$notify({
-            title: "提示",
-            message: "取消删除操作",
-            type: "info",
+            title: "失败",
+            message: err.message,
+            type: "error",
             duration: 2000,
           });
         });
@@ -400,7 +416,7 @@ export default {
     },
     handleCreate() {
       this.$router.push({
-        name: "user-create"
+        name: "user-create",
       });
     },
     handleDialogClose() {
@@ -431,5 +447,10 @@ export default {
 }
 .el-scrollbar__wrap {
   overflow-x: hidden;
+}
+.el-table {
+  .cell {
+    padding: 2px 10px;
+  }
 }
 </style>
