@@ -69,6 +69,16 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="creatorUserName"
+            label="创建人"
+            min-width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="creationTime"
+            label="创建时间"
+            min-width="100"
+          ></el-table-column>          
+          <el-table-column
             prop="lastModificationUserName"
             label="更新人"
             min-width="100"

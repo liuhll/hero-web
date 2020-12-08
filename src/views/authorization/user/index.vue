@@ -72,6 +72,7 @@
               highlight-current-row
               v-loading="listLoading"
               style="width: 100%"
+              el-scroll="scroll"
             >
               <el-table-column
                 prop="userName"
@@ -106,6 +107,26 @@
                   </el-tag>
                 </template>
               </el-table-column>
+              <el-table-column
+                prop="creatorUserName"
+                label="创建人"
+                min-width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="creationTime"
+                label="创建时间"
+                min-width="100"
+              ></el-table-column>
+              <el-table-column
+                prop="lastModificationUserName"
+                label="更新人"
+                min-width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="lastModificationTime"
+                label="更新时间"
+                min-width="100"
+              ></el-table-column>
               <el-table-column
                 label="操作"
                 align="center"
@@ -200,6 +221,7 @@
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
+import scroll from "@/directive/el-scroll/index.js"; 
 import OrgNode from "@/views/organization/components/OrgNode.vue";
 import CreateOrUpdate from "./components/UserinfoForm.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
@@ -212,7 +234,7 @@ export default {
     CreateOrUpdate,
     Pagination,
   },
-  directives: { waves },
+  directives: { waves,scroll },
   filters: {
     statusFilter(status) {
       const statusMap = ["冻结", "有效"];
@@ -307,16 +329,15 @@ export default {
           this.resetPassword({
             id: row.id,
             newPassword: value,
-          })
-            .then((data) => {
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.loadUserData();
+          }).then((data) => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000,
             });
+            this.loadUserData();
+          });
         })
         .catch((err) => {
           this.$notify({
@@ -328,16 +349,15 @@ export default {
         });
     },
     handleDelete(row) {
-      this.deleteUser(row.id)
-        .then((data) => {
-          this.$notify({
-            title: "成功",
-            message: data,
-            type: "success",
-            duration: 2000,
-          });
-          this.loadUserData();
+      this.deleteUser(row.id).then((data) => {
+        this.$notify({
+          title: "成功",
+          message: data,
+          type: "success",
+          duration: 2000,
         });
+        this.loadUserData();
+      });
     },
     loadUserData() {
       this.listLoading = true;
@@ -370,16 +390,15 @@ export default {
           this.updateStatus({
             id: row.id,
             status: userStatus,
-          })
-            .then((data) => {
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.loadUserData();
+          }).then((data) => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000,
             });
+            this.loadUserData();
+          });
         })
         .catch((err) => {
           this.$notify({
@@ -428,5 +447,27 @@ export default {
   .cell {
     padding: 2px 10px;
   }
+}
+.treeScrollbar::-webkit-scrollbar-track-piece {
+  //滚动条凹槽的颜色，还可以设置边框属性
+  background-color: #f1f1f1;
+}
+ 
+.treeScrollbar::-webkit-scrollbar {
+  //滚动条的宽度
+  width: 10px;
+  height: 10px;
+}
+ 
+.treeScrollbar::-webkit-scrollbar-thumb {
+  //滚动条的设置
+  background-color: #c1c1c1;
+  background-clip: padding-box;
+  min-height: 28px;
+  border-radius: 8px;
+}
+ 
+.treeScrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a8a8a8;
 }
 </style>
