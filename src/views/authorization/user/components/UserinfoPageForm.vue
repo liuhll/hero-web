@@ -3,7 +3,7 @@
     <el-card>
       <el-form
         ref="userInfo"
-        label-width="120px"
+        label-width="110px"
         :model="userInfo"
         :rules="rules"
         class="userinfo"
@@ -17,6 +17,7 @@
                     v-model="userInfo.userName"
                     placeholder="请输入用户名"
                     :disabled="editType ==='update'"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -25,14 +26,25 @@
                   <el-input
                     v-model="userInfo.chineseName"
                     placeholder="请输入中文名"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item v-if="editType ==='create'" label="密码" prop="password" required>
+                  <el-input
+                    v-model="userInfo.password"
+                    placeholder="请输入密码"
+                    size="small"
+                  />
+                </el-form-item>
+              </el-col>                            
               <el-col :span="12">
                 <el-form-item label="手机" prop="phone" required>
                   <el-input
                     v-model="userInfo.phone"
                     placeholder="请输入手机号码"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -41,6 +53,7 @@
                   <el-input
                     v-model="userInfo.email"
                     placeholder="请输入电子邮件"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -65,7 +78,7 @@
                     placeholder="请选择所属部门"
                     filterable
                     size="small"
-                    style="width: 100%; float: left; padding: 2px 0"
+                    style="width: 100%"
                   ></el-cascader>
                 </el-form-item>
               </el-col>
@@ -78,7 +91,8 @@
                 >
                   <el-select
                     v-model="userInfo.positionId"
-                    style="width: 100%; float: left; padding: 2px 0"
+                    style="width: 100%"
+                    size="small"
                   >
                     <el-option
                       v-for="item in deptPositions"
@@ -89,34 +103,36 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  label="性别"
-                  prop="gender"
-                  placeholder="请选择性别"
-                  required
-                >
-                  <el-radio-group v-model="userInfo.gender">
-                    <el-radio :label="1">男</el-radio>
-                    <el-radio :label="0">女</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
+
               <el-col :span="12">
                 <el-form-item label="生日" prop="birth">
                   <el-date-picker
                     v-model="userInfo.birth"
                     type="date"
                     placeholder="请选择生日"
-                    style="width: 100%; float: left; padding: 2px 0"
+                    style="width: 100%" 
                   ></el-date-picker>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="性别"
+                  prop="gender"
+                  placeholder="请选择性别"
+                  required                 
+                >
+                  <el-radio-group v-model="userInfo.gender" style="width: 100%" size="small">
+                    <el-radio :label="1">男</el-radio>
+                    <el-radio :label="0">女</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>              
               <el-col :span="12">
                 <el-form-item label="毕业院校" prop="graduateInstitutions">
                   <el-input
                     v-model="userInfo.graduateInstitutions"
                     placeholder="请输入毕业院校"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -124,8 +140,9 @@
                 <el-form-item label="最高学历" prop="education">
                   <el-select
                     v-model="userInfo.education"
-                    style="width: 100%; float: left; padding: 2px 0"
+                    style="width: 100%"
                     clearable
+                    size="small"
                   >
                     <el-option key="1" label="博士" value="1"></el-option>
                     <el-option key="2" label="硕士" value="2"></el-option>
@@ -137,7 +154,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="专业" prop="major">
-                  <el-input v-model="userInfo.major" placeholder="请输入专业" />
+                  <el-input v-model="userInfo.major" placeholder="请输入专业" size="small"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -145,6 +162,7 @@
                   <el-input
                     v-model="userInfo.nativePlace"
                     placeholder="请输入籍贯"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -153,6 +171,7 @@
                   <el-input
                     v-model="userInfo.address"
                     placeholder="请输入联系地址"
+                    size="small"
                   />
                 </el-form-item>
               </el-col>
@@ -166,7 +185,7 @@
                   multiple
                   clearable
                   filterable
-                  style="width: 100%; float: left; padding: 2px 0"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="item in roles"
@@ -193,6 +212,7 @@
 
 <script>
 import { isEmpty } from "@/utils";
+import { isPassword, validatePhone, validatePhoneTwo } from '@/utils/validator';
 import { mapActions } from "vuex";
 import Tinymce from "@/components/Tinymce";
 export default {
@@ -240,6 +260,13 @@ export default {
             trigger: "blur",
           },
         ],
+        password: [
+          { required: true, message: "密码不允许为空", trigger: "blur" },
+          {
+            validator: isPassword ,
+            trigger: "blur",
+          },
+        ],        
         chineseName: [
           { required: true, message: "中文名称不允许为空", trigger: "blur" },
           {
@@ -252,10 +279,7 @@ export default {
         phone: [
           { required: true, message: "手机号码不允许为空", trigger: "blur" },
           {
-            type: "regexp",
-            pattern:
-              "^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$",
-            message: "长度不允许超过50个字符",
+            validator: validatePhone ,
             trigger: "blur",
           },
         ],
