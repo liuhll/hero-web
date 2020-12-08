@@ -270,12 +270,6 @@ export default {
                 this.haveUnSaveOrgData = false;
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();
@@ -297,12 +291,6 @@ export default {
                 this.haveUnSaveOrgData = false;
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();
@@ -340,12 +328,6 @@ export default {
                 this.haveUnSaveOrgData = false;
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();
@@ -367,12 +349,6 @@ export default {
                 this.haveUnSaveOrgData = false;
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();
@@ -406,12 +382,6 @@ export default {
                 this.loadOrgData(parent.data.id);
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();
@@ -429,12 +399,6 @@ export default {
                 this.loadOrgData(parent.data.id);
               })
               .catch((err) => {
-                this.$notify({
-                  title: "失败",
-                  message: err.message,
-                  type: "error",
-                  duration: 2000,
-                });
                 this.haveUnSaveOrgData = false;
                 this.operate = operateType.Query;
                 this.handleCancleOrgData();

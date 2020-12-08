@@ -85,12 +85,6 @@ export default {
               this.$nextTick(() => {
                 loadingInstance.close();
               });
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               //this.$store.dispatch("tagsView/delView", this.$route);
               //this.$router.push({ name: "user" });
             });

@@ -316,14 +316,6 @@ export default {
                 duration: 2000,
               });
               this.loadUserData();
-            })
-            .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
             });
         })
         .catch((err) => {
@@ -345,14 +337,6 @@ export default {
             duration: 2000,
           });
           this.loadUserData();
-        })
-        .catch((err) => {
-          this.$notify({
-            title: "失败",
-            message: err.message,
-            type: "error",
-            duration: 2000,
-          });
         });
     },
     loadUserData() {
@@ -395,14 +379,6 @@ export default {
                 duration: 2000,
               });
               this.loadUserData();
-            })
-            .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
             });
         })
         .catch((err) => {

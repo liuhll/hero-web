@@ -315,12 +315,6 @@ export default {
               this.haveUnSavePermissionData = false;
             })
             .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               this.haveUnSavePermissionData = false;
               this.operate = operateType.Query;
               this.handleCancleSaveData();
@@ -343,12 +337,6 @@ export default {
               this.haveUnSavePermissionData = false;
             })
             .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               this.haveUnSavePermissionData = false;
               this.operate = operateType.Query;
               this.handleCancleSaveData();
@@ -378,12 +366,6 @@ export default {
               this.haveUnSavePermissionData = false;
             })
             .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               this.haveUnSavePermissionData = false;
               this.operate = operateType.Query;
               this.handleCancleSaveData();
@@ -406,12 +388,6 @@ export default {
               this.haveUnSavePermissionData = false;
             })
             .catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               this.haveUnSavePermissionData = false;
               this.operate = operateType.Query;
               this.handleCancleSaveData();
@@ -447,12 +423,6 @@ export default {
             this.loadMenuTreeData(parent.data.permissionId);
             this.operate = operateType.Query;
           }).catch((err) => {
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
               this.haveUnSavePermissionData = false;
               this.operate = operateType.Query;
               this.handleCancleSaveData();
