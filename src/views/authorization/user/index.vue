@@ -347,43 +347,6 @@ export default {
         }, 1.5 * 200);
       });
     },
-    createData() {
-      this.$refs["userInfo"].$refs["userInfoForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.userInfo.status = 1;
-          this.create(this.userInfo)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.loadUserData();
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-              this.$notify({
-                title: "失败",
-                message: err.message,
-                type: "error",
-                duration: 2000,
-              });
-            });
-        }
-      });
-    },
     updateData() {
       this.$refs["userInfo"].$refs["userInfoForm"].validate((valid) => {
         if (valid) {

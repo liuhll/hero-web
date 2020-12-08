@@ -18,7 +18,7 @@ const authorizationRouter = {
         },
         {
             path: 'user/page',
-            component: () => import('@/views/authorization/user/CreateOrUpdate'),
+            component: () => import('@/views/authorization/user/components/CreateOrUpdate'),
             name: 'user-create',
             hidden: true,
             meta: {
