@@ -179,7 +179,7 @@
           </el-tabs>
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="用户角色信息">
-              <el-form-item prop="roleIds" label="角色" required>
+              <el-form-item prop="roleIds" label="角色">
                 <el-select
                   v-model="userInfo.roleIds"
                   multiple
@@ -297,9 +297,9 @@ export default {
         positionId: [
           { required: true, message: "职位信息不允许为空", trigger: "change" },
         ],
-        roleIds: [
-          { required: true, message: "角色信息不允许为空", trigger: "change" },
-        ],
+        // roleIds: [
+        //   { required: true, message: "角色信息不允许为空", trigger: "change" },
+        // ],
         gender: [
           { required: true, message: "请选择用户性别", trigger: "change" },
         ],

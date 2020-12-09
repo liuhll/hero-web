@@ -49,7 +49,7 @@ export default {
         name: [
           {
             required: true,
-            message: "用户名不允角色名称不允许为空",
+            message: "角色名称不允许为空",
             trigger: "blur",
           },
         ],
