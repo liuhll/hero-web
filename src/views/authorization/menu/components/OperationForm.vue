@@ -48,6 +48,7 @@
             <el-table-column prop="serviceId" label="服务Id"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="webApi" label="API路径"></el-table-column>
+            <el-table-column prop="method" label="请求方法"></el-table-column>
             <el-table-column prop="developer" label="开发者"></el-table-column>
             <el-table-column prop="date" label="维护日期"></el-table-column>
             <!-- <el-table-column label="操作" min-width="100" v-if="operate !== operateType.Query">
