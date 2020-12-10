@@ -46,13 +46,17 @@ export default {
         orgId: null,
         positionId: null,
         roleIds: [],
+        userGroupIds: []
       },
     };
   },
   mounted() {
+    debugger
     if (this.$route.query.id) {
       this.getUser(this.$route.query.id).then((data) => {
         this.userInfo = data;
+        this.$refs['userinfo-form'].roles = this.userInfo.roles
+        this.$refs['userinfo-form'].userGroups = this.userInfo.userGroups
       });
     }
   },

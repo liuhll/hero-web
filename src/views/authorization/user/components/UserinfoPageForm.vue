@@ -178,25 +178,58 @@
             </el-tab-pane>
           </el-tabs>
           <el-tabs style="margin-bottom: 20px">
-            <el-tab-pane label="用户角色信息">
+            <el-tab-pane label="角色信息">
               <el-form-item prop="roleIds" label="角色">
-                <el-select
-                  v-model="userInfo.roleIds"
-                  multiple
-                  clearable
-                  filterable
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in roles"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
+                <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的角色" placement="top-start">
+                  <el-select
+                    v-model="userInfo.roleIds"
+                    multiple
+                    clearable
+                    filterable
+                    remote
+                    :loading="loading"
+                    :remote-method="searchRoles"
+                    style="width: 100%"
+                    placeholder="请输入要添加的角色名称"
+                  >
+                    <el-option
+                      v-for="item in roles"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    ></el-option>
+                  </el-select>
+                </el-tooltip>
+
               </el-form-item>
             </el-tab-pane>
           </el-tabs>
+           <el-tabs>
+            <el-tab-pane label="用户组信息">
+              <el-form-item prop="userGroupIds" label="用户组">
+                <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的用户组" placement="top-start">
+                  <el-select
+                    v-model="userInfo.userGroupIds"
+                    multiple
+                    clearable
+                    filterable
+                    remote
+                    :loading="loading"
+                    :remote-method="searchUserGroups"                  
+                    placeholder="请输入要添加的用户组"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in userGroups"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
+                    ></el-option>
+                  </el-select>
+                </el-tooltip>
+              </el-form-item>
+            </el-tab-pane>
+          </el-tabs>          
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="用户简介信息">
               <el-form-item prop="avatar" label="简介">
@@ -250,6 +283,8 @@ export default {
       orgData: [],
       deptPositions: [],
       roles: [],
+      userGroups: [],
+      loading: false,
       rules: {
         userName: [
           { required: true, message: "用户名不允许为空", trigger: "blur" },
@@ -304,15 +339,29 @@ export default {
           { required: true, message: "请选择用户性别", trigger: "change" },
         ],
       },
+      queryRole: {
+        searchKey: undefined,
+        status: 1,
+        pageCount: 10,
+        pageIndex: 1,
+      },      
+      queryUserGroup: {
+        searchKey: undefined,
+        status: 1,
+        pageCount: 10,
+        pageIndex: 1,
+      }
+
     };
   },
   mounted() {
     this.loadOrgData();
-    this.loadRoleData();
+    //this.loadRoleData();
   },
   methods: {
     ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
-    ...mapActions("role", ["list"]),
+    ...mapActions("role", ["list", "search"]),
+    ...mapActions("userGroup", ["searchUserGroup"]),
     handleSearchDepartment(searchKey) {
       this.$refs.treeSelect.filterFun(searchKey);
     },
@@ -322,9 +371,26 @@ export default {
       });
     },
     loadRoleData() {
-      this.list().then((data) => {
-        this.roles = data;
+      this.loading = true;
+      this.search(this.queryRole).then((data) => {
+        this.totalCount = data.totalCount;
+        this.roles = data.items;
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.loading = false;
+        }, 1.5 * 200);
       });
+    },
+    loadUserGroupData() {
+      this.loading = true;
+      this.searchUserGroup(this.queryUserGroup).then((data) => {
+        this.totalCount = data.totalCount;
+        this.userGroups = data.items;
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.loading = false;
+        }, 1.5 * 200);
+      });      
     },
     handleClearDepartment() {
       this.deptPositions = [];
@@ -336,6 +402,18 @@ export default {
       });
     },
     handlePositionChange(val) {},
+    searchRoles(key) {
+      if (key !== '' || !this.userInfo.roleIds) {
+      this.queryRole.searchKey = key;
+      this.loadRoleData()
+      }
+    },
+    searchUserGroups(key) {
+      if (key !== '' || !this.userInfo.userGroupIds) {
+      this.queryUserGroup.searchKey = key;
+      this.loadUserGroupData()
+      }
+    }    
   },
 };
 </script>

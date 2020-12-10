@@ -46,6 +46,7 @@ export default {
         orgId: null,
         positionId: null,
         roleIds: [],
+        userGroupIds: []
       },
     };
   },

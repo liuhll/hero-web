@@ -100,6 +100,11 @@
                 label="角色"
                 min-width="140"
               ></el-table-column>
+              <el-table-column
+                prop="displayUserGroups"
+                label="用户组"
+                min-width="140"
+              ></el-table-column>              
               <el-table-column label="状态" class-name="status-col">
                 <template slot-scope="{ row }">
                   <el-tag :type="row.status | statusTagFilter">
