@@ -116,10 +116,47 @@
                 >
               </el-popconfirm>
 
-              <el-button type="success" size="mini" @click="handleLook(row)">
+              <!-- <el-button type="success" size="mini" @click="handleLook(row)">
                 <svg-icon icon-class="look" />
                 查看</el-button
-              >
+              > -->
+                  <el-badge :is-dot="false" size="mini" class="item">
+                    <el-dropdown size="mini" style="margin-left: 10px">
+                      <el-button type="primary" size="mini" class="filter-item">
+                        更多
+                        <i class="el-icon-arrow-down el-icon--right" />
+                      </el-button>
+                      <el-dropdown-menu
+                        slot="dropdown"
+                        style="width: 95px; padding: 5px 0"
+                      >
+                        <el-badge :is-dot="false" size="mini" class="item">
+                          <el-dropdown-item
+                            v-if="row.status == 1"
+                            @click.native="handleModifyStatus(row, 'freeze')"
+                            ><svg-icon
+                              icon-class="freeze"
+                            />&nbsp;冻结</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            v-if="row.status == 0"
+                            @click.native="handleModifyStatus(row, 'activate')"
+                            ><svg-icon
+                              icon-class="activate"
+                            />&nbsp;激活</el-dropdown-item
+                          >
+                        </el-badge>
+                        <el-badge :is-dot="false" size="mini" class="item">
+                          <el-dropdown-item @click.native="handleLook(row)"
+                            ><svg-icon
+                              icon-class="look"
+                            />&nbsp;查看</el-dropdown-item
+                          >
+                        </el-badge>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-badge>
+
             </template>
           </el-table-column>
         </el-table>
@@ -206,7 +243,7 @@ export default {
     this.loadRoleData();
   },
   methods: {
-    ...mapActions("role", ["search", "create", "update", "delete"]),
+    ...mapActions("role", ["search", "create", "update", "delete", "updateStatus"]),
     handleRoleFilter() {
       this.query.pageIndex = 1;
       this.loadRoleData();
@@ -341,6 +378,45 @@ export default {
         this.$refs["role"].$refs["roleForm"].clearValidate();
       });
     },
+    handleModifyStatus(row, operate) {
+      let operateDesc;
+      let status = 0;
+      if (operate == "freeze") {
+        operateDesc = "冻结";
+        status = 0;
+      }
+      if (operate == "activate") {
+        operateDesc = "激活";
+        status = 1;
+      }   
+      this.$confirm(`您是否确认${operateDesc}该角色?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.updateStatus({
+            id: row.id,
+            status: status,
+          }).then((data) => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000,
+            });
+            this.loadRoleData();
+          });
+        })
+        .catch((err) => {
+          this.$notify({
+            title: "提示",
+            message: `取消${operateDesc}操作${err};`,
+            type: "info",
+            duration: 2000,
+          });
+        });
+    }    
   },
 };
 </script>
