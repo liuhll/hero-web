@@ -65,7 +65,7 @@
             prop="displayRoles"
             label="角色"
             min-width="140"
-          ></el-table-column>          
+          ></el-table-column>
           <el-table-column label="状态" class-name="status-col">
             <template slot-scope="{ row }">
               <el-tag :type="row.status | statusTagFilter">
@@ -82,7 +82,7 @@
             prop="creationTime"
             label="创建时间"
             min-width="100"
-          ></el-table-column>          
+          ></el-table-column>
           <el-table-column
             prop="lastModificationUserName"
             label="更新人"
@@ -120,49 +120,50 @@
                   >删除</el-button
                 >
               </el-popconfirm>
-                  <el-badge :is-dot="false" size="mini" class="item">
-                    <el-dropdown size="mini" style="margin-left: 10px">
-                      <el-button type="primary" size="mini" class="filter-item">
-                        更多
-                        <i class="el-icon-arrow-down el-icon--right" />
-                      </el-button>
-                      <el-dropdown-menu
-                        slot="dropdown"
-                        style="width: 105px; padding: 5px 0"
+              <el-badge :is-dot="false" size="mini" class="item">
+                <el-dropdown size="mini" style="margin-left: 10px">
+                  <el-button type="primary" size="mini" class="filter-item">
+                    更多
+                    <i class="el-icon-arrow-down el-icon--right" />
+                  </el-button>
+                  <el-dropdown-menu
+                    slot="dropdown"
+                    style="width: 105px; padding: 5px 0"
+                  >
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item
+                        v-if="row.status == 1"
+                        @click.native="handleModifyStatus(row, 'freeze')"
+                        ><svg-icon
+                          icon-class="freeze"
+                        />&nbsp;冻结</el-dropdown-item
                       >
-                        <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item
-                            v-if="row.status == 1"
-                            @click.native="handleModifyStatus(row, 'freeze')"
-                            ><svg-icon
-                              icon-class="freeze"
-                            />&nbsp;冻结</el-dropdown-item
-                          >
-                          <el-dropdown-item
-                            v-if="row.status == 0"
-                            @click.native="handleModifyStatus(row, 'activate')"
-                            ><svg-icon
-                              icon-class="activate"
-                            />&nbsp;激活</el-dropdown-item
-                          >
-                        </el-badge>                      
-                        <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item @click.native="handleAddUserGroupUser(row)"
-                            ><svg-icon
-                              icon-class="assignment"
-                            />&nbsp;增加组成员</el-dropdown-item
-                          >
-                        </el-badge>
-                        <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item @click.native="handleLook(row)"
-                            ><svg-icon
-                              icon-class="look"
-                            />&nbsp;查看用户组</el-dropdown-item
-                          >
-                        </el-badge>                        
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </el-badge>
+                      <el-dropdown-item
+                        v-if="row.status == 0"
+                        @click.native="handleModifyStatus(row, 'activate')"
+                        ><svg-icon
+                          icon-class="activate"
+                        />&nbsp;激活</el-dropdown-item
+                      >
+                    </el-badge>
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item
+                        @click.native="handleAddUserGroupUser(row)"
+                        ><svg-icon
+                          icon-class="assignment"
+                        />&nbsp;增加组成员</el-dropdown-item
+                      >
+                    </el-badge>
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item @click.native="handleLook(row)"
+                        ><svg-icon
+                          icon-class="look"
+                        />&nbsp;查看用户组</el-dropdown-item
+                      >
+                    </el-badge>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-badge>
             </template>
           </el-table-column>
         </el-table>
@@ -180,10 +181,11 @@
       :visible.sync="dialogFormVisible"
       width="30%"
     >
-      <user-group-form   
+      <user-group-form
         ref="userGroup"
         :userGroup="userGroup"
-        :dialogStatus="dialogStatus"></user-group-form>
+        :dialogStatus="dialogStatus"
+      ></user-group-form>
       <div slot="footer" class="dialog-footer" v-if="dialogStatus !== 'look'">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
@@ -198,21 +200,20 @@
       title="增加组成员"
       :visible.sync="dialogAssignmentUserGroupUserVisible"
       width="750px"
-      @close="handleAddUserGroupUseDialogClose()"     
+      @close="handleAddUserGroupUseDialogClose()"
     >
-      <assignment-user-group-user-form 
+      <assignment-user-group-user-form
         ref="userGroupUser"
-        ></assignment-user-group-user-form>
-        <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogAssignmentUserGroupUserVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="handleAddUserGroupUserData()"
-
+      ></assignment-user-group-user-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAssignmentUserGroupUserVisible = false"
+          >取消</el-button
+        >
+        <el-button type="primary" @click="handleAddUserGroupUserData()"
           >确认</el-button
         >
       </div>
-    </el-dialog>    
+    </el-dialog>
   </div>
 </template>
 
@@ -221,13 +222,13 @@ import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import UserGroupForm from "./components/UserGroupForm";
-import AssignmentUserGroupUserForm from "./components/AssignmentUserGroupUserForm"
+import AssignmentUserGroupUserForm from "./components/AssignmentUserGroupUserForm";
 import { Loading } from "element-ui";
 export default {
   components: {
     Pagination,
     UserGroupForm,
-    AssignmentUserGroupUserForm
+    AssignmentUserGroupUserForm,
   },
   filters: {
     statusFilter(status) {
@@ -264,14 +265,21 @@ export default {
         create: "新增用户组",
         look: "查看用户组",
       },
-      assignmentUserIds: []
+      assignmentUserIds: [],
     };
   },
   mounted() {
     this.loadUserGroupData();
   },
   methods: {
-    ...mapActions("userGroup", ["searchUserGroup", "createUserGroup", "updateUserGroup", "deleteUserGroup", "getUserGroup"]),
+    ...mapActions("userGroup", [
+      "searchUserGroup",
+      "createUserGroup",
+      "updateUserGroup",
+      "deleteUserGroup",
+      "getUserGroup",
+      "addUserGroupUsers",
+    ]),
     handleUserGroupFilter() {
       this.query.pageIndex = 1;
       this.loadUserGroupData();
@@ -295,17 +303,38 @@ export default {
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
-    handleAddUserGroupUser(row) {    
+    handleAddUserGroupUser(row) {
       this.dialogAssignmentUserGroupUserVisible = true;
       this.$nextTick(() => {
         this.$refs["userGroupUser"].initInput({
           userGroupId: row.id,
-          userIds: []
+          userIds: [],
         });
       });
     },
     handleAddUserGroupUserData() {
-      console.log(this.$refs["userGroupUser"].input)
+      const groupUsers = this.$refs["userGroupUser"].input;
+      if (!groupUsers.userIds) {
+        this.$message.error("请选择要分配的用户");
+      } else {
+        let loadingInstance = Loading.service({
+          target: ".el-dialog",
+          text: "保存中...",
+        });
+        this.addUserGroupUsers(groupUsers).then((data) => {
+          this.$notify({
+            title: "成功",
+            message: data,
+            type: "success",
+            duration: 2000,
+          });
+          this.$nextTick(() => {
+            // 以服务的方式调用的 Loading 需要异步关闭
+            loadingInstance.close();
+          });
+          this.dialogAssignmentUserGroupUserVisible = false;
+        });
+      }
     },
     handleUpdate(row) {
       this.resetUserGroupInfo();
@@ -320,19 +349,18 @@ export default {
     loadUserGroup(id) {
       this.getUserGroup(id).then((data) => {
         this.userGroup = data;
-      })
+      });
     },
     handleDelete(row) {
-      this.deleteUserGroup(row.id)
-        .then((data) => {
-          this.$notify({
-            title: "成功",
-            message: data,
-            type: "success",
-            duration: 2000,
-          });
-          this.loadUserGroupData();
+      this.deleteUserGroup(row.id).then((data) => {
+        this.$notify({
+          title: "成功",
+          message: data,
+          type: "success",
+          duration: 2000,
         });
+        this.loadUserGroupData();
+      });
     },
     handleClear() {
       this.query.pageIndex = 1;
@@ -420,9 +448,7 @@ export default {
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
-    handleAddUserGroupUseDialogClose() {
-      
-    }
+    handleAddUserGroupUseDialogClose() {},
   },
 };
 </script>

@@ -70,7 +70,7 @@ export function deleteUserGroupUser(input) {
 export function addUserGroupUsers(input) {
     return request({
         url: `${setting.apiPrefix}/usergroup/users`,
-        method: 'delete',
+        method: 'post',
         data: { input: input }
     })
 }

@@ -1,29 +1,25 @@
 <template>
   <div class="form-container">
-   <el-form
-      ref="userGroupUserForm"
-      style="margin-left:30px;"
-      size="mini"
-    >
-      <el-form-item>
+    <el-form ref="userGroupUserForm" style="margin-left: 30px" size="mini">
+      <el-form-item >
         <hero-transfer
           filterable
           :before-filter="filterUserInfo"
           filter-placeholder="请输入用户名/姓名进行检索"
           :titles="['待选择', '已选择']"
-          :button-texts="['移除','选择']"
+          :button-texts="['移除', '选择']"
           v-model="input.userIds"
           :props="{
             key: 'id',
-            label: 'chineseName'
-          }"          
+            label: 'chineseName',
+          }"
           :data="userList"
+          @change="handleChange()"
           class="userinfo"
           ref="userInfoTransfer"
         ></hero-transfer>
       </el-form-item>
-    </el-form>      
-
+    </el-form>
   </div>
 </template>
 
@@ -31,48 +27,56 @@
 import { mapActions } from "vuex";
 import { Loading } from "element-ui";
 import { isEmpty } from "@/utils";
-import HeroTransfer from "@/components/HeroTransfer"
+import HeroTransfer from "@/components/HeroTransfer";
 export default {
   name: "AssignmentUserGroupUserForm",
   components: {
-    HeroTransfer
+    HeroTransfer,
   },
   data() {
     return {
-        userList: [],
-        query: {
-          searchKey: "",
-          pageCount: 10,
-          pageIndex: 1,            
+      userList: [],
+      query: {
+        searchKey: "",
+        userIds: {
+          include: false,
+          ids: [],
         },
-        input: {
-          userGroupId: null,
-          userIds: []
-        }       
+        pageCount: 10,
+        pageIndex: 1,
+      },
+      input: {
+        userGroupId: null,
+        userIds: [],
+      },
     };
   },
   mounted() {
-    this.searchUserInfo()
+    this.searchUserInfo();
   },
   methods: {
-    ...mapActions("user", [
-      "queryUser"
-    ]),      
+    ...mapActions("user", ["queryUser"]),
     searchUserInfo() {
       this.queryUser(this.query).then((data) => {
         this.userList = data.items;
       });
     },
     filterUserInfo(title, item) {
-      if (title == '待选择') {
-        this.query.searchKey = item
-        this.searchUserInfo()
+      if (title == "待选择") {
+        this.query.searchKey = item;
+        this.searchUserInfo();
       }
     },
     initInput(data) {
-      this.input = data
-    }    
-  }
+      this.input = data;
+    },
+    handleChange() {
+      this.query.userIds.ids = this.input.userIds;
+      this.queryUser(this.query).then((data) => {
+        this.userList = data.items;
+      });
+    },
+  },
 };
 </script>
 
