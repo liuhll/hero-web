@@ -51,11 +51,16 @@
           style="width: 100%"
         >
           <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column
-            prop="name"
-            label="用户组名"
-            min-width="100"
-          ></el-table-column>
+          <el-table-column prop="name" label="用户组名" min-width="100">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                @click="handleLook(scope.row)"
+                >{{ scope.row.name }}</el-button
+              >
+            </template>
+          </el-table-column>
           <el-table-column
             prop="memo"
             label="备注"
@@ -147,18 +152,18 @@
                       >
                     </el-badge>
                     <el-badge :is-dot="false" size="mini" class="item">
-                      <el-dropdown-item
-                        @click.native="handleAddUserGroupUser(row)"
-                        ><svg-icon
-                          icon-class="assignment"
-                        />&nbsp;增加组成员</el-dropdown-item
-                      >
-                    </el-badge>
-                    <el-badge :is-dot="false" size="mini" class="item">
                       <el-dropdown-item @click.native="handleLook(row)"
                         ><svg-icon
                           icon-class="look"
                         />&nbsp;查看用户组</el-dropdown-item
+                      >
+                    </el-badge>
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item
+                        @click.native="handleAddUserGroupUser(row)"
+                        ><svg-icon
+                          icon-class="assignment"
+                        />&nbsp;分配组成员</el-dropdown-item
                       >
                     </el-badge>
                   </el-dropdown-menu>
@@ -197,10 +202,9 @@
     </el-dialog>
 
     <el-dialog
-      title="增加组成员"
+      title="分配组成员"
       :visible.sync="dialogAssignmentUserGroupUserVisible"
       width="750px"
-      @close="handleAddUserGroupUseDialogClose()"
     >
       <assignment-user-group-user-form
         ref="userGroupUser"
@@ -259,11 +263,11 @@ export default {
       userGroup: {
         name: undefined,
         memo: undefined,
-        roleIds: []
+        roleIds: [],
       },
       textMap: {
         update: "编辑用户组",
-        create: "新增用户组",
+        create: "分配组成员",
         look: "查看用户组",
       },
       assignmentUserIds: [],
@@ -280,6 +284,7 @@ export default {
       "deleteUserGroup",
       "getUserGroup",
       "addUserGroupUsers",
+      "updateUserGroupStatus"
     ]),
     handleUserGroupFilter() {
       this.query.pageIndex = 1;
@@ -315,7 +320,7 @@ export default {
     },
     handleAddUserGroupUserData() {
       const groupUsers = this.$refs["userGroupUser"].input;
-      if (!groupUsers.userIds || groupUsers.userIds.length <=0) {
+      if (!groupUsers.userIds || groupUsers.userIds.length <= 0) {
         this.$message.error("请添加要分配给该用户组的用户");
       } else {
         let loadingInstance = Loading.service({
@@ -342,8 +347,8 @@ export default {
       this.userGroup = Object.assign({}, row);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
-      this.$nextTick(() => {       
-        this.$refs['userGroup'].roles = row.roles
+      this.$nextTick(() => {
+        this.$refs["userGroup"].roles = row.roles;
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
@@ -441,13 +446,52 @@ export default {
     },
     handleLook(row) {
       this.$router.push({
-        name: 'usergroup-user',
+        name: "usergroup-user",
         query: {
-          userGroupId: row.id
-        } 
-      })
+          userGroupId: row.id,
+          userGroupName: row.name,
+        },
+      });
     },
-    handleAddUserGroupUseDialogClose() {},
+    handleModifyStatus(row, operate) {
+      let operateDesc;
+      let status = 0;
+      if (operate == "freeze") {
+        operateDesc = "冻结";
+        status = 0;
+      }
+      if (operate == "activate") {
+        operateDesc = "激活";
+        status = 1;
+      }   
+      this.$confirm(`您是否确认${operateDesc}该用户组?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.updateUserGroupStatus({
+            id: row.id,
+            status: status,
+          }).then((data) => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000,
+            });
+            this.loadUserGroupData();
+          });
+        })
+        .catch((err) => {
+          this.$notify({
+            title: "提示",
+            message: `取消${operateDesc}操作${err};`,
+            type: "info",
+            duration: 2000,
+          });
+        });
+    },
   },
 };
 </script>

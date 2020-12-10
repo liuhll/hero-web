@@ -61,7 +61,7 @@ export function searchUserGroupUser(query) {
 
 export function deleteUserGroupUser(input) {
     return request({
-        url: `${setting.apiPrefix}/usergroup`,
+        url: `${setting.apiPrefix}/usergroup/users`,
         method: 'delete',
         data: { input: input }
     })

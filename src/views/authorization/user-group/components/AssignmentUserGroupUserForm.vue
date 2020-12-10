@@ -1,6 +1,7 @@
 <template>
-  <div class="form-container">
-    <el-form ref="userGroupUserForm" style="margin-left: 30px" size="mini">
+  <div>
+    <span style="font-size:14px;color:red; margin-left: 30px;">*Tips: 您可以输入要添加的用户名进行检索</span>
+    <el-form ref="userGroupUserForm" style="margin-left: 30px;margin-top: 10px" size="mini">
       <el-form-item >
         <hero-transfer
           filterable
