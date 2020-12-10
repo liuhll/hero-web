@@ -6,29 +6,13 @@
       size="mini"
     >
       <el-form-item>
-        <!-- <el-transfer
-          filterable
-          :before-filter="filterUserInfo"
-          filter-placeholder="请输入用户名/姓名进行检索"
-          :titles="['待选择', '已选择']"
-          :button-texts="['移除','选择']"
-          v-model="userIds"
-          :props="{
-            key: 'id',
-            label: 'chineseName'
-          }"          
-          :data="userList"
-          class="userinfo"
-          ref="userInfoTransfer"
-          >
-        </el-transfer> -->
         <hero-transfer
           filterable
           :before-filter="filterUserInfo"
           filter-placeholder="请输入用户名/姓名进行检索"
           :titles="['待选择', '已选择']"
           :button-texts="['移除','选择']"
-          v-model="userIds"
+          v-model="input.userIds"
           :props="{
             key: 'id',
             label: 'chineseName'
@@ -61,7 +45,10 @@ export default {
           pageCount: 10,
           pageIndex: 1,            
         },
-        userIds: []       
+        input: {
+          userGroupId: null,
+          userIds: []
+        }       
     };
   },
   mounted() {
@@ -72,15 +59,8 @@ export default {
       "queryUser"
     ]),      
     searchUserInfo() {
-      let loadingInstance = Loading.service({
-        target: ".userinfo",
-        text: "加载中...",
-      });
       this.queryUser(this.query).then((data) => {
         this.userList = data.items;
-        this.$nextTick(() => {
-          loadingInstance.close();
-        });
       });
     },
     filterUserInfo(title, item) {
@@ -88,6 +68,9 @@ export default {
         this.query.searchKey = item
         this.searchUserInfo()
       }
+    },
+    initInput(data) {
+      this.input = data
     }    
   }
 };

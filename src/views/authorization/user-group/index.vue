@@ -198,16 +198,17 @@
       title="增加组成员"
       :visible.sync="dialogAssignmentUserGroupUserVisible"
       width="750px"
-       ref="assignmentUserGroupUserDialog"
+      @close="handleAddUserGroupUseDialogClose()"     
     >
       <assignment-user-group-user-form 
-        ref="assignmentUserGroupUser"
-        :userIds="assignmentUserIds"></assignment-user-group-user-form>
+        ref="userGroupUser"
+        ></assignment-user-group-user-form>
         <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAssignmentUserGroupUserVisible = false">取消</el-button>
         <el-button
           type="primary"
           @click="handleAddUserGroupUserData()"
+
           >确认</el-button
         >
       </div>
@@ -294,12 +295,17 @@ export default {
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
-    handleAddUserGroupUser() {
-      this.assignmentUserIds = []
+    handleAddUserGroupUser(row) {    
       this.dialogAssignmentUserGroupUserVisible = true;
+      this.$nextTick(() => {
+        this.$refs["userGroupUser"].initInput({
+          userGroupId: row.id,
+          userIds: []
+        });
+      });
     },
     handleAddUserGroupUserData() {
-
+      console.log(this.$refs["userGroupUser"].input)
     },
     handleUpdate(row) {
       this.resetUserGroupInfo();
@@ -414,6 +420,9 @@ export default {
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
+    handleAddUserGroupUseDialogClose() {
+      
+    }
   },
 };
 </script>
