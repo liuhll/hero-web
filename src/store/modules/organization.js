@@ -121,9 +121,9 @@ const actions = {
             })
         })
     },
-    checkCanDeletePosition({ commit }, input) {
+    checkCanDeletePosition({ commit }, id) {
         return new Promise((resolve, reject) => {
-            Position.checkCanDeletePosition(input).then(response => {
+            Position.checkCanDeletePosition(id).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {

@@ -1,12 +1,9 @@
 import request from '@/utils/request'
 import setting from '@/settings'
 
-export const checkCanDeletePosition = (input) => {
+export const checkCanDeletePosition = (id) => {
     return request({
-        url: `${setting.apiPrefix}/position/check`,
-        method: 'post',
-        data: {
-            input: input
-        }
+        url: `${setting.apiPrefix}/position/check/${id}`,
+        method: 'post'
     })
 }

@@ -172,30 +172,40 @@ export default {
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
     },
-    deletePosition(data) {
+    deletePosition(row) {
       this.$confirm("是否删除该岗位?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.checkCanDeletePosition({
-            id: data.id
-          }).then(data => {
-            if (data) {
-              let index = this.department.positions.indexOf(data);
-              this.department.positions.splice(index, 1);
-              this.$message({
-                type: "success",
-                message: "移除职位信息成功,保存后生效"
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: "该职位已被分配用户,需要先删除相关用户才可以删除该职位"
-              });
-            }
-          });
+          debugger
+          if (!row.id) {
+            let index = this.department.positions.indexOf(row);
+            this.department.positions.splice(index, 1);
+            this.$message({
+              type: "success",
+              message: "移除职位信息成功,保存后生效"
+            });
+          }else{
+            this.checkCanDeletePosition(row.id).then(data => {
+              debugger
+              if (data) {
+                let index = this.department.positions.indexOf(row);
+                this.department.positions.splice(index, 1);
+                this.$message({
+                  type: "success",
+                  message: "移除职位信息成功,保存后生效"
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: "该职位已被分配用户,需要先删除相关用户才可以删除该职位"
+                });
+              }
+            });
+          }
+
         })
         .catch(() => {
           this.$message({
