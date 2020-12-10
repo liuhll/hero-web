@@ -259,6 +259,7 @@ export default {
       userGroup: {
         name: undefined,
         memo: undefined,
+        roleIds: []
       },
       textMap: {
         update: "编辑用户组",
@@ -314,8 +315,8 @@ export default {
     },
     handleAddUserGroupUserData() {
       const groupUsers = this.$refs["userGroupUser"].input;
-      if (!groupUsers.userIds) {
-        this.$message.error("请选择要分配的用户");
+      if (!groupUsers.userIds || groupUsers.userIds.length <=0) {
+        this.$message.error("请添加要分配给该用户组的用户");
       } else {
         let loadingInstance = Loading.service({
           target: ".el-dialog",
@@ -341,8 +342,8 @@ export default {
       this.userGroup = Object.assign({}, row);
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
-
-      this.$nextTick(() => {
+      this.$nextTick(() => {       
+        this.$refs['userGroup'].roles = row.roles
         this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
       });
     },
@@ -439,14 +440,12 @@ export default {
       });
     },
     handleLook(row) {
-      this.resetUserGroupInfo();
-      this.userGroup = Object.assign({}, row); // copy obj
-      this.dialogStatus = "look";
-      this.dialogFormVisible = true;
-
-      this.$nextTick(() => {
-        this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
-      });
+      this.$router.push({
+        name: 'usergroup-user',
+        query: {
+          userGroupId: row.id
+        } 
+      })
     },
     handleAddUserGroupUseDialogClose() {},
   },

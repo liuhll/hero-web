@@ -60,6 +60,13 @@ const authorizationRouter = {
             component: () => import('@/views/authorization/user-group'),
             name: 'usergroup',
             meta: { title: '用户组管理', icon: 'user-group', noCache: true }
+        },
+        {
+            path: 'usergroup/user',
+            component: () => import('@/views/authorization/user-group/user.vue'),
+            hidden: true,
+            name: 'usergroup-user',
+            meta: { title: '用户组用户', icon: 'user-group', noCache: true, isPermission: true }
         }
     ]
 }

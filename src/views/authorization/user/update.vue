@@ -51,7 +51,6 @@ export default {
     };
   },
   mounted() {
-    debugger
     if (this.$route.query.id) {
       this.getUser(this.$route.query.id).then((data) => {
         this.userInfo = data;

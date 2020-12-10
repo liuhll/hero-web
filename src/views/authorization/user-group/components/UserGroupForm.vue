@@ -12,20 +12,26 @@
         <el-input v-model="userGroup.name" placeholder="请输入用户组名" />
       </el-form-item>
       <el-form-item prop="roleIds" label="角色" required>
-        <el-select
-          v-model="userGroup.roleIds"
-          multiple
-          clearable
-          filterable
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in roles"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
+            <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的角色" placement="top-start">
+                <el-select
+                  v-model="userGroup.roleIds"
+                  multiple
+                  clearable
+                  filterable
+                  remote
+                  :loading="loading"
+                  :remote-method="searchRoles"
+                  style="width: 100%"
+                  placeholder="请输入要添加的角色名称"
+                >
+                  <el-option
+                    v-for="item in roles"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+            </el-tooltip>
       </el-form-item>
       <el-form-item label="备注" prop="memo">
         <el-input type="textarea" v-model="userGroup.memo" />
@@ -56,19 +62,40 @@ export default {
           },
         ],
       },
+      loading: false,
       roles: [],
+      queryRole: {
+        searchKey: undefined,
+        status: 1,
+        pageCount: 10,
+        pageIndex: 1,
+      },       
     };
   },
-  mounted() {
-    this.loadRoleData();
-  },
   methods: {
-    ...mapActions("role", ["list"]),
+    ...mapActions("role", ["list", "search"]),
     loadRoleData() {
       this.list().then((data) => {
         this.roles = data;
       })
-    }
+    },
+    searchRoles(key) {
+      if (key !== '' || !this.userGroup.roleIds) {
+      this.queryRole.searchKey = key;
+      this.loadRoleData()
+      }
+    },
+    loadRoleData() {
+      this.loading = true;
+      this.search(this.queryRole).then((data) => {
+        this.totalCount = data.totalCount;
+        this.roles = data.items;
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.loading = false;
+        }, 1.5 * 200);
+      });
+    },    
   }
 };
 </script>
