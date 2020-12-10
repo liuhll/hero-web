@@ -72,6 +72,7 @@
                       label: 'name',
                       value: 'id',
                       emitPath: false,
+                      checkStrictly: true,
                       children: 'children',
                     }"
                     clearable
