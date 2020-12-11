@@ -105,13 +105,13 @@
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
-                v-if="row.type !==1"
+                v-if="row.type !== 1"
                 >编辑</el-button
               >
               <el-popconfirm
                 title="您确定要删除该字典吗?"
                 placement="top"
-                v-if="row.type !==1"
+                v-if="row.type !== 1"
                 @onConfirm="handleDelete(row)"
               >
                 <el-button
@@ -183,14 +183,13 @@
     </el-dialog>
 
     <el-dialog
-      title="新增字典項"
-      :visible.sync="dialogAssignmentWordbookItemVisible"
+      :title="wordbookItemTextMap[dialogStatus]"
+      :visible.sync="wordbookItemVisible"
       width="750px"
     >
+      <wordbook-item-form ref="wordbookItem"></wordbook-item-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogAssignmentWordbookItemVisible = false"
-          >取消</el-button
-        >
+        <el-button @click="wordbookItemVisible = false">取消</el-button>
         <el-button type="primary" @click="handleAddWordbookItemData()"
           >确认</el-button
         >
@@ -204,23 +203,13 @@ import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import WordbookForm from "./components/WordbookForm";
-import AssignmentWordbookItemForm from "./components/AssignmentWordbookItemForm";
+import WordbookItemForm from "./components/WordbookItemForm";
 import { Loading } from "element-ui";
 export default {
   components: {
     Pagination,
     WordbookForm,
-    AssignmentWordbookItemForm,
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = ["冻结", "有效"];
-      return statusMap[status];
-    },
-    statusTagFilter(status) {
-      const statusMap = ["danger", "success"];
-      return statusMap[status];
-    },
+    WordbookItemForm
   },
   directives: {
     waves,
@@ -237,7 +226,7 @@ export default {
       wordbookData: [],
       dialogStatus: "",
       dialogFormVisible: false,
-      dialogAssignmentWordbookItemVisible: false,
+      wordbookItemVisible: false,
       wordbook: {
         name: undefined,
         memo: undefined,
@@ -248,7 +237,11 @@ export default {
         create: "新增字典",
         look: "查看字典",
       },
-      assignmentUserIds: [],
+      wordbookItemTextMap: {
+        update: "编辑字典项",
+        create: "新增字典项",
+        look: "查看字典项",
+      },
     };
   },
   mounted() {
@@ -261,8 +254,8 @@ export default {
       "updateWordbook",
       "deleteWordbook",
       "getWordbook",
-      "addWordbookItems",
-      "updateWordbookStatus",
+      "createWordbookItem",
+      "updateWordbookItem",
     ]),
     handleWordbookFilter() {
       this.query.pageIndex = 1;
@@ -288,37 +281,40 @@ export default {
       });
     },
     handleAddWordbookItem(row) {
-      this.dialogAssignmentWordbookItemVisible = true;
+      this.wordbookItemVisible = true;
+      this.dialogStatus = "create";
       this.$nextTick(() => {
-        this.$refs["wordbookUser"].initInput({
+        this.$refs["wordbookItem"].initInput({
           wordbookId: row.id,
-          userIds: [],
         });
+        this.$refs["wordbookItem"].$refs["wordbookItemForm"].clearValidate();
       });
     },
     handleAddWordbookItemData() {
-      const groupUsers = this.$refs["wordbookUser"].input;
-      if (!groupUsers.userIds || groupUsers.userIds.length <= 0) {
-        this.$message.error("请添加要分配给该字典的用户");
-      } else {
+      debugger
+      const workBookItem = this.$refs["wordbookItem"].wordbookItem;
+
+      this.$refs["wordbookItem"].$refs["wordbookItemForm"].validate((valid) => {
+        if (valid) {
+          this.createWordbookItem(workBookItem).then((data) => {
+            this.$notify({
+              title: "成功",
+              message: data,
+              type: "success",
+              duration: 2000,
+            });
+            this.$nextTick(() => {
+              // 以服务的方式调用的 Loading 需要异步关闭
+              loadingInstance.close();
+            });
+            this.wordbookItemVisible = false;
+          });
+        }
         let loadingInstance = Loading.service({
           target: ".el-dialog",
           text: "保存中...",
         });
-        this.addWordbookItems(groupUsers).then((data) => {
-          this.$notify({
-            title: "成功",
-            message: data,
-            type: "success",
-            duration: 2000,
-          });
-          this.$nextTick(() => {
-            // 以服务的方式调用的 Loading 需要异步关闭
-            loadingInstance.close();
-          });
-          this.dialogAssignmentWordbookItemVisible = false;
-        });
-      }
+      });
     },
     handleUpdate(row) {
       this.resetWordbookInfo();
@@ -326,7 +322,6 @@ export default {
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs["wordbook"].roles = row.roles;
         this.$refs["wordbook"].$refs["wordbookForm"].clearValidate();
       });
     },

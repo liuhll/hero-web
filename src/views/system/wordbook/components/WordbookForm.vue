@@ -77,38 +77,10 @@ export default {
         id: 2,
         name: '业务类'
       }],
-      queryRole: {
-        searchKey: undefined,
-        status: 1,
-        pageCount: 10,
-        pageIndex: 1,
-      },
     };
   },
   methods: {
-    ...mapActions("role", ["list", "search"]),
-    loadRoleData() {
-      this.list().then((data) => {
-        this.roles = data;
-      });
-    },
-    searchRoles(key) {
-      if (key !== "" || !this.wordbook.roleIds) {
-        this.queryRole.searchKey = key;
-        this.loadRoleData();
-      }
-    },
-    loadRoleData() {
-      this.loading = true;
-      this.search(this.queryRole).then((data) => {
-        this.totalCount = data.totalCount;
-        this.roles = data.items;
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.loading = false;
-        }, 1.5 * 200);
-      });
-    },
+   
   },
 };
 </script>
