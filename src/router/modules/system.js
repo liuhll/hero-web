@@ -16,6 +16,17 @@ const systemRouter = {
             name: 'wordbook',
             meta: {
               title: '字典管理',
+              icon: 'wordbook',
+              noCache: true
+            }              
+        },
+        {
+            path: 'setting',
+            component: () => import('@/views/system/setting'),
+            name: 'setting',
+            meta: {
+              title: '系统设置',
+              icon: 'setting',
               noCache: true
             }              
         }
