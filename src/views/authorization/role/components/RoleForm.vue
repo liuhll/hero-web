@@ -8,10 +8,10 @@
       :rules="rules"
       :disabled="dialogStatus === 'look'"
     >
-      <el-form-item label="角色名称" prop="name" required>
+      <el-form-item label="角色名称" prop="name">
         <el-input v-model="role.name" placeholder="请输入角色名称" />
       </el-form-item>
-      <el-form-item label="权限" prop="permissionIds" required>
+      <el-form-item label="权限" prop="permissionIds" >
         <el-scrollbar style="height: 300px">
           <el-tree
             ref="permissionTree"

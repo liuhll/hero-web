@@ -12,7 +12,7 @@
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="用户基本信息">
               <el-col :span="12">
-                <el-form-item label="用户名" prop="userName" required>
+                <el-form-item label="用户名" prop="userName" >
                   <el-input
                     v-model="userInfo.userName"
                     placeholder="请输入用户名"
@@ -22,7 +22,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="中文名" prop="chineseName" required>
+                <el-form-item label="中文名" prop="chineseName" >
                   <el-input
                     v-model="userInfo.chineseName"
                     placeholder="请输入中文名"
@@ -31,7 +31,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item v-if="editType ==='create'" label="密码" prop="password" required>
+                <el-form-item v-if="editType ==='create'" label="密码" prop="password" >
                   <el-input
                     v-model="userInfo.password"
                     placeholder="请输入密码"
@@ -40,7 +40,7 @@
                 </el-form-item>
               </el-col>                            
               <el-col :span="12">
-                <el-form-item label="手机" prop="phone" required>
+                <el-form-item label="手机" prop="phone" >
                   <el-input
                     v-model="userInfo.phone"
                     placeholder="请输入手机号码"
@@ -49,7 +49,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="邮件" prop="email" required>
+                <el-form-item label="邮件" prop="email" >
                   <el-input
                     v-model="userInfo.email"
                     placeholder="请输入电子邮件"

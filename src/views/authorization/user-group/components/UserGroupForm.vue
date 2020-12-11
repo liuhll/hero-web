@@ -8,10 +8,10 @@
       :rules="rules"
       :disabled="dialogStatus === 'look'"
     >
-      <el-form-item label="用户组名" prop="name" required>
+      <el-form-item label="用户组名" prop="name" >
         <el-input v-model="userGroup.name" placeholder="请输入用户组名" />
       </el-form-item>
-      <el-form-item prop="roleIds" label="角色" required>
+      <el-form-item prop="roleIds" label="角色" >
             <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的角色" placement="top-start">
                 <el-select
                   v-model="userGroup.roleIds"

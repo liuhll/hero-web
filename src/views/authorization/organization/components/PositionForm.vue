@@ -10,7 +10,7 @@
       <el-form-item label="岗位名称" prop="name">
         <el-input v-model="position.name" placeholder="请输入岗位名称" />
       </el-form-item>
-      <el-form-item label="岗位职能" prop="functionId" required>
+      <el-form-item label="岗位职能" prop="functionId">
         <el-select
           v-model="position.functionId"
           placeholder="请选择岗位职能"
@@ -24,7 +24,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="岗位级别" prop="positionLevelId" required>
+      <el-form-item label="岗位级别" prop="positionLevelId">
         <el-select
           v-model="position.positionLevelId"
           placeholder="请选择岗位级别"

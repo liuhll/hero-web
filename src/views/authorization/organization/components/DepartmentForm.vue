@@ -7,10 +7,10 @@
       :model="department"
       :disabled="operate !== operateType.Create && operate !== operateType.Update"
     >
-      <el-form-item label="部门名称" prop="name" required>
+      <el-form-item label="部门名称" prop="name">
         <el-input v-model="department.name" placeholder="请输入部门名称" />
       </el-form-item>
-      <el-form-item label="部门类型" prop="deptTypeId" required>
+      <el-form-item label="部门类型" prop="deptTypeId">
         <el-select v-model="department.deptTypeId">
           <el-option
             v-for="item in departmentTypes"

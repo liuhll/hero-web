@@ -8,19 +8,19 @@
     label-width="90px"
     size="mini"
   >
-    <el-form-item label="用户名" prop="userName" required>
+    <el-form-item label="用户名" prop="userName" >
       <el-input v-model="userInfo.userName" placeholder="请输入用户名" :disabled="dialogStatus=='update'" />
     </el-form-item>
-    <el-form-item label="中文名" prop="chineseName" required>
+    <el-form-item label="中文名" prop="chineseName" >
       <el-input v-model="userInfo.chineseName" placeholder="请输入中文名" />
     </el-form-item>
-    <el-form-item label="手机" prop="phone" required>
+    <el-form-item label="手机" prop="phone" >
       <el-input v-model="userInfo.phone" placeholder="请输入手机号码" />
     </el-form-item>
-    <el-form-item label="邮件" prop="email" required>
+    <el-form-item label="邮件" prop="email" >
       <el-input v-model="userInfo.email" placeholder="请输入电子邮件" />
     </el-form-item>
-    <el-form-item label="所属部门" prop="orgId" placeholder="请选择所属部门" required>
+    <el-form-item label="所属部门" prop="orgId" placeholder="请选择所属部门" >
       <el-tree-select
         v-model="userInfo.orgId"
         :treeRenderFun="renderContent"
@@ -31,7 +31,7 @@
         ref="treeSelect"
       ></el-tree-select>
     </el-form-item>
-    <el-form-item label="职位" prop="positionId" placeholder="请选择职位" required>
+    <el-form-item label="职位" prop="positionId" placeholder="请选择职位" >
       <el-select v-model="userInfo.positionId">
         <el-option v-for="item in deptPositions" :key="item.id" :label="item.name" :value="item.id"></el-option>
       </el-select>
