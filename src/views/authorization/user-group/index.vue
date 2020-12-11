@@ -267,7 +267,7 @@ export default {
       },
       textMap: {
         update: "编辑用户组",
-        create: "分配组成员",
+        create: "新增用户组",
         look: "查看用户组",
       },
       assignmentUserIds: [],

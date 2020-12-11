@@ -68,15 +68,10 @@
           ></el-table-column>
           <el-table-column
             prop="code"
-            label="標識"
+            label="标识"
             min-width="140"
           ></el-table-column>
-          <el-table-column label="状态" class-name="status-col">
-            <template slot-scope="{ row }">
-              <el-tag :type="row.status | statusTagFilter">
-                {{ row.status | statusFilter }}
-              </el-tag>
-            </template>
+          <el-table-column prop="typeDesc" label="类型" min-width="150">
           </el-table-column>
           <el-table-column
             prop="creatorUserName"
@@ -101,7 +96,7 @@
           <el-table-column
             label="操作"
             align="center"
-            width="280"
+            width="250"
             class-name="small-padding fixed-width"
           >
             <template slot-scope="{ row }">
@@ -110,11 +105,13 @@
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
+                v-if="row.type !==1"
                 >编辑</el-button
               >
               <el-popconfirm
                 title="您确定要删除该字典吗?"
                 placement="top"
+                v-if="row.type !==1"
                 @onConfirm="handleDelete(row)"
               >
                 <el-button
@@ -170,11 +167,11 @@
       :visible.sync="dialogFormVisible"
       width="30%"
     >
-      <user-group-form
+      <wordbook-form
         ref="wordbook"
         :wordbook="wordbook"
         :dialogStatus="dialogStatus"
-      ></user-group-form>
+      ></wordbook-form>
       <div slot="footer" class="dialog-footer" v-if="dialogStatus !== 'look'">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
@@ -190,9 +187,6 @@
       :visible.sync="dialogAssignmentWordbookItemVisible"
       width="750px"
     >
-      <assignment-user-group-user-form
-        ref="wordbookUser"
-      ></assignment-user-group-user-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAssignmentWordbookItemVisible = false"
           >取消</el-button
@@ -251,7 +245,7 @@ export default {
       },
       textMap: {
         update: "编辑字典",
-        create: "分配字典項",
+        create: "新增字典",
         look: "查看字典",
       },
       assignmentUserIds: [],
@@ -268,7 +262,7 @@ export default {
       "deleteWordbook",
       "getWordbook",
       "addWordbookItems",
-      "updateWordbookStatus"
+      "updateWordbookStatus",
     ]),
     handleWordbookFilter() {
       this.query.pageIndex = 1;
@@ -430,51 +424,12 @@ export default {
     },
     handleLook(row) {
       this.$router.push({
-        name: "usergroup-user",
+        name: "wordbook-item",
         query: {
           wordbookId: row.id,
           wordbookName: row.name,
         },
       });
-    },
-    handleModifyStatus(row, operate) {
-      let operateDesc;
-      let status = 0;
-      if (operate == "freeze") {
-        operateDesc = "冻结";
-        status = 0;
-      }
-      if (operate == "activate") {
-        operateDesc = "激活";
-        status = 1;
-      }   
-      this.$confirm(`您是否确认${operateDesc}该字典?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          this.updateWordbookStatus({
-            id: row.id,
-            status: status,
-          }).then((data) => {
-            this.$notify({
-              title: "成功",
-              message: data,
-              type: "success",
-              duration: 2000,
-            });
-            this.loadWordbookData();
-          });
-        })
-        .catch((err) => {
-          this.$notify({
-            title: "提示",
-            message: `取消${operateDesc}操作${err};`,
-            type: "info",
-            duration: 2000,
-          });
-        });
     },
   },
 };
