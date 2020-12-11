@@ -8,6 +8,7 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import authorizationRouter from './modules/authorization'
+import systemRouter from './modules/system'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -86,7 +87,8 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
-  authorizationRouter
+  authorizationRouter,
+  systemRouter
 
 ]
 
