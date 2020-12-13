@@ -10,13 +10,13 @@
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="department.name" placeholder="请输入部门名称" />
       </el-form-item>
-      <el-form-item label="部门类型" prop="deptTypeId">
-        <el-select v-model="department.deptTypeId">
+      <el-form-item label="部门类型" prop="deptTypeKey">
+        <el-select v-model="department.deptTypeKey">
           <el-option
             v-for="item in departmentTypes"
-            :key="item.id"
+            :key="item.key"
             :label="item.value"
-            :value="item.id"
+            :value="item.key"
           ></el-option>
         </el-select>
       </el-form-item>

@@ -10,31 +10,31 @@
       <el-form-item label="岗位名称" prop="name">
         <el-input v-model="position.name" placeholder="请输入岗位名称" />
       </el-form-item>
-      <el-form-item label="岗位职能" prop="functionId">
+      <el-form-item label="岗位职能" prop="functionKey">
         <el-select
-          v-model="position.functionId"
+          v-model="position.functionKey"
           placeholder="请选择岗位职能"
           @change="onPositionFunctionChange"
         >
           <el-option
             v-for="item in positionFunctions"
-            :key="item.id"
+            :key="item.key"
             :label="item.value"
-            :value="item.id"           
+            :value="item.key"           
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="岗位级别" prop="positionLevelId">
+      <el-form-item label="岗位级别" prop="positionLevelKey">
         <el-select
-          v-model="position.positionLevelId"
+          v-model="position.positionLevelKey"
           placeholder="请选择岗位级别"
           @change="onPositionLevelChange"
         >
           <el-option
             v-for="item in positionLevels"
-            :key="item.id"
+            :key="item.key"
             :label="item.value"
-            :value="item.id"
+            :value="item.key"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -116,12 +116,12 @@ export default {
         this.positionLevels = data;
       });
     },
-    onPositionFunctionChange(id) { 
-      const positionFunction = this.positionFunctions.find(item => item.id == id);
+    onPositionFunctionChange(key) { 
+      const positionFunction = this.positionFunctions.find(item => item.key == key);
       this.position.functionName = positionFunction.value;
     },
-    onPositionLevelChange(id) {
-      const positionLevel = this.positionLevels.find(item => item.id == id);
+    onPositionLevelChange(key) {
+      const positionLevel = this.positionLevels.find(item => item.key == key);
       this.position.positionLevelName = positionLevel.value;
     }
   }
