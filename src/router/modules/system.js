@@ -21,6 +21,18 @@ const systemRouter = {
             }              
         },
         {
+            path: 'wordbook/items',
+            component: () => import('@/views/system/wordbook/WordbookItem.vue'),
+            name: 'wordbook-item',
+            hidden: true,
+            meta: {
+              title: '字典项管理',
+              icon: 'wordbook',
+              noCache: true,
+              isPermission: true
+            }              
+        },        
+        {
             path: 'setting',
             component: () => import('@/views/system/setting'),
             name: 'setting',

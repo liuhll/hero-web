@@ -81,11 +81,11 @@ export function deleteWordbookItem(id) {
     })
 }
 
-export function searchWordbookItems(query) {
+export function getWordbookItems(input) {
     return request({
-        url: `${setting.apiPrefix}/wordbook/items/search`,
+        url: `${setting.apiPrefix}/wordbook/items/page`,
         method: 'post',
-        data: { query: query }
+        data: { input: input }
     })
 }
 

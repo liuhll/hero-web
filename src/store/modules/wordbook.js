@@ -71,9 +71,9 @@ const actions = {
             })
         })
     },
-    searchWordbookItems({ commit }, query) {
+    getWordbookItems({ commit }, input) {
         return new Promise((resolve, reject) => {
-            WordBook.searchWordbookItems(query).then(response => {
+            WordBook.getWordbookItems(input).then(response => {
                 const { data } = response
                 resolve(data)
             }).catch(err => {
