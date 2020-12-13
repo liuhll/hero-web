@@ -291,9 +291,7 @@ export default {
       });
     },
     handleAddWordbookItemData() {
-      debugger
       const workBookItem = this.$refs["wordbookItem"].wordbookItem;
-
       this.$refs["wordbookItem"].$refs["wordbookItemForm"].validate((valid) => {
         if (valid) {
           this.createWordbookItem(workBookItem).then((data) => {
@@ -423,6 +421,7 @@ export default {
         query: {
           wordbookId: row.id,
           wordbookName: row.name,
+          wordbookCode: row.code
         },
       });
     },
