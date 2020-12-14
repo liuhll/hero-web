@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="newOrgNodeForm" :model="newOrgNodeData" label-position="left" label-width="90px">
+    <el-form ref="newOrgNodeForm" :model="newOrgNodeData" label-position="left" label-width="90px" :rules="rules">
       <el-form-item label="组织类型" v-if="newOrgNodeData.parentOrgType === 0" prop="orgType">
         <el-radio-group v-model="newOrgNodeData.orgType">
           <el-radio :label="0">公司</el-radio>
@@ -45,6 +45,9 @@ export default {
       rules: {
         orgType: [
           { required: true, message: "请选择组织类型", trigger: "blur" }
+        ],
+        corporationLevel: [
+          { required: true, message: "请选择公司类型", trigger: "change" }
         ],
         name: [
           { required: true, message: "请输入组织名称", trigger: "blur" }
