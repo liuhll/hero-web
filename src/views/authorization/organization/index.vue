@@ -63,6 +63,7 @@
     <el-dialog
       title="请选择组织类型"
       :visible.sync="dialogFormVisible"
+      width="550px"
       @close="handleDialogClose"
     >
       <check-org-type

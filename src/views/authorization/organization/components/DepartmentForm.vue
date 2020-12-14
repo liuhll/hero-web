@@ -96,7 +96,7 @@
         </div>
       </el-form-item>
     </el-form>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="750px">
       <position-form :position="editPosition" ref="position"></position-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>

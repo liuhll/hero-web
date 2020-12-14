@@ -62,6 +62,7 @@
       title="请选择权限类型"
       :visible.sync="dialogFormVisible"
       @close="handleDialogClose"
+      width="550px"
     >
       <check-permission-type
         ref="newPermission"
