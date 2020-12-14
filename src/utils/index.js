@@ -405,6 +405,11 @@ export const orgType = {
   Department: 1
 };
 
+export const corporationLevel = {
+  TopCorporation: 0,
+  SubCorporation: 1
+};
+
 export const permissionLevel = {
   TopMenu: 0,
   SubMenu: 1

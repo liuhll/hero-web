@@ -68,6 +68,7 @@
       <check-org-type
         ref="newOrgNode"
         :newOrgNodeData="newOrgNodeData"
+        :selectedOrgData="selectedOrg"
       ></check-org-type>
       <div slot="footer" class="dialog-footer">
         <el-button type="default" size="mini" @click="dialogFormVisible = false"
@@ -90,7 +91,7 @@ import { Loading } from "element-ui";
 
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import { isEmpty, findTreeItem, operateType, orgType } from "@/utils";
+import { isEmpty, findTreeItem, operateType, orgType, corporationLevel } from "@/utils";
 
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",
@@ -120,6 +121,7 @@ export default {
       loading: false,
       operateType: operateType,
       orgType: orgType,
+      corporationLevel: corporationLevel
     };
   },
   watch: {
@@ -199,7 +201,16 @@ export default {
           if (!this.selectedOrg.children) {
             this.$set(this.selectedOrg, "children", []);
           }
-          this.selectedOrg.children.push(newOrgData);
+
+            if (
+              this.newOrgNodeData.corporationLevel === corporationLevel.TopCorporation
+            ) {
+              newOrgData.parentId = 0;
+              this.orgData.push(newOrgData);
+            } else {
+              newOrgData.parentId = this.newOrgNodeData.parentId;
+              this.selectedOrg.children.push(newOrgData);
+            }
           this.selectedOrg = newOrgData;
           this.haveUnSaveOrgData = true;
           if (this.newOrgNodeData.orgType === orgType.Corporation) {

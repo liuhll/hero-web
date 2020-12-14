@@ -7,6 +7,16 @@
           <el-radio :label="1">部门</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item
+        v-if="newOrgNodeData.orgType==organizationType.Corporation && selectedOrgData.parentId===0"
+        label="公司类型"
+        prop="corporationLevel"
+      >
+        <el-radio-group v-model="newOrgNodeData.corporationLevel">
+          <el-radio :label="corporationLevel.TopCorporation">新公司</el-radio>
+          <el-radio :label="corporationLevel.SubCorporation">子公司</el-radio>
+        </el-radio-group>
+      </el-form-item>      
       <el-form-item label="组织名称" prop="name">
         <el-input v-model="newOrgNodeData.name" placeholder="请输入组织名称" />
       </el-form-item>
@@ -16,6 +26,7 @@
 
 <script>
 import Emitter from "@/mixins/emitter.js";
+import {orgType, orgLevel, corporationLevel } from "@/utils";
 export default {
   name: "CheckOrgType",
   mixins: [Emitter],
@@ -23,6 +34,10 @@ export default {
     newOrgNodeData: {
       type: Object,
       default: () => {}
+    },
+    selectedOrgData: {
+      type: Object,
+      default: () => {}      
     }
   },
   data() {
@@ -34,7 +49,9 @@ export default {
         name: [
           { required: true, message: "请输入组织名称", trigger: "blur" }
         ]
-      }
+      },
+      organizationType: orgType,
+      corporationLevel: corporationLevel
     };
   }
 };

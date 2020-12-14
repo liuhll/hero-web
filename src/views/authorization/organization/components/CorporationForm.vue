@@ -69,6 +69,9 @@ export default {
         ],
         mold: [
           { required: true, message: '请选择公司类型', trigger: 'change' }
+        ],
+        address: [
+          { required: true, message: '请输入公司地址', trigger: 'blur' }
         ]
       }      
     };
