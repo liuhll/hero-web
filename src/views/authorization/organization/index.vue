@@ -202,7 +202,7 @@ export default {
           if (!this.selectedOrg.children) {
             this.$set(this.selectedOrg, "children", []);
           }
-
+            debugger
             if (
               this.newOrgNodeData.corporationLevel === corporationLevel.TopCorporation
             ) {
@@ -216,13 +216,13 @@ export default {
           this.haveUnSaveOrgData = true;
           if (this.newOrgNodeData.orgType === orgType.Corporation) {
             this.corporation = {
-              parentId: this.newOrgNodeData.parentId,
-              name: this.newOrgNodeData.name,
+              parentId: newOrgData.parentId,
+              name: newOrgData.name,
             };
           } else {
             this.department = {
-              parentId: this.newOrgNodeData.parentId,
-              name: this.newOrgNodeData.name,
+              parentId: newOrgData.parentId,
+              name: newOrgData.name,
             };
           }
         }

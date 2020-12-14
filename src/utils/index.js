@@ -379,7 +379,8 @@ export const findTreeItem = (treeArr, findFunc) => {
   if (!findResult) {
     for (let item of treeArr) {
       if (!item.children) {
-        throw new Error("treeArr不是树形结构,不存在children")
+        //throw new Error("treeArr不是树形结构,不存在children")
+        continue;
       }
       findResult = findTreeItem(item.children, findFunc);
       if (findResult) {
