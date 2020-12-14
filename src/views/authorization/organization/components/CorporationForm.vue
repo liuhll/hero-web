@@ -2,14 +2,18 @@
   <div class="form-container">
     <el-form
       ref="corporationForm"
-      label-position="left"
-      label-width="90px"
+      label-position="right"
+      label-width="120px"
       :model="corporation"
+      :rules="rules"
       :disabled="operate !== operateType.Create && operate !== operateType.Update"
     >
       <el-form-item label="公司名称" prop="name">
         <el-input v-model="corporation.name" placeholder="请输入公司名称" />
       </el-form-item>
+      <el-form-item label="组织机构标识" prop="identification">
+        <el-input v-model="corporation.identification" />
+      </el-form-item>        
       <el-form-item label="公司类型" prop="mold">
         <el-radio-group v-model="corporation.mold">
           <el-radio-button label="0">集团</el-radio-button>
@@ -55,7 +59,18 @@ export default {
   },
   data() {
     return {
-      operateType: operateType
+      operateType: operateType,
+      rules: {
+        name: [
+           { required: true, message: '请输入公司名称', trigger: 'blur' }
+        ],
+        identification: [
+          { required: true, message: '请输入组织机构标识', trigger: 'blur' }
+        ],
+        mold: [
+          { required: true, message: '请选择公司类型', trigger: 'change' }
+        ]
+      }      
     };
   }
 };

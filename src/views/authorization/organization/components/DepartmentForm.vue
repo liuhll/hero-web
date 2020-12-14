@@ -2,13 +2,19 @@
   <div class="form-container">
     <el-form
       ref="departmentForm"
-      label-position="left"
-      label-width="90px"
+      label-position="right"
+      label-width="120px"
       :model="department"
-      :disabled="operate !== operateType.Create && operate !== operateType.Update"
+      :rules="rules"
+      :disabled="
+        operate !== operateType.Create && operate !== operateType.Update
+      "
     >
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="department.name" placeholder="请输入部门名称" />
+      </el-form-item>
+      <el-form-item label="组织机构标识" prop="identification">
+        <el-input v-model="department.identification" />
       </el-form-item>
       <el-form-item label="部门类型" prop="deptTypeKey">
         <el-select v-model="department.deptTypeKey">
@@ -32,41 +38,58 @@
           icon="el-icon-plus"
           v-if="operate !== operateType.Query"
           @click="createPosition"
-        >新增</el-button>
+          >新增</el-button
+        >
         <div class="department-container">
           <el-table
             :data="department.positions"
             border
             small
             highlight-current-row
-            style="width: 100%;"
+            style="width: 100%"
           >
             <el-table-column prop="name" label="职位名称"></el-table-column>
             <el-table-column prop="functionName" label="职能"></el-table-column>
-            <el-table-column prop="positionLevelName" label="职位级别"></el-table-column>
+            <el-table-column
+              prop="positionLevelName"
+              label="职位级别"
+            ></el-table-column>
             <el-table-column label="是否部门负责人">
               <template slot-scope="{ row }">
                 <el-tag :type="row.isLeadershipPost | statusTagFilter">
-                  {{
-                  row.isLeadershipPost | statusFilter
-                  }}
+                  {{ row.isLeadershipPost | statusFilter }}
                 </el-tag>
               </template>
             </el-table-column>
             <el-table-column label="是否领导人岗位">
               <template slot-scope="{ row }">
                 <el-tag :type="row.isLeadingOfficial | statusTagFilter">
-                  {{
-                  row.isLeadingOfficial | statusFilter
-                  }}
+                  {{ row.isLeadingOfficial | statusFilter }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="postResponsibility" label="岗位职责"></el-table-column>
-            <el-table-column label="操作" min-width="100" v-if="operate !== operateType.Query">
+            <el-table-column
+              prop="postResponsibility"
+              label="岗位职责"
+            ></el-table-column>
+            <el-table-column
+              label="操作"
+              min-width="100"
+              v-if="operate !== operateType.Query"
+            >
               <template slot-scope="{ row }">
-                <el-button type="primary" size="mini" @click="updatePosition(row)">编辑</el-button>
-                <el-button type="danger" size="mini" @click="deletePosition(row)">移除</el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="updatePosition(row)"
+                  >编辑</el-button
+                >
+                <el-button
+                  type="danger"
+                  size="mini"
+                  @click="deletePosition(row)"
+                  >移除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -84,7 +107,8 @@
               ? createPositionData()
               : updatePositionData()
           "
-        >确认</el-button>
+          >确认</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -103,21 +127,21 @@ const defaultPosition = {
   functionId: undefined,
   positionLevelId: undefined,
   briefIntro: "",
-  postResponsibility: ""
+  postResponsibility: "",
 };
 export default {
   components: {
-    PositionForm
+    PositionForm,
   },
   props: {
     department: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     operate: {
       type: Number,
-      default: () => 0
-    }
+      default: () => 0,
+    },
   },
   filters: {
     statusTagFilter(val) {
@@ -135,7 +159,7 @@ export default {
       } else {
         return statusMap[1];
       }
-    }
+    },
   },
   mounted() {
     this.loadDepartmentType();
@@ -148,17 +172,26 @@ export default {
       dialogFormVisible: false,
       textMap: {
         update: "编辑岗位",
-        create: "新增岗位"
+        create: "新增岗位",
       },
       editPosition: {},
-      operateType: operateType
+      operateType: operateType,
+      rules: {
+        name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
+        identification: [
+          { required: true, message: "请输入组织机构标识", trigger: "blur" },
+        ],
+        deptTypeKey: [
+          { required: true, message: "请选择部门类型", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
     ...mapActions("wordbook", ["getWordbookitemByCode"]),
     ...mapActions("organization", ["checkCanDeletePosition"]),
     loadDepartmentType() {
-      this.getWordbookitemByCode(deptTypeCode).then(data => {
+      this.getWordbookitemByCode(deptTypeCode).then((data) => {
         this.departmentTypes = data;
       });
     },
@@ -176,52 +209,52 @@ export default {
       this.$confirm("是否删除该岗位?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          debugger
+          debugger;
           if (!row.id) {
             let index = this.department.positions.indexOf(row);
             this.department.positions.splice(index, 1);
             this.$message({
               type: "success",
-              message: "移除职位信息成功,保存后生效"
+              message: "移除职位信息成功,保存后生效",
             });
-          }else{
-            this.checkCanDeletePosition(row.id).then(data => {
-              debugger
+          } else {
+            this.checkCanDeletePosition(row.id).then((data) => {
+              debugger;
               if (data) {
                 let index = this.department.positions.indexOf(row);
                 this.department.positions.splice(index, 1);
                 this.$message({
                   type: "success",
-                  message: "移除职位信息成功,保存后生效"
+                  message: "移除职位信息成功,保存后生效",
                 });
               } else {
                 this.$message({
                   type: "error",
-                  message: "该职位已被分配用户,需要先删除相关用户才可以删除该职位"
+                  message:
+                    "该职位已被分配用户,需要先删除相关用户才可以删除该职位",
                 });
               }
             });
           }
-
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     createPositionData() {
-      this.$refs["position"].$refs["positionForm"].validate(valid => {
+      this.$refs["position"].$refs["positionForm"].validate((valid) => {
         if (valid) {
           if (!this.department.positions) {
             this.department.positions = [];
           }
           const exsitPostion = this.department.positions.find(
-            p => p.name === this.editPosition.name
+            (p) => p.name === this.editPosition.name
           );
           if (exsitPostion != undefined) {
             this.$message.error(
@@ -241,20 +274,20 @@ export default {
             this.$message({
               message: `新增${this.editPosition.name}岗位`,
               type: "success",
-              duration: 2000
+              duration: 2000,
             });
           }
         }
       });
     },
     updatePositionData() {
-      this.$refs["position"].$refs["positionForm"].validate(valid => {
+      this.$refs["position"].$refs["positionForm"].validate((valid) => {
         if (valid) {
           if (!this.department.positions) {
             this.department.positions = [];
           }
           const exsitPostion = this.department.positions.find(
-            p =>
+            (p) =>
               p.name === this.editPosition.name &&
               p.index !== this.editPosition.index
           );
@@ -264,7 +297,7 @@ export default {
             );
           } else {
             let updatePositionItem = this.department.positions.find(
-              p => p.index == this.editPosition.index
+              (p) => p.index == this.editPosition.index
             );
             let index = this.department.positions.indexOf(updatePositionItem);
             this.department.positions[index] = this.editPosition;
@@ -272,13 +305,13 @@ export default {
             this.$message({
               message: `更新${this.editPosition.name}岗位`,
               type: "success",
-              duration: 2000
+              duration: 2000,
             });
           }
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
