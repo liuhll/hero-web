@@ -1,9 +1,15 @@
 <template>
   <span style="width: '100%'" class="org-tree-node">
     <span>
-      <svg-icon v-if="data.orgType==orgType.Corporation" icon-class="corporation" />
-      <svg-icon v-if="data.orgType==orgType.Department" icon-class="department" />
-      {{data.name}}
+      <svg-icon
+        v-if="data.orgType == orgType.Corporation"
+        icon-class="corporation"
+      />
+      <svg-icon
+        v-if="data.orgType == orgType.Department"
+        icon-class="department"
+      />
+      {{ data.name }}
     </span>
     <span>
       <el-button
@@ -13,7 +19,8 @@
         icon="el-icon-circle-plus"
         circle
         @click="appendNode"
-        v-if="data.operate==operateType.Query || data.operate==undefined"
+        v-permission="{ operateType: 'create', dataType: data.orgType, nodeType: 'org' }"
+        v-if="data.operate == operateType.Query || data.operate == undefined"
       ></el-button>
       <el-button
         size="mini"
@@ -22,7 +29,8 @@
         icon="el-icon-edit"
         circle
         @click="editNode"
-        v-if="data.operate==operateType.Query || data.operate==undefined"
+        v-permission="{ operateType: 'update', dataType: data.orgType, nodeType: 'org' }"
+        v-if="data.operate == operateType.Query || data.operate == undefined"
       ></el-button>
       <el-button
         size="mini"
@@ -30,6 +38,7 @@
         class="org-node-buttion"
         icon="el-icon-delete"
         circle
+        v-permission="{ operateType: 'delete', dataType: data.orgType, nodeType: 'org' }"
         @click="deleteNode"
       ></el-button>
     </span>
@@ -39,23 +48,25 @@
 <script>
 import Emitter from "@/mixins/emitter.js";
 import { operateType, orgType } from "@/utils";
+import permission from "@/directive/permission/index.js";
 export default {
   name: "OrgNodeEdit",
   mixins: [Emitter],
+  directives: { permission },
   props: {
     node: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     data: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
       operateType: operateType,
-      orgType: orgType
+      orgType: orgType,
     };
   },
   methods: {
@@ -67,8 +78,8 @@ export default {
     },
     editNode() {
       this.$emit("on-edit-org", this.node, this.data);
-    }
-  }
+    },
+  },
 };
 </script>
 

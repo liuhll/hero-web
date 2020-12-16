@@ -16,6 +16,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleRoleFilter"
+            v-permission="{ name: 'role-search' }"
             >搜索</el-button
           >
 
@@ -34,6 +35,7 @@
               class="filter-item"
               type="success"
               icon="el-icon-plus"
+              v-permission="{ name: 'role-create' }"
               >新增</el-button
             >
           </div>
@@ -100,6 +102,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
+                v-permission="{ name: 'role-update' }"
                 >编辑</el-button
               >
               <el-popconfirm
@@ -112,6 +115,7 @@
                   size="mini"
                   icon="el-icon-delete"
                   slot="reference"
+                  v-permission="{ name: 'role-delete' }"
                   >删除</el-button
                 >
               </el-popconfirm>
@@ -134,6 +138,7 @@
                           <el-dropdown-item
                             v-if="row.status == 1"
                             @click.native="handleModifyStatus(row, 'freeze')"
+                            v-permission="{ name: 'role-status' }"
                             ><svg-icon
                               icon-class="freeze"
                             />&nbsp;冻结</el-dropdown-item
@@ -141,6 +146,7 @@
                           <el-dropdown-item
                             v-if="row.status == 0"
                             @click.native="handleModifyStatus(row, 'activate')"
+                            v-permission="{ name: 'role-status' }"
                             ><svg-icon
                               icon-class="activate"
                             />&nbsp;激活</el-dropdown-item
@@ -148,6 +154,7 @@
                         </el-badge>
                         <el-badge :is-dot="false" size="mini" class="item">
                           <el-dropdown-item @click.native="handleLook(row)"
+                          v-permission="{ name: 'role-look' }"
                             ><svg-icon
                               icon-class="look"
                             />&nbsp;查看</el-dropdown-item
@@ -198,6 +205,7 @@ import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import RoleForm from "./components/RoleForm.vue";
 import { Loading } from "element-ui";
+import permission from "@/directive/permission/index.js"; 
 export default {
   components: {
     Pagination,
@@ -215,6 +223,7 @@ export default {
   },
   directives: {
     waves,
+    permission
   },
   data() {
     return {

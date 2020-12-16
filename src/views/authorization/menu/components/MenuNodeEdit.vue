@@ -13,6 +13,7 @@
         icon="el-icon-circle-plus"
         circle
         @click="appendNode"
+        v-permission="{ operateType: 'create', dataType: data.mold, nodeType: 'menu' }"
         v-if="(data.operate==operateType.Query || data.operate==undefined) && data.mold==permissionType.Menu"
       ></el-button>
       <el-button
@@ -22,6 +23,7 @@
         icon="el-icon-edit"
         circle
         @click="editNode"
+        v-permission="{ operateType: 'update', dataType: data.mold, nodeType: 'menu' }"
         v-if="data.operate==operateType.Query  || data.operate==undefined"
       ></el-button>
       <el-button
@@ -30,6 +32,7 @@
         class="menu-node-buttion"
         icon="el-icon-delete"
         circle
+        v-permission="{ operateType: 'delete', dataType: data.mold, nodeType: 'menu' }"
         @click="deleteNode"
       ></el-button>
     </span>
@@ -39,9 +42,11 @@
 <script>
 import Emitter from "@/mixins/emitter.js";
 import { operateType, permissionType } from "@/utils";
+import permission from "@/directive/permission/index.js";
 export default {
   name: "menuNodeEdit",
   mixins: [Emitter],
+  directives: { permission },
   props: {
     node: {
       type: Object,

@@ -29,6 +29,9 @@ const mutations = {
   },
   SET_OPERATIONS: (state, operations) => {
     state.operations = operations
+  },
+  SET_CURRENT_MENUID: (state,currentMenuId) => {
+    state.currentMenuId = currentMenuId
   }
 }
 
@@ -79,6 +82,9 @@ const actions = {
       getOperations(menuId).then(response => {
         const { data } = response
         commit('SET_OPERATIONS', data)
+        console.log('SET_OPERATIONS')
+        console.log(data)
+        console.log('SET_OPERATIONS')
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -94,7 +100,12 @@ const actions = {
       resolve()
     })
   },
-
+  setCurrentMenuId({ commit }, menuId) {
+    return new Promise((resolve, reject) => {
+      commit('SET_CURRENT_MENUID', menuId)
+      resolve()
+    })
+  },
   // dynamically modify permissions
   changeRoles({ commit, dispatch }, role) {
     return new Promise(async resolve => {

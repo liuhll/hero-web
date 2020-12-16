@@ -42,6 +42,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleUserFilter"
+            v-permission="{ name: 'user-search' }"
             >搜索</el-button
           >
           <el-button
@@ -145,6 +146,7 @@
                     size="mini"
                     icon="el-icon-edit"
                     @click="handleUpdate(row)"
+                    v-permission="{ name: 'user-update' }"
                     >编辑</el-button
                   >
 
@@ -159,6 +161,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       slot="reference"
+                      v-permission="{ name: 'user-delete' }"
                     >
                       删除</el-button
                     >
@@ -175,7 +178,9 @@
                         style="width: 95px; padding: 5px 0"
                       >
                         <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item @click.native="handleResetPwd(row)"
+                          <el-dropdown-item
+                            @click.native="handleResetPwd(row)"
+                            v-permission="{ name: 'user-reset-password' }"
                             ><svg-icon
                               icon-class="password"
                             />&nbsp;重置密码</el-dropdown-item
@@ -185,6 +190,7 @@
                           <el-dropdown-item
                             v-if="row.status == 1"
                             @click.native="handleModifyStatus(row, 'freeze')"
+                            v-permission="{ name: 'user-status' }"
                             ><svg-icon
                               icon-class="freeze"
                             />&nbsp;冻结</el-dropdown-item
@@ -194,11 +200,14 @@
                             @click.native="handleModifyStatus(row, 'activate')"
                             ><svg-icon
                               icon-class="activate"
+                              v-permission="{ name: 'user-status' }"
                             />&nbsp;激活</el-dropdown-item
                           >
                         </el-badge>
                         <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item @click.native="handleLook(row)"
+                          <el-dropdown-item
+                            @click.native="handleLook(row)"
+                            v-permission="{ name: 'user-look' }"
                             ><svg-icon
                               icon-class="look"
                             />&nbsp;查看</el-dropdown-item
