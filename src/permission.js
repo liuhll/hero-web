@@ -13,7 +13,6 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-
   // set page title
   document.title = getPageTitle(to.meta.title)
 
@@ -30,6 +29,9 @@ router.beforeEach(async(to, from, next) => {
       //const hasRoles = store.getters.roles && store.getters.roles.length > 0
       const userName = store.getters.name;
       if (userName) {
+        if (to.meta.menuId) {
+          await store.dispatch('account/getOperations',to.meta.menuId)
+        }        
         next()
       } else {
         try {

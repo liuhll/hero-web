@@ -25,3 +25,10 @@ export const accountMenu = () => {
     method: 'get'
   })  
 }
+
+export const getOperations = menuId => {
+  return request({
+    url: `${setting.apiPrefix}/account/operation/${menuId}`,
+    method: 'get'
+  })    
+} 

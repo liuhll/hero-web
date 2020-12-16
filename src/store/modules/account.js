@@ -1,4 +1,4 @@
-import { login, getLoginUser } from '@/api/account'
+import { login, getLoginUser, getOperations } from '@/api/account'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -26,6 +26,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_OPERATIONS: (state, operations) => {
+    state.operations = operations
   }
 }
 
@@ -71,7 +74,17 @@ const actions = {
       })
     })
   },
-
+  getOperations({ commit, state }, menuId) {
+    return new Promise((resolve, reject) => {
+      getOperations(menuId).then(response => {
+        const { data } = response
+        commit('SET_OPERATIONS', data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {

@@ -8,11 +8,13 @@ import menu from './menu'
  */
 function hasPermission(route, menus) {
   let hasPermission = false
-  menus.forEach(m=> {    
+  menus.forEach(m => {
     if (m.name == route.name) {
+      route.meta = Object.assign({ menuId: m.id },route.meta)
       hasPermission = true
     }
     if (route.meta && route.meta.isPermission) {
+      route.meta = Object.assign({ menuId: m.id },route.meta)
       hasPermission = true
     }
   })
@@ -20,14 +22,14 @@ function hasPermission(route, menus) {
 }
 
 function getPermissionRoutes(routes, menus) {
-  
+
   let filterRoutes = []
   routes.forEach(route => {
-    let tmp = {...route}
+    let tmp = { ...route }
 
-    if (hasPermission(tmp,menus)) {
+    if (hasPermission(tmp, menus)) {
       if (route.children) {
-        tmp.children = getPermissionRoutes(route.children,menus)
+        tmp.children = getPermissionRoutes(route.children, menus)
       }
       filterRoutes.push(tmp)
     }
@@ -45,9 +47,9 @@ export function filterAsyncRoutes(routes) {
   return new Promise((resolve, reject) => {
     accountMenu().then(response => {
       const { data } = response
-      const res = getPermissionRoutes(routes,data)
+      const res = getPermissionRoutes(routes, data)
       resolve(res)
-     
+
     }).catch(err => reject(err))
   })
 
@@ -73,7 +75,7 @@ const actions = {
         accessedRoutes = res
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
-      })     
+      })
     })
   }
 }

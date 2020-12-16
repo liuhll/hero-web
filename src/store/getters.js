@@ -1,3 +1,5 @@
+import store from "."
+
 const getters = {
   sidebar: state => state.app.sidebar,
   size: state => state.app.size,
@@ -9,6 +11,7 @@ const getters = {
   name: state => state.account.name,
   roles: state => state.account.roles,
   permission_routes: state => state.permission.routes,
-  errorLogs: state => state.errorLog.logs
+  errorLogs: state => state.errorLog.logs,
+  operations: state => state.account.operations
 }
 export default getters

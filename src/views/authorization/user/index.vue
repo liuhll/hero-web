@@ -60,6 +60,7 @@
             class="filter-item"
             type="success"
             icon="el-icon-plus"
+            v-permission="{ name: 'user-create' }"
             >新增</el-button
           >
         </div>
@@ -104,7 +105,7 @@
                 prop="displayUserGroups"
                 label="用户组"
                 min-width="140"
-              ></el-table-column>              
+              ></el-table-column>
               <el-table-column label="状态" class-name="status-col">
                 <template slot-scope="{ row }">
                   <el-tag :type="row.status | statusTagFilter">
@@ -226,12 +227,13 @@
 <script>
 import { mapActions } from "vuex";
 import waves from "@/directive/waves"; // waves directive
-import scroll from "@/directive/el-scroll/index.js"; 
+import scroll from "@/directive/el-scroll/index.js";
 import OrgNode from "@/views/organization/components/OrgNode.vue";
 import CreateOrUpdate from "./components/UserinfoForm.vue";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import { operateType } from "@/utils";
 import { Loading } from "element-ui";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 
 export default {
   components: {
@@ -239,7 +241,7 @@ export default {
     CreateOrUpdate,
     Pagination,
   },
-  directives: { waves,scroll },
+  directives: { waves, scroll, permission },
   filters: {
     statusFilter(status) {
       const statusMap = ["冻结", "有效"];
@@ -457,13 +459,13 @@ export default {
   //滚动条凹槽的颜色，还可以设置边框属性
   background-color: #f1f1f1;
 }
- 
+
 .treeScrollbar::-webkit-scrollbar {
   //滚动条的宽度
   width: 10px;
   height: 10px;
 }
- 
+
 .treeScrollbar::-webkit-scrollbar-thumb {
   //滚动条的设置
   background-color: #c1c1c1;
@@ -471,7 +473,7 @@ export default {
   min-height: 28px;
   border-radius: 8px;
 }
- 
+
 .treeScrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #a8a8a8;
 }
