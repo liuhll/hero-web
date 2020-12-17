@@ -16,6 +16,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleUserGroupFilter"
+            v-permission="{ name: 'usergroup-search' }"
             >搜索</el-button
           >
 
@@ -34,6 +35,7 @@
               class="filter-item"
               type="success"
               icon="el-icon-plus"
+              v-permission="{ name: 'usergroup-create' }"
               >新增</el-button
             >
           </div>
@@ -110,6 +112,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
+                v-permission="{ name: 'usergroup-update' }"
                 >编辑</el-button
               >
               <el-popconfirm
@@ -122,6 +125,7 @@
                   size="mini"
                   icon="el-icon-delete"
                   slot="reference"
+                  v-permission="{ name: 'usergroup-delete' }"
                   >删除</el-button
                 >
               </el-popconfirm>
@@ -139,6 +143,7 @@
                       <el-dropdown-item
                         v-if="row.status == 1"
                         @click.native="handleModifyStatus(row, 'freeze')"
+                        v-permission="{ name: 'usergroup-status' }"
                         ><svg-icon
                           icon-class="freeze"
                         />&nbsp;冻结</el-dropdown-item
@@ -146,6 +151,7 @@
                       <el-dropdown-item
                         v-if="row.status == 0"
                         @click.native="handleModifyStatus(row, 'activate')"
+                        v-permission="{ name: 'usergroup-status' }"
                         ><svg-icon
                           icon-class="activate"
                         />&nbsp;激活</el-dropdown-item
@@ -153,6 +159,7 @@
                     </el-badge>
                     <el-badge :is-dot="false" size="mini" class="item">
                       <el-dropdown-item @click.native="handleLook(row)"
+                        v-permission="{ name: 'usergroup-search-user' }"
                         ><svg-icon
                           icon-class="look"
                         />&nbsp;查看用户组</el-dropdown-item
@@ -161,6 +168,7 @@
                     <el-badge :is-dot="false" size="mini" class="item">
                       <el-dropdown-item
                         @click.native="handleAddUserGroupUser(row)"
+                        v-permission="{ name: 'usergroup-allocation-user' }"
                         ><svg-icon
                           icon-class="assignment"
                         />&nbsp;分配组成员</el-dropdown-item
@@ -228,6 +236,7 @@ import Pagination from "@/components/Pagination"; // secondary package based on 
 import UserGroupForm from "./components/UserGroupForm";
 import AssignmentUserGroupUserForm from "./components/AssignmentUserGroupUserForm";
 import { Loading } from "element-ui";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: {
     Pagination,
@@ -245,7 +254,7 @@ export default {
     },
   },
   directives: {
-    waves,
+    waves, permission
   },
   data() {
     return {

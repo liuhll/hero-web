@@ -7,7 +7,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  operations: []
 }
 
 const mutations = {
@@ -77,14 +78,13 @@ const actions = {
       })
     })
   },
-  getOperations({ commit, state }, menuId) {
+  getOperations({ commit, dispatch, state }, menuId) {
     return new Promise((resolve, reject) => {
       getOperations(menuId).then(response => {
         const { data } = response
         commit('SET_OPERATIONS', data)
-        console.log('SET_OPERATIONS')
-        console.log(data)
-        console.log('SET_OPERATIONS')
+       // reset visited views and cached views
+       // dispatch('tagsView/delAllViews', null, { root: true })
         resolve(data)
       }).catch(error => {
         reject(error)

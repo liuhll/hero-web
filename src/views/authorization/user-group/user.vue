@@ -16,6 +16,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleUserFilter"
+            v-permission="{ name: 'usergroup-search-user' }"
             >搜索</el-button
           >
 
@@ -42,6 +43,7 @@
             class="filter-item"
             type="success"
             icon="el-icon-plus"
+            v-permission="{ name: 'usergroup-allocation-user' }"
             >分配组成员</el-button
           >
         </div>
@@ -111,6 +113,7 @@
                   type="danger"
                   icon="el-icon-delete"
                   slot="reference"
+                  v-permission="{ name: 'usergroup-delete' }"
                 >
                   删除</el-button
                 >
@@ -154,6 +157,7 @@ import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import AssignmentUserGroupUserForm from "./components/AssignmentUserGroupUserForm";
 import { Loading } from "element-ui";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: {
     Pagination,
@@ -170,7 +174,7 @@ export default {
     },
   },
   directives: {
-    waves,
+    waves, permission
   },
   data() {
     return {

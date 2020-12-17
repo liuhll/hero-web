@@ -33,6 +33,7 @@
             class="filter-item"
             type="success"
             icon="el-icon-plus"
+            v-permission="{ name: 'wordbook-item-create' }"
             >新增字典项</el-button
           >
         </div>
@@ -78,6 +79,7 @@
                 size="mini"
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
+                v-permission="{ name: 'wordbook-item-update' }"
                 >编辑</el-button
               >
               <el-popconfirm
@@ -91,6 +93,7 @@
                   type="danger"
                   icon="el-icon-delete"
                   slot="reference"
+                  v-permission="{ name: 'wordbook-item-delete' }"
                 >
                   删除</el-button
                 >
@@ -135,13 +138,14 @@ import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import { Loading } from "element-ui";
 import WordbookItemForm from "./components/WordbookItemForm";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: {
     Pagination,
     WordbookItemForm,
   },
   directives: {
-    waves,
+    waves, permission
   },
   data() {
     return {

@@ -16,6 +16,7 @@
             type="primary"
             icon="el-icon-search"
             @click="handleWordbookFilter"
+            v-permission="{ name: 'wordbook-search' }"
             >搜索</el-button
           >
 
@@ -34,6 +35,7 @@
               class="filter-item"
               type="success"
               icon="el-icon-plus"
+              v-permission="{ name: 'wordbook-create' }"
               >新增</el-button
             >
           </div>
@@ -106,6 +108,7 @@
                 icon="el-icon-edit"
                 @click="handleUpdate(row)"
                 v-if="row.type !== 1"
+                v-permission="{ name: 'wordbook-update' }"
                 >编辑</el-button
               >
               <el-popconfirm
@@ -119,6 +122,7 @@
                   size="mini"
                   icon="el-icon-delete"
                   slot="reference"
+                  v-permission="{ name: 'wordbook-delete' }"
                   >删除</el-button
                 >
               </el-popconfirm>
@@ -134,6 +138,7 @@
                   >
                     <el-badge :is-dot="false" size="mini" class="item">
                       <el-dropdown-item @click.native="handleLook(row)"
+                        v-permission="{ name: 'wordbook-item-look' }"
                         ><svg-icon
                           icon-class="look"
                         />&nbsp;查看字典</el-dropdown-item
@@ -142,6 +147,7 @@
                     <el-badge :is-dot="false" size="mini" class="item">
                       <el-dropdown-item
                         @click.native="handleAddWordbookItem(row)"
+                        v-permission="{ name: 'wordbook-item-create' }"
                         ><svg-icon
                           icon-class="assignment"
                         />&nbsp;新增字典項</el-dropdown-item
@@ -205,6 +211,7 @@ import Pagination from "@/components/Pagination"; // secondary package based on 
 import WordbookForm from "./components/WordbookForm";
 import WordbookItemForm from "./components/WordbookItemForm";
 import { Loading } from "element-ui";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: {
     Pagination,
@@ -212,7 +219,7 @@ export default {
     WordbookItemForm
   },
   directives: {
-    waves,
+    waves, permission
   },
   data() {
     return {

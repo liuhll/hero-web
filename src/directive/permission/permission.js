@@ -12,13 +12,12 @@ function setParentElPermission(el) {
 }
 
 export default {
-  inserted(el, binding, vnode) {
+  async inserted (el, binding, vnode) {
     const { value } = binding
     if (value) {
       const { name, operateType, dataType, nodeType } = value
       if (name) {
-        const operations = store.getters && store.getters.operations
-        console.log(operations)
+        const operations = await store.getters && await store.getters.operations
         const hasPermission = operations.some(operation => {
           return operation.name == name
         })
@@ -39,7 +38,7 @@ export default {
         }
 
         const permissionName = `${dataTypeDesc[dataType]}-${operateType}`
-        const operations = store.getters && store.getters.operations
+        const operations = await store.getters && await store.getters.operations
         const hasPermission = operations.some(operation => {
           return operation.name == permissionName
         })
