@@ -61,7 +61,7 @@
       </el-col>
     </el-row>
     <el-dialog
-      title="请选择组织类型"
+      :title="selectedOrg.orgType === orgType.Corporation ? '请选择组织类型' : '请输入部门名称'"
       :visible.sync="dialogFormVisible"
       width="550px"
       @close="handleDialogClose"
