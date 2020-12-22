@@ -260,6 +260,7 @@ export default {
     return {
       query: {
         searchKey: undefined,
+        selfCreate: true,
         pageCount: 10,
         pageIndex: 1,
       },

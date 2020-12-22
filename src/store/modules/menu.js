@@ -18,7 +18,7 @@ const actions = {
             })
         })
     },
-    getMenu({ commit },id) {
+    getMenu({ commit }, id) {
         return new Promise((resolve, reject) => {
             Menu.getMenu(id).then(response => {
                 const { data } = response
@@ -27,8 +27,8 @@ const actions = {
                 reject(err)
             })
         })
-    },  
-    getOperation({ commit },id) {
+    },
+    getOperation({ commit }, id) {
         return new Promise((resolve, reject) => {
             Menu.getOperation(id).then(response => {
                 const { data } = response
@@ -38,7 +38,7 @@ const actions = {
             })
         })
     },
-    createMenu({ commit },data) {
+    createMenu({ commit }, data) {
         return new Promise((resolve, reject) => {
             Menu.createMenu(data).then(response => {
                 const { data } = response
@@ -48,7 +48,7 @@ const actions = {
             })
         })
     },
-    updateMenu({ commit },data) {
+    updateMenu({ commit }, data) {
         return new Promise((resolve, reject) => {
             Menu.updateMenu(data).then(response => {
                 const { data } = response
@@ -57,8 +57,8 @@ const actions = {
                 reject(err)
             })
         })
-    },                    
-    createOperation({ commit },data) {
+    },
+    createOperation({ commit }, data) {
         return new Promise((resolve, reject) => {
             Menu.createOperation(data).then(response => {
                 const { data } = response
@@ -68,7 +68,7 @@ const actions = {
             })
         })
     },
-    updateOperation({ commit },data) {
+    updateOperation({ commit }, data) {
         return new Promise((resolve, reject) => {
             Menu.updateOperation(data).then(response => {
                 const { data } = response
@@ -77,8 +77,8 @@ const actions = {
                 reject(err)
             })
         })
-    }, 
-    deletePermission({ commit },data) {
+    },
+    deletePermission({ commit }, data) {
         return new Promise((resolve, reject) => {
             Menu.deletePermission(data).then(response => {
                 const { data } = response
@@ -87,7 +87,17 @@ const actions = {
                 reject(err)
             })
         })
-    },     
+    },
+    getDataPermissionTypes({ commit }) {
+        return new Promise((resolve, reject) => {
+            Menu.getDataPermissionTypes().then(response => {
+                const { data } = response
+                resolve(data)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }
 }
 
 export default {
@@ -95,5 +105,4 @@ export default {
     state,
     mutations,
     actions
-  }
-  
+}

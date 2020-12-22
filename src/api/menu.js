@@ -62,3 +62,10 @@ export const deletePermission = data => {
         method: 'delete'
     })    
 }
+
+export const getDataPermissionTypes = () => {
+    return request({
+        url: `${setting.apiPrefix}/permission/datapermissiontypes`,
+        method: 'get'
+    })  
+}

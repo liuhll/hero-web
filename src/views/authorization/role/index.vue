@@ -59,6 +59,11 @@
             min-width="100"
           ></el-table-column>
           <el-table-column
+            prop="dataPermissionTypeDes"
+            label="数据权限"
+            min-width="100"
+          ></el-table-column>
+          <el-table-column
             prop="memo"
             label="备注"
             min-width="150"
@@ -79,7 +84,7 @@
             prop="creationTime"
             label="创建时间"
             min-width="100"
-          ></el-table-column>          
+          ></el-table-column>
           <el-table-column
             prop="lastModificationUserName"
             label="更新人"
@@ -124,46 +129,46 @@
                 <svg-icon icon-class="look" />
                 查看</el-button
               > -->
-                  <el-badge :is-dot="false" size="mini" class="item">
-                    <el-dropdown size="mini" style="margin-left: 10px">
-                      <el-button type="primary" size="mini" class="filter-item">
-                        更多
-                        <i class="el-icon-arrow-down el-icon--right" />
-                      </el-button>
-                      <el-dropdown-menu
-                        slot="dropdown"
-                        style="width: 95px; padding: 5px 0"
+              <el-badge :is-dot="false" size="mini" class="item">
+                <el-dropdown size="mini" style="margin-left: 10px">
+                  <el-button type="primary" size="mini" class="filter-item">
+                    更多
+                    <i class="el-icon-arrow-down el-icon--right" />
+                  </el-button>
+                  <el-dropdown-menu
+                    slot="dropdown"
+                    style="width: 95px; padding: 5px 0"
+                  >
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item
+                        v-if="row.status == 1"
+                        @click.native="handleModifyStatus(row, 'freeze')"
+                        v-permission="{ name: 'role-status' }"
+                        ><svg-icon
+                          icon-class="freeze"
+                        />&nbsp;冻结</el-dropdown-item
                       >
-                        <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item
-                            v-if="row.status == 1"
-                            @click.native="handleModifyStatus(row, 'freeze')"
-                            v-permission="{ name: 'role-status' }"
-                            ><svg-icon
-                              icon-class="freeze"
-                            />&nbsp;冻结</el-dropdown-item
-                          >
-                          <el-dropdown-item
-                            v-if="row.status == 0"
-                            @click.native="handleModifyStatus(row, 'activate')"
-                            v-permission="{ name: 'role-status' }"
-                            ><svg-icon
-                              icon-class="activate"
-                            />&nbsp;激活</el-dropdown-item
-                          >
-                        </el-badge>
-                        <el-badge :is-dot="false" size="mini" class="item">
-                          <el-dropdown-item @click.native="handleLook(row)"
-                          v-permission="{ name: 'role-look' }"
-                            ><svg-icon
-                              icon-class="look"
-                            />&nbsp;查看</el-dropdown-item
-                          >
-                        </el-badge>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </el-badge>
-
+                      <el-dropdown-item
+                        v-if="row.status == 0"
+                        @click.native="handleModifyStatus(row, 'activate')"
+                        v-permission="{ name: 'role-status' }"
+                        ><svg-icon
+                          icon-class="activate"
+                        />&nbsp;激活</el-dropdown-item
+                      >
+                    </el-badge>
+                    <el-badge :is-dot="false" size="mini" class="item">
+                      <el-dropdown-item
+                        @click.native="handleLook(row)"
+                        v-permission="{ name: 'role-look' }"
+                        ><svg-icon
+                          icon-class="look"
+                        />&nbsp;查看</el-dropdown-item
+                      >
+                    </el-badge>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-badge>
             </template>
           </el-table-column>
         </el-table>
@@ -179,7 +184,7 @@
     <el-dialog
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="40%"
       @close="handleRoleDialogClose()"
     >
       <role-form
@@ -205,7 +210,7 @@ import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import RoleForm from "./components/RoleForm.vue";
 import { Loading } from "element-ui";
-import permission from "@/directive/permission/index.js"; 
+import permission from "@/directive/permission/index.js";
 export default {
   components: {
     Pagination,
@@ -223,14 +228,15 @@ export default {
   },
   directives: {
     waves,
-    permission
+    permission,
   },
   data() {
     return {
       query: {
         searchKey: undefined,
+        selfCreate: true,
         pageCount: 10,
-        pageIndex: 1,
+        pageIndex: 1,        
       },
       listLoading: false,
       totalCount: 0,
@@ -240,6 +246,8 @@ export default {
       role: {
         name: undefined,
         memo: undefined,
+        orgIds: [],
+        permissionIds: [],
       },
       textMap: {
         update: "编辑角色",
@@ -252,7 +260,13 @@ export default {
     this.loadRoleData();
   },
   methods: {
-    ...mapActions("role", ["search", "create", "update", "delete", "updateStatus"]),
+    ...mapActions("role", [
+      "search",
+      "create",
+      "update",
+      "delete",
+      "updateStatus",
+    ]),
     handleRoleFilter() {
       this.query.pageIndex = 1;
       this.loadRoleData();
@@ -287,16 +301,15 @@ export default {
       });
     },
     handleDelete(row) {
-      this.delete(row.id)
-        .then((data) => {
-          this.$notify({
-            title: "成功",
-            message: data,
-            type: "success",
-            duration: 2000,
-          });
-          this.loadRoleData();
+      this.delete(row.id).then((data) => {
+        this.$notify({
+          title: "成功",
+          message: data,
+          type: "success",
+          duration: 2000,
         });
+        this.loadRoleData();
+      });
     },
     handleClear() {
       this.query.pageIndex = 1;
@@ -397,7 +410,7 @@ export default {
       if (operate == "activate") {
         operateDesc = "激活";
         status = 1;
-      }   
+      }
       this.$confirm(`您是否确认${operateDesc}该角色?`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -425,7 +438,7 @@ export default {
             duration: 2000,
           });
         });
-    }    
+    },
   },
 };
 </script>
