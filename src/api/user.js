@@ -55,3 +55,10 @@ export function getUser (id) {
     method: 'get'
   })
 }
+
+export function check (orgId) {
+  return request({
+    url: `${setting.apiPrefix}/user/check/${orgId}`,
+    method: 'post'
+  })
+}

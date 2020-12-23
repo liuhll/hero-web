@@ -12,17 +12,17 @@
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="用户基本信息">
               <el-col :span="12">
-                <el-form-item label="用户名" prop="userName" >
+                <el-form-item label="用户名" prop="userName">
                   <el-input
                     v-model="userInfo.userName"
                     placeholder="请输入用户名"
-                    :disabled="editType ==='update'"
+                    :disabled="editType === 'update'"
                     size="small"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="中文名" prop="chineseName" >
+                <el-form-item label="中文名" prop="chineseName">
                   <el-input
                     v-model="userInfo.chineseName"
                     placeholder="请输入中文名"
@@ -31,16 +31,20 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item v-if="editType ==='create'" label="密码" prop="password" >
+                <el-form-item
+                  v-if="editType === 'create'"
+                  label="密码"
+                  prop="password"
+                >
                   <el-input
                     v-model="userInfo.password"
                     placeholder="请输入密码"
                     size="small"
                   />
                 </el-form-item>
-              </el-col>                            
+              </el-col>
               <el-col :span="12">
-                <el-form-item label="手机" prop="phone" >
+                <el-form-item label="手机" prop="phone">
                   <el-input
                     v-model="userInfo.phone"
                     placeholder="请输入手机号码"
@@ -49,7 +53,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="邮件" prop="email" >
+                <el-form-item label="邮件" prop="email">
                   <el-input
                     v-model="userInfo.email"
                     placeholder="请输入电子邮件"
@@ -111,7 +115,7 @@
                     v-model="userInfo.birth"
                     type="date"
                     placeholder="请选择生日"
-                    style="width: 100%" 
+                    style="width: 100%"
                   ></el-date-picker>
                 </el-form-item>
               </el-col>
@@ -120,14 +124,18 @@
                   label="性别"
                   prop="gender"
                   placeholder="请选择性别"
-                  required                 
+                  required
                 >
-                  <el-radio-group v-model="userInfo.gender" style="width: 100%" size="small">
+                  <el-radio-group
+                    v-model="userInfo.gender"
+                    style="width: 100%"
+                    size="small"
+                  >
                     <el-radio :label="1">男</el-radio>
                     <el-radio :label="0">女</el-radio>
                   </el-radio-group>
                 </el-form-item>
-              </el-col>              
+              </el-col>
               <el-col :span="12">
                 <el-form-item label="毕业院校" prop="graduateInstitutions">
                   <el-input
@@ -155,7 +163,11 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="专业" prop="major">
-                  <el-input v-model="userInfo.major" placeholder="请输入专业" size="small"/>
+                  <el-input
+                    v-model="userInfo.major"
+                    placeholder="请输入专业"
+                    size="small"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -181,7 +193,12 @@
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="角色信息">
               <el-form-item prop="roleIds" label="角色">
-                <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的角色" placement="top-start">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="请输入关键字查找要添加的角色"
+                  placement="top-start"
+                >
                   <el-select
                     v-model="userInfo.roleIds"
                     multiple
@@ -201,14 +218,18 @@
                     ></el-option>
                   </el-select>
                 </el-tooltip>
-
               </el-form-item>
             </el-tab-pane>
           </el-tabs>
-           <el-tabs>
+          <el-tabs>
             <el-tab-pane label="用户组信息">
               <el-form-item prop="userGroupIds" label="用户组">
-                <el-tooltip class="item" effect="dark" content="请输入关键字查找要添加的用户组" placement="top-start">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="请输入关键字查找要添加的用户组"
+                  placement="top-start"
+                >
                   <el-select
                     v-model="userInfo.userGroupIds"
                     multiple
@@ -216,7 +237,7 @@
                     filterable
                     remote
                     :loading="loading"
-                    :remote-method="searchUserGroups"                  
+                    :remote-method="searchUserGroups"
                     placeholder="请输入要添加的用户组"
                     style="width: 100%"
                   >
@@ -230,7 +251,7 @@
                 </el-tooltip>
               </el-form-item>
             </el-tab-pane>
-          </el-tabs>          
+          </el-tabs>
           <el-tabs style="margin-bottom: 20px">
             <el-tab-pane label="用户简介信息">
               <el-form-item prop="avatar" label="简介">
@@ -246,7 +267,7 @@
 
 <script>
 import { isEmpty } from "@/utils";
-import { isPassword, validatePhone, validatePhoneTwo } from '@/utils/validator';
+import { isPassword, validatePhone, validatePhoneTwo } from "@/utils/validator";
 import { mapActions } from "vuex";
 import Tinymce from "@/components/Tinymce";
 export default {
@@ -261,17 +282,17 @@ export default {
     },
     editType: {
       type: String,
-      default: 'create'
-    }
+      default: "create",
+    },
   },
   watch: {
     "userInfo.orgId": {
-      handler(newOrgId, oldOrgId) {
+     handler(newOrgId, oldOrgId) {
         if (oldOrgId && oldOrgId !== newOrgId) {
           this.userInfo.positionId = null;
         }
         if (newOrgId && oldOrgId !== newOrgId) {
-          this.loadDeptPosition(newOrgId);
+          this.checkUser(newOrgId);
         } else {
           this.deptPositions = [];
         }
@@ -299,10 +320,10 @@ export default {
         password: [
           { required: true, message: "密码不允许为空", trigger: "blur" },
           {
-            validator: isPassword ,
+            validator: isPassword,
             trigger: "blur",
           },
-        ],        
+        ],
         chineseName: [
           { required: true, message: "中文名称不允许为空", trigger: "blur" },
           {
@@ -315,7 +336,7 @@ export default {
         phone: [
           { required: true, message: "手机号码不允许为空", trigger: "blur" },
           {
-            validator: validatePhone ,
+            validator: validatePhone,
             trigger: "blur",
           },
         ],
@@ -345,14 +366,13 @@ export default {
         status: 1,
         pageCount: 10,
         pageIndex: 1,
-      },      
+      },
       queryUserGroup: {
         searchKey: undefined,
         status: 1,
         pageCount: 10,
         pageIndex: 1,
-      }
-
+      },
     };
   },
   mounted() {
@@ -363,6 +383,7 @@ export default {
     ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
     ...mapActions("role", ["list", "search"]),
     ...mapActions("userGroup", ["searchUserGroup"]),
+    ...mapActions("user", ["check"]),
     handleSearchDepartment(searchKey) {
       this.$refs.treeSelect.filterFun(searchKey);
     },
@@ -391,7 +412,7 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 1.5 * 200);
-      });      
+      });
     },
     handleClearDepartment() {
       this.deptPositions = [];
@@ -404,17 +425,27 @@ export default {
     },
     handlePositionChange(val) {},
     searchRoles(key) {
-      if (key !== '' || !this.userInfo.roleIds) {
-      this.queryRole.searchKey = key;
-      this.loadRoleData()
+      if (key !== "" || !this.userInfo.roleIds) {
+        this.queryRole.searchKey = key;
+        this.loadRoleData();
       }
     },
     searchUserGroups(key) {
-      if (key !== '' || !this.userInfo.userGroupIds) {
-      this.queryUserGroup.searchKey = key;
-      this.loadUserGroupData()
+      if (key !== "" || !this.userInfo.userGroupIds) {
+        this.queryUserGroup.searchKey = key;
+        this.loadUserGroupData();
       }
-    }    
+    },
+    checkUser(orgId) {
+      this.check(orgId).then(data=>{
+         if (data) {
+           this.loadDeptPosition(orgId)
+         }else{
+           this.deptPositions = []
+           this.$message.error("您没有添加该部门用户的权限")
+         }
+      })
+    }
   },
 };
 </script>
