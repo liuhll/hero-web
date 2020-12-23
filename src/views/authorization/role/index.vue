@@ -28,7 +28,6 @@
             @click="handleClear"
             >清除</el-button
           >
-           <el-checkbox class="filter-item" v-model="query.includeSelfCreate" style="margin-left:10px" @change="handleRoleFilter">包括由我维护</el-checkbox>
           <div class="filter-container">
             <el-button
               v-waves
@@ -240,7 +239,6 @@ export default {
     return {
       query: {
         searchKey: undefined,
-        includeSelfCreate: false,
         pageCount: 10,
         pageIndex: 1,        
       },
@@ -320,7 +318,6 @@ export default {
     handleClear() {
       this.query.pageIndex = 1;
       this.query.searchKey = "";
-      this.query.includeSelfCreate = false;
       this.loadRoleData();
     },
     resetRoleInfo() {

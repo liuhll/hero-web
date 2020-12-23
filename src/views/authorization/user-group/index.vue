@@ -28,12 +28,17 @@
             @click="handleClear"
             >清除</el-button
           >
-          <el-checkbox class="filter-item" v-model="query.includeSelfCreate" style="margin-left:10px" @change="handleUserGroupFilter">包括由我维护</el-checkbox>
           <span
             type="text"
             class="filter-item"
-            style="margin-left: 20px; margin-padding: 2px; font-size: 14px; color:#0000FF"            
-            >* 用户组的数据权限是只限于为该用户组分配的权限,数据权限存在冲突,权限范围值最大的有效</span
+            style="
+              margin-left: 20px;
+              margin-padding: 2px;
+              font-size: 14px;
+              color: #0000ff;
+            "
+            >*
+            用户组的数据权限是只限于为该用户组分配的权限,数据权限存在冲突,权限范围值最大的有效</span
           >
           <div class="filter-container">
             <el-button
@@ -279,7 +284,6 @@ export default {
     return {
       query: {
         searchKey: undefined,
-        includeSelfCreate: true,
         pageCount: 10,
         pageIndex: 1,
       },
@@ -294,7 +298,7 @@ export default {
         memo: undefined,
         roleIds: [],
         permissionIds: [],
-        orgIds: [] 
+        orgIds: [],
       },
       textMap: {
         update: "编辑用户组",
@@ -402,7 +406,6 @@ export default {
     handleClear() {
       this.query.pageIndex = 1;
       this.query.searchKey = "";
-      this.query.includeSelfCreate = false;
       this.loadUserGroupData();
     },
     resetUserGroupInfo() {
