@@ -3,13 +3,19 @@
     <el-form
       ref="userGroupForm"
       label-position="left"
-      label-width="90px"
+      label-width="120px"
       :model="userGroup"
       :rules="rules"
       :disabled="dialogStatus === 'look'"
     >
       <el-form-item label="用户组名" prop="name">
         <el-input v-model="userGroup.name" placeholder="请输入用户组名" />
+      </el-form-item>
+      <el-form-item label="用户组标识" prop="identification">
+        <el-input
+          v-model="userGroup.identification"
+          placeholder="不少于四位英文或数字组合"
+        />
       </el-form-item>
       <el-form-item prop="roleIds" label="角色">
         <el-tooltip
@@ -53,6 +59,46 @@
           </el-tree>
         </el-scrollbar>
       </el-form-item>
+      <el-form-item
+        label="数据权限"
+        prop="dataPermissionType"
+        v-if="userGroup.permissionIds.length > 0"
+      >
+        <el-select
+          v-model="userGroup.dataPermissionType"
+          placeholder="该用户组指定的权限拥有的数据权限"
+          style="width: 100%"
+          clearable
+          @change="handleDataPermissionTypeChange"
+        >
+          <el-option
+            v-for="item in dataPermissionTypes"
+            :key="item.id"
+            :label="item.description"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        label="自定义部门"
+        prop="orgIds"
+        v-if="userGroup.dataPermissionType == 3"
+      >
+        <el-scrollbar style="height: 180px">
+          <el-tree
+            ref="orgTree"
+            :data="orgData"
+            show-checkbox
+            node-key="id"
+            :default-expand-all="true"
+            :default-checked-keys="userGroup.orgIds"
+            :props="orgIdProps"
+            @check-change="handleCheckUserDefinedDataPermission"
+          >
+          </el-tree>
+        </el-scrollbar>
+      </el-form-item>
       <el-form-item label="备注" prop="memo">
         <el-input type="textarea" v-model="userGroup.memo" />
       </el-form-item>
@@ -62,6 +108,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { validateIdentification } from "@/utils/validator";
 export default {
   name: "UserGroupForm",
   props: {
@@ -81,6 +128,17 @@ export default {
             trigger: "blur",
           },
         ],
+        identification: [
+          { required: true, message: "标识不允许为空", trigger: "blur" },
+          { trigger: "blur", validator: validateIdentification },
+        ],
+        dataPermissionType: [
+          {
+            required: true,
+            message: "请选择角色数据权限",
+            trigger: "blur",
+          },
+        ],
       },
       loading: false,
       roles: [],
@@ -95,14 +153,42 @@ export default {
         pageCount: 10,
         pageIndex: 1,
       },
+      permissionProps: {
+        children: "children",
+        label: "title",
+      },
+      orgIdProps: {
+        children: "children",
+        label: "name",
+      },
+      permissionData: [],
+      orgData: [],
+      dataPermissionTypes: [],
+      selectedPermissionIds: [],
     };
+  },
+  watch: {
+    selectedPermissionIds: {
+      handle(val) {
+        if (val.length <= 0) {
+          this.userGroup.dataPermissionType = undefined;
+          this.userGroup.permissionIds = [];
+        } else {
+          this.userGroup.permissionIds = this.selectedPermissionIds;
+        }
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.loadPermissionData();
+    this.loadDataPermissionTypes();
+    this.loadOrgData();
   },
   methods: {
     ...mapActions("role", ["list", "search"]),
-    ...mapActions("menu", ["getTree"]),
+    ...mapActions("menu", ["getTree", "getDataPermissionTypes"]),
+    ...mapActions("organization", ["getOrgTree"]),
     loadRoleData() {
       this.list().then((data) => {
         this.roles = data;
@@ -111,6 +197,16 @@ export default {
     loadPermissionData() {
       this.getTree().then((data) => {
         this.permissionData = data;
+      });
+    },
+    loadDataPermissionTypes() {
+      this.getDataPermissionTypes().then((data) => {
+        this.dataPermissionTypes = data;
+      });
+    },
+    loadOrgData() {
+      this.getOrgTree().then((data) => {
+        this.orgData = data;
       });
     },
     searchRoles(key) {
@@ -131,8 +227,21 @@ export default {
       });
     },
     handleCheckPermission(node, checked, indeterminate) {
-      this.userGroup.permissionIds = this.$refs["permissionTree"].getCheckedKeys();
-    }
+      this.selectedPermissionIds = this.$refs[
+        "permissionTree"
+      ].getCheckedKeys();
+      // if (userGroup.permissionIds.length <= 0) {
+      //   this.userGroup.dataPermissionType = undefined;
+      // }
+    },
+    handleCheckUserDefinedDataPermission(node, checked, indeterminate) {
+      this.userGroup.orgIds = this.$refs["orgTree"].getCheckedKeys();
+    },
+    handleDataPermissionTypeChange(value) {
+      if (value == 3) {
+        this.role.orgIds = [];
+      }
+    },
   },
 };
 </script>

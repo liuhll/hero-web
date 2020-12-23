@@ -28,6 +28,12 @@
             @click="handleClear"
             >清除</el-button
           >
+          <span
+            type="text"
+            class="filter-item"
+            style="margin-left: 20px; margin-padding: 2px; font-size: 14px; color:'#0000FF'"
+            >* 用户组的数据权限是指单独为该用户组分配的权限,数据权限存在冲突,权限范围值最大的有效</span
+          >
           <div class="filter-container">
             <el-button
               v-waves
@@ -64,14 +70,24 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="memo"
-            label="备注"
-            min-width="150"
+            prop="identification"
+            label="标识"
+            min-width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="dataPermissionTypeDesc"
+            label="数据权限"
+            min-width="100"
           ></el-table-column>
           <el-table-column
             prop="displayRoles"
             label="角色"
             min-width="140"
+          ></el-table-column>
+          <el-table-column
+            prop="memo"
+            label="备注"
+            min-width="150"
           ></el-table-column>
           <el-table-column label="状态" class-name="status-col">
             <template slot-scope="{ row }">
@@ -158,7 +174,8 @@
                       >
                     </el-badge>
                     <el-badge :is-dot="false" size="mini" class="item">
-                      <el-dropdown-item @click.native="handleLook(row)"
+                      <el-dropdown-item
+                        @click.native="handleLook(row)"
                         v-permission="{ name: 'usergroup-search-user' }"
                         ><svg-icon
                           icon-class="look"
@@ -192,7 +209,7 @@
     <el-dialog
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
-      width="30%"
+      width="40%"
     >
       <user-group-form
         ref="userGroup"
@@ -254,7 +271,8 @@ export default {
     },
   },
   directives: {
-    waves, permission
+    waves,
+    permission,
   },
   data() {
     return {
@@ -294,7 +312,7 @@ export default {
       "deleteUserGroup",
       "getUserGroup",
       "addUserGroupUsers",
-      "updateUserGroupStatus"
+      "updateUserGroupStatus",
     ]),
     handleUserGroupFilter() {
       this.query.pageIndex = 1;
@@ -473,7 +491,7 @@ export default {
       if (operate == "activate") {
         operateDesc = "激活";
         status = 1;
-      }   
+      }
       this.$confirm(`您是否确认${operateDesc}该用户组?`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
