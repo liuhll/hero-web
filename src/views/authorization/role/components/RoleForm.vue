@@ -11,8 +11,14 @@
       <el-form-item label="角色名称" prop="name">
         <el-input v-model="role.name" placeholder="请输入角色名称" />
       </el-form-item>
+      <el-form-item label="角色标识" prop="identification">
+        <el-input
+          v-model="role.identification"
+          placeholder="不少于四位英文或数字组合"
+        />
+      </el-form-item>
       <el-form-item label="权限" prop="permissionIds">
-        <el-scrollbar style="height: 300px">
+        <el-scrollbar style="height: 200px">
           <el-tree
             ref="permissionTree"
             :data="permissionData"
@@ -47,7 +53,7 @@
         prop="orgIds"
         v-if="role.dataPermissionType == 3"
       >
-        <el-scrollbar style="height: 200px">
+        <el-scrollbar style="height: 180px">
           <el-tree
             ref="orgTree"
             :data="orgData"
@@ -70,6 +76,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { validateIdentification } from "@/utils/validator";
 export default {
   props: {
     role: {
@@ -107,6 +114,10 @@ export default {
             trigger: "change",
           },
         ],
+        identification: [
+          { required: true, message: "标识不允许为空", trigger: "blur" },
+          { trigger: "blur", validator: validateIdentification },
+        ],
         // orgIds: [
         //    {
         //     required: true,
@@ -117,7 +128,7 @@ export default {
         //     required: true,
         //     message: "请选择用户自定义数据权限的部门",
         //     trigger: "change",
-        //   },         
+        //   },
         // ]
       },
       permissionProps: {
@@ -160,7 +171,7 @@ export default {
       this.role.permissionIds = this.$refs["permissionTree"].getCheckedKeys();
     },
     handleCheckUserDefinedDataPermission(node, checked, indeterminate) {
-       this.role.orgIds = this.$refs["orgTree"].getCheckedKeys();
+      this.role.orgIds = this.$refs["orgTree"].getCheckedKeys();
     },
     handleDataPermissionTypeChange(value) {
       if (value == 3) {

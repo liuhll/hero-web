@@ -59,6 +59,11 @@
             min-width="100"
           ></el-table-column>
           <el-table-column
+            prop="identification"
+            label="标识"
+            min-width="100"
+          ></el-table-column>          
+          <el-table-column
             prop="dataPermissionTypeDes"
             label="数据权限"
             min-width="100"

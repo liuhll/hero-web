@@ -312,3 +312,18 @@ export function validateIP(rule, value,callback) {
     const reg = /^[A-Za-z]+$/;
     return reg.test(str);
   }
+
+  export function validateIdentification(rule, value, callback) {
+    if (!value) {
+      return callback(new Error('输入不可以为空'));
+    }
+    setTimeout(() => {
+      const re = /^[a-zA-Z][a-zA-Z0-9]{4,50}$/;
+      const rsCheck = re.test(value);
+      if (!rsCheck) {
+        callback(new Error('您输入的唯一标识格式不正确'));
+      } else {
+        callback();
+      }
+    }, 0);
+  }  
