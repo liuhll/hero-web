@@ -292,6 +292,8 @@ export default {
         name: undefined,
         memo: undefined,
         roleIds: [],
+        permissionIds: [],
+        orgIds: [] 
       },
       textMap: {
         update: "编辑用户组",

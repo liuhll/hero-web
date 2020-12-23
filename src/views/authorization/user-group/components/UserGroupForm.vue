@@ -164,20 +164,16 @@ export default {
       permissionData: [],
       orgData: [],
       dataPermissionTypes: [],
-      selectedPermissionIds: [],
     };
   },
   watch: {
-    selectedPermissionIds: {
-      handle(val) {
-        if (val.length <= 0) {
-          this.userGroup.dataPermissionType = undefined;
-          this.userGroup.permissionIds = [];
-        } else {
-          this.userGroup.permissionIds = this.selectedPermissionIds;
-        }
+    "userGroup.permissionIds": {
+      handler(newval,oldval) {
+        if (newval != oldval && newval.length <= 0) {
+          this.userGroup.dataPermissionType = null;
+        } 
       },
-      immediate: true,
+      immediate: false,
     },
   },
   mounted() {
@@ -227,19 +223,16 @@ export default {
       });
     },
     handleCheckPermission(node, checked, indeterminate) {
-      this.selectedPermissionIds = this.$refs[
+      this.userGroup.permissionIds = this.$refs[
         "permissionTree"
       ].getCheckedKeys();
-      // if (userGroup.permissionIds.length <= 0) {
-      //   this.userGroup.dataPermissionType = undefined;
-      // }
     },
     handleCheckUserDefinedDataPermission(node, checked, indeterminate) {
       this.userGroup.orgIds = this.$refs["orgTree"].getCheckedKeys();
     },
     handleDataPermissionTypeChange(value) {
       if (value == 3) {
-        this.role.orgIds = [];
+        this.userGroup.orgIds = [];
       }
     },
   },
