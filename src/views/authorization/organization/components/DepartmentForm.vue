@@ -96,7 +96,11 @@
         </div>
       </el-form-item>
     </el-form>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="750px">
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+      width="750px"
+    >
       <position-form :position="editPosition" ref="position"></position-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -118,6 +122,7 @@
 import { mapActions } from "vuex";
 import PositionForm from "./PositionForm.vue";
 import { operateType } from "@/utils";
+import { validateIdentification } from "@/utils/validator";
 const deptTypeCode = "DeptType",
   positionLevelCode = "PositionLevel",
   positionFunctionCode = "PositionFunction";
@@ -180,6 +185,7 @@ export default {
         name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
         identification: [
           { required: true, message: "请输入组织机构标识", trigger: "blur" },
+          { trigger: "blur", validator: validateIdentification },
         ],
         deptTypeKey: [
           { required: true, message: "请选择部门类型", trigger: "blur" },
@@ -212,7 +218,6 @@ export default {
         type: "warning",
       })
         .then(() => {
-          debugger;
           if (!row.id) {
             let index = this.department.positions.indexOf(row);
             this.department.positions.splice(index, 1);
@@ -222,7 +227,6 @@ export default {
             });
           } else {
             this.checkCanDeletePosition(row.id).then((data) => {
-              debugger;
               if (data) {
                 let index = this.department.positions.indexOf(row);
                 this.department.positions.splice(index, 1);

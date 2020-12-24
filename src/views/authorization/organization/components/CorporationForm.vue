@@ -46,6 +46,7 @@
 
 <script>
 import { operateType } from "@/utils";
+import { validateIdentification } from "@/utils/validator";
 export default {
   props: {
     corporation: {
@@ -65,7 +66,8 @@ export default {
            { required: true, message: '请输入公司名称', trigger: 'blur' }
         ],
         identification: [
-          { required: true, message: '请输入组织机构标识', trigger: 'blur' }
+          { required: true, message: '请输入组织机构标识', trigger: 'blur' },
+          { trigger: "blur", validator: validateIdentification },
         ],
         mold: [
           { required: true, message: '请选择公司类型', trigger: 'change' }
