@@ -60,12 +60,12 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>Username : liuhl</span>
+          <span>Username : admin</span>
           <span>Password : 123qwe</span>
         </div>
         <div class="tips">
-          <span style="margin-right:18px;">Username : dev1</span>
-          <span>Password : 1234qwer</span>
+          <span style="margin-right:18px;">Username : zhangsan</span>
+          <span>Password : 123qwe</span>
         </div>
       
       </div>
