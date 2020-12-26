@@ -78,9 +78,9 @@ const actions = {
       })
     })
   },
-  getOperations({ commit, dispatch, state }, menuId) {
+  getOperations({ commit, dispatch, state }, menuName) {
     return new Promise((resolve, reject) => {
-      getOperations(menuId).then(response => {
+      getOperations(menuName).then(response => {
         const { data } = response
         commit('SET_OPERATIONS', data)
        // reset visited views and cached views

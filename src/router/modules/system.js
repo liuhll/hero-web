@@ -7,7 +7,8 @@ const systemRouter = {
     name: 'system',
     meta: {
         title: '系统管理',
-        icon: 'system'
+        icon: 'system',
+        permissionMenuName: "system"
     },
     children: [
         {
@@ -17,7 +18,8 @@ const systemRouter = {
             meta: {
               title: '字典管理',
               icon: 'wordbook',
-              noCache: true
+              noCache: true,
+              permissionMenuName: "wordbook"
             }              
         },
         {
@@ -29,7 +31,8 @@ const systemRouter = {
               title: '字典项管理',
               icon: 'wordbook',
               noCache: true,
-              isPermission: true
+              isPermission: true,
+              permissionMenuName: "wordbook"
             }              
         },        
         {
@@ -39,7 +42,8 @@ const systemRouter = {
             meta: {
               title: '系统设置',
               icon: 'setting',
-              noCache: true
+              noCache: true,
+              permissionMenuName: "setting"
             }              
         }
     ]    
