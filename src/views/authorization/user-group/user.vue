@@ -79,15 +79,16 @@
           <el-table-column prop="deptName" label="部门"></el-table-column>
           <el-table-column prop="positionName" label="职位"></el-table-column>
           <el-table-column
-            prop="displayRoles"
-            label="角色"
-            min-width="140"
-          ></el-table-column>
-          <el-table-column
             prop="displayUserGroups"
             label="用户组"
             min-width="140"
           ></el-table-column>
+          <el-table-column
+            prop="displayRoles"
+            label="角色"
+            min-width="140"
+          ></el-table-column>
+
           <el-table-column label="状态" class-name="status-col">
             <template slot-scope="{ row }">
               <el-tag :type="row.status | statusTagFilter">
@@ -174,7 +175,8 @@ export default {
     },
   },
   directives: {
-    waves, permission
+    waves,
+    permission,
   },
   data() {
     return {

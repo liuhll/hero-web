@@ -1,8 +1,14 @@
 <template>
   <div>
-    <span style="font-size:14px;color:red; margin-left: 30px;">*Tips: 您可以输入要添加的用户名进行检索</span>
-    <el-form ref="userGroupUserForm" style="margin-left: 30px;margin-top: 10px" size="mini">
-      <el-form-item >
+    <span style="font-size: 14px; color: red; margin-left: 30px"
+      >*Tips: 您可以输入要添加的用户名进行检索</span
+    >
+    <el-form
+      ref="userGroupUserForm"
+      style="margin-left: 30px; margin-top: 10px"
+      size="mini"
+    >
+      <el-form-item>
         <hero-transfer
           filterable
           :before-filter="filterUserInfo"
@@ -43,6 +49,7 @@ export default {
           include: false,
           ids: [],
         },
+        userGroupId: -1,
         pageCount: 10,
         pageIndex: 1,
       },
@@ -70,6 +77,7 @@ export default {
     },
     initInput(data) {
       this.input = data;
+      this.query.userGroupId = data.userGroupId;
     },
     handleChange() {
       this.query.userIds.ids = this.input.userIds;

@@ -70,7 +70,7 @@ const authorizationRouter = {
                 isPermission: true,
                 permissionMenuName: "role"
             }
-        },                   
+        },
         {
             path: 'organization',
             component: () => import('@/views/authorization/organization'),
@@ -95,7 +95,31 @@ const authorizationRouter = {
             hidden: true,
             name: 'usergroup-user',
             meta: { title: '用户组成员', icon: 'user-group', noCache: true, isPermission: true, permissionMenuName: "usergroup" }
-        }
+        }, 
+        {
+            path: 'usergroup/create',
+            component: () => import('@/views/authorization/user-group/create'),
+            name: 'usergroup-create',
+            hidden: true,
+            meta: {
+                title: '添加用户组',
+                noCache: true,
+                isPermission: true,
+                permissionMenuName: "usergroup"
+            }
+        },
+        {
+            path: 'usergroup/update',
+            component: () => import('@/views/authorization/user-group/update'),
+            name: 'usergroup-update',
+            hidden: true,
+            meta: {
+                title: '修改用户组',
+                noCache: true,
+                isPermission: true,
+                permissionMenuName: "usergroup"
+            }
+        },
     ]
 }
 

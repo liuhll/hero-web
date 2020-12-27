@@ -352,3 +352,17 @@ export function validateIP(rule, value,callback) {
       }
     }, 100);
   }    
+
+  export function validateRoleIds(rule, value, callback) {
+    if (!value) {
+      return callback(new Error('选择的角色不允许为空'));
+    }
+    setTimeout(() => {
+      if (value.length <=0) {
+        callback(new Error('请选择需要设置的角色'));
+      } else {
+        callback();
+      }
+    }, 100);
+  }  
+  

@@ -185,11 +185,6 @@ export default {
     ...mapActions("role", ["list", "search"]),
     ...mapActions("menu", ["getTree", "getDataPermissionTypes"]),
     ...mapActions("organization", ["getOrgTree"]),
-    loadRoleData() {
-      this.list().then((data) => {
-        this.roles = data;
-      });
-    },
     loadPermissionData() {
       this.getTree().then((data) => {
         this.permissionData = data;

@@ -314,8 +314,6 @@ export default {
   methods: {
     ...mapActions("userGroup", [
       "searchUserGroup",
-      "createUserGroup",
-      "updateUserGroup",
       "deleteUserGroup",
       "getUserGroup",
       "addUserGroupUsers",
@@ -337,11 +335,8 @@ export default {
       });
     },
     handleCreate() {
-      this.resetUserGroupInfo();
-      this.dialogStatus = "create";
-      this.dialogFormVisible = true;
-      this.$nextTick(() => {
-        this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
+      this.$router.push({
+        name: "usergroup-create",
       });
     },
     handleAddUserGroupUser(row) {
@@ -350,6 +345,7 @@ export default {
         this.$refs["userGroupUser"].initInput({
           userGroupId: row.id,
           userIds: [],
+          orgIds: row.orgIds,
         });
       });
     },
@@ -378,107 +374,14 @@ export default {
       }
     },
     handleUpdate(row) {
-      this.resetUserGroupInfo();
-      this.userGroup = Object.assign({}, row);
-      this.dialogStatus = "update";
-      this.dialogFormVisible = true;
-      this.$nextTick(() => {
-        this.$refs["userGroup"].roles = row.roles;
-        this.$refs["userGroup"].$refs["userGroupForm"].clearValidate();
+      this.$router.push({
+        name: "usergroup-update",
+        query: {
+          id: row.id,
+        },
       });
     },
-    loadUserGroup(id) {
-      this.getUserGroup(id).then((data) => {
-        this.userGroup = data;
-      });
-    },
-    handleDelete(row) {
-      this.deleteUserGroup(row.id).then((data) => {
-        this.$notify({
-          title: "成功",
-          message: data,
-          type: "success",
-          duration: 2000,
-        });
-        this.loadUserGroupData();
-      });
-    },
-    handleClear() {
-      this.query.pageIndex = 1;
-      this.query.searchKey = "";
-      this.loadUserGroupData();
-    },
-    resetUserGroupInfo() {
-      this.userGroup = {
-        name: undefined,
-        memo: undefined,
-        permissionIds: [],
-      };
-    },
-    createData() {
-      this.$refs["userGroup"].$refs["userGroupForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.createUserGroup(this.userGroup)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.resetUserGroupInfo();
-              this.loadUserGroupData();
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                loadingInstance.close();
-              });
-            });
-        }
-      });
-    },
-    updateData() {
-      this.$refs["userGroup"].$refs["userGroupForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.updateUserGroup(this.userGroup)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.resetUserGroupInfo();
-              this.loadUserGroupData();
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            });
-        }
-      });
-    },
+
     handleLook(row) {
       this.$router.push({
         name: "usergroup-user",
@@ -526,6 +429,11 @@ export default {
             duration: 2000,
           });
         });
+    },
+    handleClear() {
+      this.query.pageIndex = 1;
+      this.query.searchKey = "";
+      this.loadUserGroupData();
     },
   },
 };
