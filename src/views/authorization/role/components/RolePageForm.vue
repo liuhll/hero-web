@@ -135,7 +135,11 @@
 </template>
 
 <script>
-import { validateIdentification } from "@/utils/validator";
+import {
+  validateIdentification,
+  validatePermissionIds,
+  validateOrgIds,
+} from "@/utils/validator";
 import { mapActions } from "vuex";
 export default {
   name: "RolePageForm",
@@ -162,7 +166,9 @@ export default {
             trigger: "blur",
           },
         ],
-        permissionIds: [],
+        permissionIds: [
+          { required: true, validator: validatePermissionIds, trigger: "blur" },
+        ],
         identification: [
           { required: true, message: "标识不允许为空", trigger: "blur" },
           { trigger: "blur", validator: validateIdentification },
@@ -177,9 +183,26 @@ export default {
         orgIds: [
           {
             required: true,
-            message: "角色所属部门不允许为空",
+            validator: validateOrgIds,
             trigger: "change",
           },
+          {
+            required: true,
+            validator: validateOrgIds,
+            trigger: "blur",
+          },            
+        ],
+        dataPermissionOrgIds: [
+          {
+            required: true,
+            validator: validateOrgIds,
+            trigger: "change",
+          },
+          {
+            required: true,
+            validator: validateOrgIds,
+            trigger: "blur",
+          },          
         ],
       },
       orgProps: {
@@ -187,6 +210,7 @@ export default {
         checkStrictly: true,
         label: "title",
         value: "id",
+        emitPath: false
       },
       permissionProps: {
         children: "children",
@@ -245,4 +269,10 @@ export default {
 </script>
 
 <style>
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+.el-scrollbar__bar.is-horizontal {
+  display: none;
+}
 </style>

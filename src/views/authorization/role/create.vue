@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <el-row>
       <el-col>
         <sticky
@@ -22,7 +22,7 @@
         </sticky>
       </el-col>
       <el-col :span="14" :push="5">
-       <role-page-form :role="role"></role-page-form>
+        <role-page-form ref="role-form" :role="role"></role-page-form>
       </el-col>
     </el-row>
   </div>
@@ -38,17 +38,58 @@ import { Loading } from "element-ui";
 export default {
   components: { RolePageForm, Sticky },
   data() {
-      return {
-          role: {
-            orgIds: []
-
-          }
-      }
-  }
-
-}
+    return {
+      role: {
+        orgIds: [],
+        name: undefined,
+        memo: undefined,
+        dataPermissionOrgIds: [],
+        permissionIds: [],
+      },
+    };
+  },
+  methods: {
+    ...mapActions("role", ["create", "update"]),
+    handleCreate() {
+      this.$refs["role-form"].$refs["role"].validate((valid) => {
+        if (valid) {
+          let loadingInstance = Loading.service({
+            target: ".el-dialog",
+            text: "保存中...",
+          });
+          this.create(this.role)
+            .then((data) => {
+              this.dialogFormVisible = false;
+              this.$notify({
+                title: "成功",
+                message: data,
+                type: "success",
+                duration: 2000,
+              });
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                loadingInstance.close();
+              });
+              this.$store.dispatch("tagsView/delView", this.$route);
+              this.$router.push({ name: "role" });
+            })
+            .catch((err) => {
+              this.dialogFormVisible = false;
+              this.$nextTick(() => {
+                // 以服务的方式调用的 Loading 需要异步关闭
+                loadingInstance.close();
+              });
+            });
+        }
+      });
+    },
+    handleCancel() {
+      this.$store.dispatch("tagsView/delView", this.$route);
+      this.$router.go(-1);
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>

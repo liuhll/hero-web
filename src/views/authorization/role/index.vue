@@ -191,26 +191,6 @@
         />
       </el-col>
     </el-row>
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-      width="40%"
-      @close="handleRoleDialogClose()"
-    >
-      <role-form
-        ref="role"
-        :role="role"
-        :dialogStatus="dialogStatus"
-      ></role-form>
-      <div slot="footer" class="dialog-footer" v-if="dialogStatus !== 'look'">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-          >确认</el-button
-        >
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -334,39 +314,6 @@ export default {
         memo: undefined,
         permissionIds: [],
       };
-    },
-    createData() {
-      this.$refs["role"].$refs["roleForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.create(this.role)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.resetRoleInfo();
-              this.loadRoleData();
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                // 以服务的方式调用的 Loading 需要异步关闭
-                loadingInstance.close();
-              });
-            });
-        }
-      });
     },
     updateData() {
       this.$refs["role"].$refs["roleForm"].validate((valid) => {

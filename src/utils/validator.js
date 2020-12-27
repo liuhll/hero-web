@@ -325,5 +325,30 @@ export function validateIP(rule, value,callback) {
       } else {
         callback();
       }
-    }, 0);
+    }, 100);
+  }
+  export function validatePermissionIds(rule, value, callback) {
+    if (!value) {
+      return callback(new Error('操作权限不允许为空'));
+    }
+    setTimeout(() => {
+      if (value.length <=0) {
+        callback(new Error('请选择需要设置的操作权限'));
+      } else {
+        callback();
+      }
+    }, 100);
   }  
+
+  export function validateOrgIds(rule, value, callback) {
+    if (!value) {
+      return callback(new Error('选择的部门不允许为空'));
+    }
+    setTimeout(() => {
+      if (value.length <=0) {
+        callback(new Error('请选择需要设置的部门'));
+      } else {
+        callback();
+      }
+    }, 100);
+  }    
