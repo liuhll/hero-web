@@ -292,15 +292,12 @@ export default {
       });
     },
     handleCreate() {
-      // this.resetRoleInfo();
-      // this.dialogStatus = "create";
-      // this.dialogFormVisible = true;
-      // this.$nextTick(() => {
-      //   this.$refs["role"].$refs["roleForm"].clearValidate();
-      // });
-      this.$router.push({
-        name: 'role-create'
-      })
+      this.resetRoleInfo();
+      this.dialogStatus = "create";
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs["role"].$refs["roleForm"].clearValidate();
+      });
     },
     handleUpdate(row) {
       this.resetRoleInfo();

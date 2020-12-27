@@ -46,7 +46,32 @@ const authorizationRouter = {
             component: () => import('@/views/authorization/role'),
             name: 'role',
             meta: { title: '角色管理', icon: 'role', noCache: true, permissionMenuName: "role" }
-        }, {
+        },
+        {
+            path: 'role/create',
+            component: () => import('@/views/authorization/role/create'),
+            name: 'role-create',
+            hidden: true,
+            meta: {
+                title: '添加角色',
+                noCache: true,
+                isPermission: true,
+                permissionMenuName: "role"
+            }
+        },
+        {
+            path: 'role/update',
+            component: () => import('@/views/authorization/role/update'),
+            name: 'role-update',
+            hidden: true,
+            meta: {
+                title: '修改角色',
+                noCache: true,
+                isPermission: true,
+                permissionMenuName: "role"
+            }
+        },                   
+        {
             path: 'organization',
             component: () => import('@/views/authorization/organization'),
             name: 'organization',
