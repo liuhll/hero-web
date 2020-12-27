@@ -283,14 +283,6 @@ export default {
           id: row.id,
         },
       });
-      // this.resetRoleInfo();
-      // this.role = Object.assign({}, row); // copy obj
-      // this.dialogStatus = "update";
-      // this.dialogFormVisible = true;
-
-      // this.$nextTick(() => {
-      //   this.$refs["role"].$refs["roleForm"].clearValidate();
-      // });
     },
     handleDelete(row) {
       this.delete(row.id).then((data) => {
@@ -314,40 +306,6 @@ export default {
         memo: undefined,
         permissionIds: [],
       };
-    },
-    updateData() {
-      this.$refs["role"].$refs["roleForm"].validate((valid) => {
-        if (valid) {
-          let loadingInstance = Loading.service({
-            target: ".el-dialog",
-            text: "保存中...",
-          });
-          this.update(this.role)
-            .then((data) => {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "成功",
-                message: data,
-                type: "success",
-                duration: 2000,
-              });
-              this.resetRoleInfo();
-              this.loadRoleData();
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            })
-            .catch((err) => {
-              this.dialogFormVisible = false;
-              this.$nextTick(() => {
-                loadingInstance.close();
-              });
-            });
-        }
-      });
-    },
-    handleRoleDialogClose() {
-      this.$refs["role"].$refs["permissionTree"].setCheckedKeys([]);
     },
     handleLook(row) {
     },
