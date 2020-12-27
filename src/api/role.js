@@ -52,3 +52,10 @@ export const deleteRole = id => {
     method: 'delete'
   })
 }
+
+export const getRole = id => {
+  return request({
+    url: `${setting.apiPrefix}/role/${id}`,
+    method: 'get'
+  })  
+}

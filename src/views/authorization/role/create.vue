@@ -49,7 +49,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("role", ["create", "update"]),
+    ...mapActions("role", ["create",]),
     handleCreate() {
       this.$refs["role-form"].$refs["role"].validate((valid) => {
         if (valid) {

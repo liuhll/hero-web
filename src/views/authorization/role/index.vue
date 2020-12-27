@@ -9,7 +9,7 @@
             style="width: 350px"
             class="filter-item"
             @keyup.enter.native="handleRoleFilter"
-          />        
+          />
           <el-button
             v-waves
             class="filter-item"
@@ -62,12 +62,12 @@
             prop="identification"
             label="标识"
             min-width="100"
-          ></el-table-column>  
+          ></el-table-column>
           <el-table-column
             prop="displayOrganizations"
             label="所属部门"
             min-width="100"
-          ></el-table-column>                    
+          ></el-table-column>
           <el-table-column
             prop="dataPermissionTypeDes"
             label="数据权限"
@@ -225,7 +225,7 @@ export default {
       query: {
         searchKey: undefined,
         pageCount: 10,
-        pageIndex: 1,        
+        pageIndex: 1,
       },
       listLoading: false,
       totalCount: 0,
@@ -272,25 +272,25 @@ export default {
       });
     },
     handleCreate() {
+      this.$router.push({
+        name: "role-create",
+      });
+    },
+    handleUpdate(row) {
+      this.$router.push({
+        name: "role-update",
+        query: {
+          id: row.id,
+        },
+      });
       // this.resetRoleInfo();
-      // this.dialogStatus = "create";
+      // this.role = Object.assign({}, row); // copy obj
+      // this.dialogStatus = "update";
       // this.dialogFormVisible = true;
+
       // this.$nextTick(() => {
       //   this.$refs["role"].$refs["roleForm"].clearValidate();
       // });
-      this.$router.push({
-        name: 'role-create'
-      })
-    },
-    handleUpdate(row) {
-      this.resetRoleInfo();
-      this.role = Object.assign({}, row); // copy obj
-      this.dialogStatus = "update";
-      this.dialogFormVisible = true;
-
-      this.$nextTick(() => {
-        this.$refs["role"].$refs["roleForm"].clearValidate();
-      });
     },
     handleDelete(row) {
       this.delete(row.id).then((data) => {
@@ -350,14 +350,6 @@ export default {
       this.$refs["role"].$refs["permissionTree"].setCheckedKeys([]);
     },
     handleLook(row) {
-      this.resetRoleInfo();
-      this.role = Object.assign({}, row); // copy obj
-      this.dialogStatus = "look";
-      this.dialogFormVisible = true;
-
-      this.$nextTick(() => {
-        this.$refs["role"].$refs["roleForm"].clearValidate();
-      });
     },
     handleModifyStatus(row, operate) {
       let operateDesc;

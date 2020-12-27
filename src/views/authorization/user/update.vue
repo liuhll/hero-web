@@ -70,7 +70,6 @@ export default {
           });
           this.update(this.userInfo)
             .then((data) => {
-              this.dialogFormVisible = false;
               this.$notify({
                 title: "成功",
                 message: data,
@@ -84,7 +83,6 @@ export default {
               this.$router.push({ name: "user" });
             })
             .catch((err) => {
-              this.dialogFormVisible = false;
               this.$nextTick(() => {
                 loadingInstance.close();
               });
