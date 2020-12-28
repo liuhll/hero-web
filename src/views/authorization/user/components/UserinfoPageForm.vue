@@ -288,19 +288,27 @@ export default {
   watch: {
     "userInfo.orgId": {
       handler(newOrgId, oldOrgId) {
-        if (oldOrgId && oldOrgId !== newOrgId) {
-          debugger;
+        if (oldOrgId == undefined) {
+          return;
+        }
+        if (newOrgId != null && oldOrgId !== newOrgId) {
           this.userInfo.positionId = null;
-          this.userInfo.roleIds = [];
-        } else if (newOrgId != null && oldOrgId !== newOrgId) {
+
           this.checkUser(newOrgId);
-          if (oldOrgId) {
-            this.userInfo.roleIds = [];
-            this.queryRole.orgIds = [newOrgId];
-            this.loadRoleData();
-          }
+
+          this.userInfo.roleIds = [];
+          this.queryRole.orgIds = [newOrgId];
+          this.loadRoleData();
+
+          this.userInfo.userGroupIds = [];
+          this.queryUserGroup.orgId = newOrgId;
+          this.loadUserGroupData();
         } else {
           this.deptPositions = [];
+          if (!newOrgId) {
+            this.roles = [];
+            this.userGroupIds = [];
+          }
         }
       },
       immediate: false,
@@ -442,10 +450,15 @@ export default {
       this.loadRoleData();
     },
     searchUserGroups(key) {
-      if (key !== "" || !this.userInfo.userGroupIds) {
+      if (key !== "") {
         this.queryUserGroup.searchKey = key;
-        this.loadUserGroupData();
       }
+      if (!this.userInfo.orgId) {
+        this.$message.error("请先选择用户所在的部门");
+        return;
+      }
+      this.queryUserGroup.orgId = this.userInfo.orgId;
+      this.loadUserGroupData();
     },
     checkUser(orgId) {
       this.check(orgId).then((data) => {
