@@ -7,3 +7,10 @@ export const getOrgTree = () => {
         method: 'get'
     })
 }
+
+export const getOwnOrgTree = () => {
+    return request({
+        url: `${setting.apiPrefix}/organization/own/tree`,
+        method: 'get'
+    })    
+}

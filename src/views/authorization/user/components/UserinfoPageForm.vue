@@ -380,7 +380,7 @@ export default {
     //this.loadRoleData();
   },
   methods: {
-    ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
+    ...mapActions("organization", ["getOwnOrgTree", "getDeptPositionByOrgId"]),
     ...mapActions("role", ["list", "search"]),
     ...mapActions("userGroup", ["searchUserGroup"]),
     ...mapActions("user", ["check"]),
@@ -419,7 +419,7 @@ export default {
       this.userInfo.positionId = null;
     },
     loadOrgData() {
-      this.getOrgTree().then((data) => {
+      this.getOwnOrgTree().then((data) => {
         this.orgData = data;
       });
     },

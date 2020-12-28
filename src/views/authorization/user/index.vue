@@ -291,7 +291,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("organization", ["getOrgTree", "getDeptPositionByOrgId"]),
+    ...mapActions("organization", ["getOwnOrgTree", "getDeptPositionByOrgId"]),
     ...mapActions("user", [
       "queryUser",
       "create",
@@ -301,7 +301,7 @@ export default {
       "resetPassword",
     ]),
     loadOrgData() {
-      this.getOrgTree().then((data) => {
+      this.getOwnOrgTree().then((data) => {
         this.orgData = data;
       });
     },

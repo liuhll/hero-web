@@ -231,10 +231,10 @@ export default {
     this.loadDataPermissionTypes();
   },
   methods: {
-    ...mapActions("organization", ["getOrgTree"]),
+    ...mapActions("organization", ["getOwnOrgTree"]),
     ...mapActions("menu", ["getTree", "getDataPermissionTypes"]),
     loadOrgData() {
-      this.getOrgTree().then((data) => {
+      this.getOwnOrgTree().then((data) => {
         this.orgData = data;
       });
     },

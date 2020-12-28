@@ -284,7 +284,7 @@ export default {
   },
   methods: {
     ...mapActions("role", ["list", "search"]),
-    ...mapActions("organization", ["getOrgTree"]),
+    ...mapActions("organization", ["getOwnOrgTree"]),
     ...mapActions("menu", ["getTree", "getDataPermissionTypes"]),
     loadRoleData() {
       this.loading = true;
@@ -298,7 +298,7 @@ export default {
       });
     },
     loadOrgData() {
-      this.getOrgTree().then((data) => {
+      this.getOwnOrgTree().then((data) => {
         this.orgData = data;
       });
     },
