@@ -262,7 +262,7 @@ export default {
       queryRole: {
         searchKey: undefined,
         status: 1,
-        pageCount: 10,
+        pageCount: 50,
         pageIndex: 1,
       },
     };
@@ -272,6 +272,35 @@ export default {
       handler(newval, oldval) {
         if (newval != oldval && newval.length <= 0) {
           this.userGroup.dataPermissionType = null;
+        }
+      },
+      immediate: false,
+    },
+    "userGroup.isAllOrg": {
+      handler(newval, oldval) {
+        if (newval != oldval) {
+          if (newval) {
+            this.queryRole.orgIds = null;
+            this.loadRoleData();
+          } else {
+            this.roles = [];
+          }
+        }
+      },
+      immediate: false,
+    },
+    "userGroup.orgIds": {
+      handler(newval, oldval) {
+        if (newval != oldval) {
+          if (newval && newval.length > 0) {
+            this.queryRole.orgIds = newval;
+            this.loadRoleData();
+          } else if (this.userGroup.isAllOrg) {
+            this.queryRole.orgIds = null;
+            this.loadRoleData();
+          } else {
+            this.roles = [];
+          }
         }
       },
       immediate: false,
@@ -354,7 +383,7 @@ export default {
         }
         this.loadRoleData();
       }
-    }
+    },
   },
 };
 </script>

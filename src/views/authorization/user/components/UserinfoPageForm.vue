@@ -287,12 +287,16 @@ export default {
   },
   watch: {
     "userInfo.orgId": {
-     handler(newOrgId, oldOrgId) {
+      handler(newOrgId, oldOrgId) {
         if (oldOrgId && oldOrgId !== newOrgId) {
           this.userInfo.positionId = null;
+          this.userInfo.roleIds = [];
         }
         if (newOrgId && oldOrgId !== newOrgId) {
           this.checkUser(newOrgId);
+          this.userInfo.roleIds = [];
+          this.queryRole.orgIds = [newOrgId];
+          this.loadRoleData();
         } else {
           this.deptPositions = [];
         }
@@ -364,7 +368,7 @@ export default {
       queryRole: {
         searchKey: undefined,
         status: 1,
-        pageCount: 10,
+        pageCount: 50,
         pageIndex: 1,
       },
       queryUserGroup: {
@@ -425,10 +429,15 @@ export default {
     },
     handlePositionChange(val) {},
     searchRoles(key) {
-      if (key !== "" || !this.userInfo.roleIds) {
+      if (key !== "") {
         this.queryRole.searchKey = key;
-        this.loadRoleData();
       }
+      if (!this.userInfo.orgId) {
+        this.$message.error("请先选择用户所在的部门");
+        return;
+      }
+      this.queryRole.OrgIds = [this.userInfo.orgId];
+      this.loadRoleData();
     },
     searchUserGroups(key) {
       if (key !== "" || !this.userInfo.userGroupIds) {
@@ -437,15 +446,15 @@ export default {
       }
     },
     checkUser(orgId) {
-      this.check(orgId).then(data=>{
-         if (data) {
-           this.loadDeptPosition(orgId)
-         }else{
-           this.deptPositions = []
-           this.$message.error("您没有添加该部门用户的权限")
-         }
-      })
-    }
+      this.check(orgId).then((data) => {
+        if (data) {
+          this.loadDeptPosition(orgId);
+        } else {
+          this.deptPositions = [];
+          this.$message.error("您没有添加该部门用户的权限");
+        }
+      });
+    },
   },
 };
 </script>
