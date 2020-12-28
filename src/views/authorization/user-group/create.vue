@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       userGroup: {
-        orgIds: [],
+        orgIds: undefined,
         name: undefined,
         memo: undefined,
         dataPermissionOrgIds: [],

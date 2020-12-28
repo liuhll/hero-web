@@ -289,19 +289,21 @@ export default {
     "userInfo.orgId": {
       handler(newOrgId, oldOrgId) {
         if (oldOrgId && oldOrgId !== newOrgId) {
+          debugger;
           this.userInfo.positionId = null;
           this.userInfo.roleIds = [];
-        }
-        if (newOrgId && oldOrgId !== newOrgId) {
+        } else if (newOrgId != null && oldOrgId !== newOrgId) {
           this.checkUser(newOrgId);
-          this.userInfo.roleIds = [];
-          this.queryRole.orgIds = [newOrgId];
-          this.loadRoleData();
+          if (oldOrgId) {
+            this.userInfo.roleIds = [];
+            this.queryRole.orgIds = [newOrgId];
+            this.loadRoleData();
+          }
         } else {
           this.deptPositions = [];
         }
       },
-      immediate: true,
+      immediate: false,
     },
   },
   data() {

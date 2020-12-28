@@ -278,11 +278,14 @@ export default {
     },
     "userGroup.isAllOrg": {
       handler(newval, oldval) {
-        if (newval != oldval) {
-          if (newval) {
+        if (newval != oldval && oldval != undefined) {
+          if (newval) {            
+            this.userGroup.roleIds = [];
             this.queryRole.orgIds = null;
             this.loadRoleData();
-          } else {
+          } else if (!newval) {
+            this.userGroup.orgIds = [];
+            this.userGroup.roleIds = [];
             this.roles = [];
           }
         }
@@ -291,13 +294,19 @@ export default {
     },
     "userGroup.orgIds": {
       handler(newval, oldval) {
-        if (newval != oldval) {
+        if (newval != oldval && oldval != undefined) {
           if (newval && newval.length > 0) {
-            this.queryRole.orgIds = newval;
-            this.loadRoleData();
+            if (oldval != undefined) {
+              this.userGroup.roleIds = [];
+              this.queryRole.orgIds = newval;
+              this.loadRoleData();
+            }
           } else if (this.userGroup.isAllOrg) {
-            this.queryRole.orgIds = null;
-            this.loadRoleData();
+            if (oldval != undefined) {
+              this.userGroup.roleIds = [];
+              this.queryRole.orgIds = null;
+              this.loadRoleData();
+            }
           } else {
             this.roles = [];
           }
@@ -362,27 +371,28 @@ export default {
       }
     },
     searchRoles(key) {
-      if (key !== "" || !this.userGroup.roleIds) {
+      if (key !== "") {
         this.queryRole.searchKey = key;
-        if (
-          this.userGroup.isAllOrg == undefined ||
-          this.userGroup.isAllOrg == null
-        ) {
-          this.$message.error("请先选择用户组所属部门类型");
-          return;
-        }
-        if (
-          this.userGroup.isAllOrg == false &&
-          (!this.userGroup.orgIds || this.userGroup.orgIds.length <= 0)
-        ) {
-          this.$message.error("请先选择用户组的部门");
-          return;
-        }
-        if (this.userGroup.isAllOrg == false) {
-          this.queryRole.orgIds = this.userGroup.orgIds;
-        }
-        this.loadRoleData();
       }
+
+      if (
+        this.userGroup.isAllOrg == undefined ||
+        this.userGroup.isAllOrg == null
+      ) {
+        this.$message.error("请先选择用户组所属部门类型");
+        return;
+      }
+      if (
+        this.userGroup.isAllOrg == false &&
+        (!this.userGroup.orgIds || this.userGroup.orgIds.length <= 0)
+      ) {
+        this.$message.error("请先选择用户组的部门");
+        return;
+      }
+      if (this.userGroup.isAllOrg == false) {
+        this.queryRole.orgIds = this.userGroup.orgIds;
+      }
+      this.loadRoleData();
     },
   },
 };
