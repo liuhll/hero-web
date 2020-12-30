@@ -381,7 +381,17 @@ export default {
         },
       });
     },
-
+    handleDelete(row) {
+      this.deleteUserGroup(row.id).then((data) => {
+        this.$notify({
+          title: "成功",
+          message: data,
+          type: "success",
+          duration: 2000,
+        });
+        this.loadUserGroupData();
+      });
+    },
     handleLook(row) {
       this.$router.push({
         name: "usergroup-user",
