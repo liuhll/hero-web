@@ -289,6 +289,7 @@ export default {
     "userInfo.orgId": {
       handler(newOrgId, oldOrgId) {
         if (oldOrgId == undefined) {
+          this.loadDeptPosition(newOrgId);
           return;
         }
         if (newOrgId != null && oldOrgId !== newOrgId) {
