@@ -371,6 +371,15 @@ export const objEqual = (obj1, obj2) => {
   else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
 
+/**
+ * 获取uuid
+ */
+export function getUUID () {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    return (c === 'x' ? (Math.random() * 16 | 0) : ('r&0x3' | '0x8')).toString(16)
+  })
+}
+
 export const findTreeItem = (treeArr, findFunc) => {
   if (!treeArr instanceof Array) {
     throw new Error("第一个参数必须是树形结构的数组")

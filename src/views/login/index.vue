@@ -1,212 +1,197 @@
 <template>
-  <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      autocomplete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">登  录</h3>
-      </div>
-
-      <el-form-item prop="userName">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="userName"
-          v-model="loginForm.userName"
-          placeholder="请输入用户名"
-          name="userName"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip v-model="capsTooltip" content="大写字母键锁定" placement="right" manual>
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入密码"
-            name="password"
-            tabindex="2"
+  <div class="site-wrapper site-page--login">
+    <div class="site-content__wrapper">
+      <div class="site-content">
+        <div class="brand-info">
+          <h2 class="brand-info__text">hero权限管理系统</h2>
+          <p class="brand-info__intro">
+            Hero权限管理系统采用前后端分离开发。服务端是在.net5平台上,基于surging.cloud微服务框架完成的一套权限管理系统,前端使用vue2框架,基于element-admin进行开发，支持菜单、按钮、数据权限控制。
+          </p>         
+        </div>
+        <div class="login-main">
+          <h3 class="login-title">用户登陆</h3>
+          <el-form
+            ref="loginForm"
+            :model="loginForm"
+            :rules="loginRules"
+            class="login-form"
             autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-form-item>
-      </el-tooltip>
-
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >登录</el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : 123qwe</span>
+            label-position="left"
+            status-icon
+          >
+            <el-form-item prop="userName">
+              <el-input
+                v-model="loginForm.userName"
+                placeholder="帐号"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                v-model="loginForm.password"
+                type="password"
+                placeholder="密码"
+              ></el-input>
+            </el-form-item>
+            <!-- <el-form-item prop="captcha">
+              <el-row :gutter="20">
+                <el-col :span="14">
+                  <el-input v-model="dataForm.captcha" placeholder="验证码">
+                  </el-input>
+                </el-col>
+                <el-col :span="10" class="login-captcha">
+                  <img :src="captchaPath" @click="getCaptcha()" alt="" />
+                </el-col>
+              </el-row>
+            </el-form-item> -->
+            <el-form-item>
+              <el-button
+                class="login-btn-submit"
+                type="primary"
+                @click.native.prevent="handleLogin"
+                >登录</el-button
+              >
+            </el-form-item>
+          </el-form>
         </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : zhangsan</span>
-          <span>Password : 123qwe</span>
-        </div>
-      
       </div>
-       <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">Or connect with</el-button> -->
-    </el-form>
-
-    <!-- <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br />
-      <br />
-      <br />
-      <social-sign />
-    </el-dialog>-->
+    </div>
   </div>
 </template>
 
+
 <script>
-import { validUsername, validPassword } from '@/utils/validate'
+import { getUUID } from "@/utils";
+import { validUsername, validPassword } from "@/utils/validate";
 // import SocialSign from "./components/SocialSignin";
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 export default {
-  name: 'Login',
+  name: "Login",
   //  components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('账号格式不正确'))
+        callback(new Error("账号格式不正确"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (!validPassword(value)) {
-        callback(new Error('密码格式不正确'))
+        callback(new Error("密码格式不正确"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
         userName: undefined,
-        password: undefined
+        password: undefined,
       },
       loginRules: {
         userName: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
-    }
+      otherQuery: {},
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const query = route.query
+      handler: function (route) {
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
-    // window.addEventListener('storage', this.afterQRScan)
+    //this.getCaptcha();
   },
   mounted() {
-    if (this.loginForm.userName === '') {
-      this.$refs.userName.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.userName === "") {
+      this.$refs.userName.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    ...mapActions('account', ['login']),
+    ...mapActions("account", ["login"]),
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (
-          (shiftKey && (key >= 'a' && key <= 'z')) ||
-          (!shiftKey && (key >= 'A' && key <= 'Z'))
+          (shiftKey && key >= "a" && key <= "z") ||
+          (!shiftKey && key >= "A" && key <= "Z")
         ) {
-          this.capsTooltip = true
+          this.capsTooltip = true;
         } else {
-          this.capsTooltip = false
+          this.capsTooltip = false;
         }
       }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
+      if (key === "CapsLock" && this.capsTooltip === true) {
+        this.capsTooltip = false;
       }
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.login(this.loginForm)
             .then(() => {
               this.$router.push({
-                path: this.redirect || '/',
-                query: this.otherQuery
-              })
-              this.loading = false
+                path: this.redirect || "/",
+                query: this.otherQuery,
+              });
+              this.loading = false;
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
+        return acc;
+      }, {});
+    },
+    // 获取验证码
+    getCaptcha() {
+      this.dataForm.uuid = getUUID();
+      this.captchaPath = this.$http.adornUrl(
+        `/captcha.jpg?uuid=${this.dataForm.uuid}`
+      );
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -225,129 +210,84 @@ export default {
     //     }
     //   }
     // }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
-.login-container {
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
-  .show-pwd {
+  .site-wrapper.site-page--login {
     position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .thirdparty-button {
-    position: absolute;
+    top: 0;
     right: 0;
-    bottom: 6px;
-  }
-
-  @media only screen and (max-width: 470px) {
-    .thirdparty-button {
-      display: none;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(38, 50, 56, .6);
+    overflow: hidden;
+    &:before {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      content: "";
+      background-image: url(~@/assets/img/login_bg.jpg);
+      background-size: cover;
+    }
+    .site-content__wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: transparent;
+    }
+    .site-content {
+      min-height: 100%;
+      padding: 30px 500px 30px 30px;
+    }
+    .brand-info {
+      margin: 220px 100px 0 90px;
+      color: #fff;
+    }
+    .brand-info__text {
+      margin:  0 0 22px 0;
+      font-size: 48px;
+      font-weight: 400;
+      text-transform : uppercase;
+    }
+    .brand-info__intro {
+      margin: 10px 0;
+      font-size: 16px;
+      line-height: 1.58;
+      opacity: .6;
+    }
+    .login-main {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 150px 60px 180px;
+      width: 470px;
+      min-height: 100%;
+      background-color: #fff;
+    }
+    .login-title {
+      font-size: 16px;
+    }
+    .login-captcha {
+      overflow: hidden;
+      > img {
+        width: 100%;
+        cursor: pointer;
+      }
+    }
+    .login-btn-submit {
+      width: 100%;
+      margin-top: 38px;
     }
   }
-}
 </style>
