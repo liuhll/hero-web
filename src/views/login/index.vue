@@ -6,7 +6,7 @@
           <h2 class="brand-info__text">hero权限管理系统</h2>
           <p class="brand-info__intro">
             Hero权限管理系统采用前后端分离开发。服务端是在.net5平台上,基于surging.cloud微服务框架完成的一套权限管理系统,前端使用vue2框架,基于element-admin进行开发，支持菜单、按钮、数据权限控制。
-          </p>         
+          </p>
         </div>
         <div class="login-main">
           <h3 class="login-title">用户登陆</h3>
@@ -32,17 +32,17 @@
                 placeholder="密码"
               ></el-input>
             </el-form-item>
-            <!-- <el-form-item prop="captcha">
+            <el-form-item prop="captcha">
               <el-row :gutter="20">
                 <el-col :span="14">
-                  <el-input v-model="dataForm.captcha" placeholder="验证码">
+                  <el-input v-model="loginForm.captcha" placeholder="验证码">
                   </el-input>
                 </el-col>
                 <el-col :span="10" class="login-captcha">
-                  <img :src="captchaPath" @click="getCaptcha()" alt="" />
+                  <img :src="captchaPath" @click="getCaptchaImg()" alt="" />
                 </el-col>
               </el-row>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item>
               <el-button
                 class="login-btn-submit"
@@ -62,6 +62,7 @@
 <script>
 import { getUUID } from "@/utils";
 import { validUsername, validPassword } from "@/utils/validate";
+import setting from "@/settings";
 // import SocialSign from "./components/SocialSignin";
 import { mapActions } from "vuex";
 
@@ -96,6 +97,7 @@ export default {
           { required: true, trigger: "blur", validator: validatePassword },
         ],
       },
+      captchaPath: "",
       passwordType: "password",
       capsTooltip: false,
       loading: false,
@@ -117,7 +119,7 @@ export default {
     },
   },
   created() {
-    //this.getCaptcha();
+    this.getCaptchaImg();
   },
   mounted() {
     if (this.loginForm.userName === "") {
@@ -131,6 +133,7 @@ export default {
   },
   methods: {
     ...mapActions("account", ["login"]),
+    ...mapActions("fileservice", ["getCaptcha"]),
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (
@@ -169,6 +172,7 @@ export default {
               this.loading = false;
             })
             .catch(() => {
+              this.getCaptchaImg();
               this.loading = false;
             });
         } else {
@@ -186,11 +190,9 @@ export default {
       }, {});
     },
     // 获取验证码
-    getCaptcha() {
-      this.dataForm.uuid = getUUID();
-      this.captchaPath = this.$http.adornUrl(
-        `/captcha.jpg?uuid=${this.dataForm.uuid}`
-      );
+    getCaptchaImg() {
+      this.loginForm.uuid = getUUID();
+      this.captchaPath = `${process.env.VUE_APP_FILESERVICE_API}/${setting.apiPrefix}/captcha/${this.loginForm.uuid}`;
     },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -215,79 +217,79 @@ export default {
 </script>
 
 <style lang="scss">
-  .site-wrapper.site-page--login {
+.site-wrapper.site-page--login {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(38, 50, 56, 0.6);
+  overflow: hidden;
+  &:before {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    content: "";
+    background-image: url(~@/assets/img/login_bg.jpg);
+    background-size: cover;
+  }
+  .site-content__wrapper {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(38, 50, 56, .6);
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: transparent;
+  }
+  .site-content {
+    min-height: 100%;
+    padding: 30px 500px 30px 30px;
+  }
+  .brand-info {
+    margin: 220px 100px 0 90px;
+    color: #fff;
+  }
+  .brand-info__text {
+    margin: 0 0 22px 0;
+    font-size: 48px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+  .brand-info__intro {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.58;
+    opacity: 0.6;
+  }
+  .login-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 150px 60px 180px;
+    width: 470px;
+    min-height: 100%;
+    background-color: #fff;
+  }
+  .login-title {
+    font-size: 16px;
+  }
+  .login-captcha {
     overflow: hidden;
-    &:before {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
+    > img {
       width: 100%;
-      height: 100%;
-      content: "";
-      background-image: url(~@/assets/img/login_bg.jpg);
-      background-size: cover;
-    }
-    .site-content__wrapper {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding: 0;
-      margin: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
-      background-color: transparent;
-    }
-    .site-content {
-      min-height: 100%;
-      padding: 30px 500px 30px 30px;
-    }
-    .brand-info {
-      margin: 220px 100px 0 90px;
-      color: #fff;
-    }
-    .brand-info__text {
-      margin:  0 0 22px 0;
-      font-size: 48px;
-      font-weight: 400;
-      text-transform : uppercase;
-    }
-    .brand-info__intro {
-      margin: 10px 0;
-      font-size: 16px;
-      line-height: 1.58;
-      opacity: .6;
-    }
-    .login-main {
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 150px 60px 180px;
-      width: 470px;
-      min-height: 100%;
-      background-color: #fff;
-    }
-    .login-title {
-      font-size: 16px;
-    }
-    .login-captcha {
-      overflow: hidden;
-      > img {
-        width: 100%;
-        cursor: pointer;
-      }
-    }
-    .login-btn-submit {
-      width: 100%;
-      margin-top: 38px;
+      cursor: pointer;
     }
   }
+  .login-btn-submit {
+    width: 100%;
+    margin-top: 38px;
+  }
+}
 </style>

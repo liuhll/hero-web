@@ -1,8 +1,7 @@
 import request from '@/utils/request'
 import setting from '@/settings'
 
-export const login = ({ userName, password }) => {
-  const data = { userName, password }
+export const login = data => {
   return request({
     url: 'api/oauth2/token',
     data: { 'input': data },
