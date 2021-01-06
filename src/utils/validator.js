@@ -318,7 +318,7 @@ export function validateIP(rule, value,callback) {
       return callback(new Error('输入不可以为空'));
     }
     setTimeout(() => {
-      const re = /^[a-zA-Z][a-zA-Z0-9]{4,50}$/;
+      const re = /^[a-zA-Z][a-zA-Z0-9_-]{4,50}$/;
       const rsCheck = re.test(value);
       if (!rsCheck) {
         callback(new Error('您输入的唯一标识格式不正确'));

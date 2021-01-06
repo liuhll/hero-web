@@ -120,6 +120,12 @@ const authorizationRouter = {
                 permissionMenuName: "usergroup"
             }
         },
+        {
+            path: 'tenant',
+            component: () => import('@/views/authorization/tenant'),
+            name: 'tenant',
+            meta: { title: '租户管理', icon: 'tenant', noCache: true, permissionMenuName: "tenant" }
+        },
     ]
 }
 
