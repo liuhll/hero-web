@@ -29,8 +29,23 @@
               <el-input
                 v-model="loginForm.password"
                 type="password"
+                @keyup.native="checkCapslock"
                 placeholder="密码"
               ></el-input>
+            </el-form-item>
+            <el-form-item prop="tenantId">
+              <el-select
+                v-model="loginForm.tenantId"
+                placeholder="请选择租户"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in tenants"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item prop="captcha">
               <el-row :gutter="20">
@@ -91,11 +106,11 @@ export default {
       },
       loginRules: {
         userName: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, message: "请输入账号", trigger: "blur" },
+          { trigger: "blur", validator: validateUsername },
         ],
-        password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+        password: [{ trigger: "blur", validator: validatePassword }],
+        tenantId: [{ required: true, trigger: "change", message: "请选择租户" }],
       },
       captchaPath: "",
       passwordType: "password",
@@ -104,6 +119,7 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
+      tenants: [],
     };
   },
   watch: {
@@ -122,6 +138,7 @@ export default {
     this.getCaptchaImg();
   },
   mounted() {
+    this.loadTenants();
     if (this.loginForm.userName === "") {
       this.$refs.userName.focus();
     } else if (this.loginForm.password === "") {
@@ -134,6 +151,7 @@ export default {
   methods: {
     ...mapActions("account", ["login"]),
     ...mapActions("fileservice", ["getCaptcha"]),
+    ...mapActions("tenant", ["list"]),
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (
@@ -193,6 +211,11 @@ export default {
     getCaptchaImg() {
       this.loginForm.uuid = getUUID();
       this.captchaPath = `${process.env.VUE_APP_FILESERVICE_API}/${setting.apiPrefix}/captcha/${this.loginForm.uuid}`;
+    },
+    loadTenants() {
+      this.list().then((data) => {
+        this.tenants = data;
+      });
     },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
