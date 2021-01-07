@@ -355,7 +355,7 @@ export default {
             });
         }
       });
-    },    
+    },
     handleDelete(row) {
       this.delete(row.id).then((data) => {
         this.$notify({
@@ -376,7 +376,7 @@ export default {
       this.tenant = {
         name: undefined,
         memo: undefined,
-        permissionIds: [],
+        createSuper: false,
       };
     },
     handleLook(row) {},
