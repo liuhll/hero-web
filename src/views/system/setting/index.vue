@@ -66,14 +66,12 @@
         </el-form>
         <div class="operate-container" v-if="edit">
           <el-button
-            v-loading="loading"
             style="margin-left: 10px"
             type="success"
             @click="handleSettingConfigSave()"
             >保存</el-button
           >
           <el-button
-            v-loading="loading"
             type="warning"
             @click="handleCancleSettingConfig()"
             >取消</el-button
@@ -86,6 +84,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { Loading } from "element-ui";
 import waves from "@/directive/waves"; // waves directive
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
@@ -137,6 +136,10 @@ export default {
       this.edit = true;
     },
     handleSettingConfigSave() {
+      let loadingInstance = Loading.service({
+        target: ".app-container",
+        fullscreen: false,
+      });
       this.setSystemConfig(this.settingConfig).then((data) => {
         this.$notify({
           title: "成功",
@@ -145,6 +148,7 @@ export default {
           duration: 2000,
         });
         this.edit = false;
+        loadingInstance.close();
       });
     },
     handleCancleSettingConfig() {

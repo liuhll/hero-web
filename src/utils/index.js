@@ -429,3 +429,8 @@ export const permissionType = {
   Menu: 0,
   Operation: 1
 };
+
+export const nonPermissionOperationStyle = {
+  Displayed: 0,
+  Disabled: 1
+}
