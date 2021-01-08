@@ -39,21 +39,27 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="系统维护者" prop="administrator">
+            <el-form-item label="系统维护员" prop="administrator">
               <el-input
                 v-model="settingConfig.administrator"
-                placeholder="请输入系统维护者"
+                placeholder="请输入系统维护员"
               />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item
-              label="权限按钮风格"
+              label="无权限按钮风格"
               prop="nonPermissionOperationStyle"
             >
-              <el-radio-group v-model="settingConfig.nonPermissionOperationStyle">
-                <el-radio :label="0">不可用</el-radio>
-                <el-radio :label="1">不显示</el-radio>
+              <el-radio-group
+                v-model="settingConfig.nonPermissionOperationStyle"
+              >
+                <el-radio
+                  v-for="item in nonPermissionOperationStyleData"
+                  :key="item.id"
+                  :label="item.id"
+                  >{{ item.description }}</el-radio
+                >
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -86,17 +92,61 @@ export default {
   directives: { waves, permission },
   data() {
     return {
-      rules: {},
+      rules: {
+        sysName: [
+          {
+            required: true,
+            message: "系统名称不允许为空",
+            trigger: "blur",
+          },
+        ],
+        nonPermissionOperationStyle: [
+          {
+            required: true,
+            message: "无权限按钮风格不允许为空",
+            trigger: "change",
+          },
+        ],
+      },
       settingConfig: {},
       edit: false,
+      nonPermissionOperationStyleData: [],
     };
   },
-  mounted() {},
+  mounted() {
+    this.loadNonPermissionOperationStyles();
+    this.loadSettingConfig();
+  },
   methods: {
+    ...mapActions("systemconfig", [
+      "getSystemConfig",
+      "setSystemConfig",
+      "getNonPermissionOperationStyles",
+    ]),
+    loadSettingConfig() {
+      this.getSystemConfig().then((data) => {
+        this.settingConfig = data;
+      });
+    },
+    loadNonPermissionOperationStyles() {
+      this.getNonPermissionOperationStyles().then((data) => {
+        this.nonPermissionOperationStyleData = data;
+      });
+    },
     handleSettingConfig() {
       this.edit = true;
     },
-    handleSettingConfigSave() {},
+    handleSettingConfigSave() {
+      this.setSystemConfig(this.settingConfig).then((data) => {
+        this.$notify({
+          title: "成功",
+          message: data,
+          type: "success",
+          duration: 2000,
+        });
+        this.edit = false;
+      });
+    },
     handleCancleSettingConfig() {
       this.edit = false;
     },
