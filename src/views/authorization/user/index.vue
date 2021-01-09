@@ -32,6 +32,7 @@
             v-model="query.status"
             class="filter-item"
             @change="handleChangeQueryUserStatus"
+            clearable
           >
             <el-option key="1" label="有效" value="1"></el-option>
             <el-option key="0" label="冻结" value="0"></el-option>
