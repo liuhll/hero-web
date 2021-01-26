@@ -10,7 +10,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
   // set page title
@@ -30,8 +30,8 @@ router.beforeEach(async(to, from, next) => {
       const userName = store.getters.name;
       if (userName) {
         if (to.meta.permissionMenuName) {
-          await store.dispatch('account/getOperations',to.meta.permissionMenuName)
-        }               
+          await store.dispatch('account/getOperations', to.meta.permissionMenuName)
+        }
         next()
       } else {
         try {
@@ -71,7 +71,13 @@ router.beforeEach(async(to, from, next) => {
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
   // finish progress bar
-  NProgress.done()
+  if (window._hmt) {
+    if (to.path) {
+      window._hmt.push(['_setAutoPageview', false]);
+      window._hmt.push(['_trackPageview', '/#' + to.fullPath]); // 如果不是根路径，需要指定第二个参数的路径
+    }
+  }
+NProgress.done()
 })
